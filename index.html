@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STNCL — Stencil Art Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;500;600;700&family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{--bg:#0a0a0a;--bgd:#050505;--bc:#141414;--bch:#1a1a1a;--fg:#f5f5f5;--fgd:#c0c0c0;--mt:#6a6a6a;--ac:#FF4D00;--acb:#FF7A33;--acd:#B33A00;--sv:#C8C8C8;--svd:#5a5a5a;--bd:#1f1f1f;--bdl:#2a2a2a}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{background:var(--bg);color:var(--fg);font-family:'Archivo',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.fd{font-family:'Bebas Neue',sans-serif;letter-spacing:.005em}.fh{font-family:'Oswald',sans-serif}.fm{font-family:'JetBrains Mono',monospace}
+.grain{position:fixed;inset:-10%;pointer-events:none;z-index:200;opacity:.07;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='250' height='250'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");mix-blend-mode:overlay}
+.rv{opacity:0;transform:translateY(48px);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)}.rv.iv{opacity:1;transform:translateY(0)}
+.rst>*{opacity:0;transform:translateY(30px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}.rst.iv>*{opacity:1;transform:translateY(0)}.rst.iv>*:nth-child(1){transition-delay:0s}.rst.iv>*:nth-child(2){transition-delay:.08s}.rst.iv>*:nth-child(3){transition-delay:.16s}.rst.iv>*:nth-child(4){transition-delay:.24s}
+.rf{position:absolute;inset:0;opacity:0;transition:opacity 2.5s ease-in-out}.rf.ac{opacity:1}.rf img{width:100%;height:100%;object-fit:cover;filter:grayscale(100%) contrast(1.5) brightness(.35);transform:scale(1.06)}.rf.ac img{animation:kb 10s ease-out forwards}
+@keyframes kb{0%{transform:scale(1.06)}100%{transform:scale(1.18) translate(-2%,-2%)}}
+.hov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,.93) 0%,rgba(10,10,10,.4) 30%,rgba(10,10,10,.5) 60%,rgba(10,10,10,.98) 100%),linear-gradient(90deg,rgba(10,10,10,.8) 0%,rgba(10,10,10,.15) 50%,rgba(10,10,10,.5) 100%),radial-gradient(ellipse at 30% 55%,rgba(255,77,0,.15) 0%,transparent 55%)}
+.sl{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0px,transparent 3px,rgba(0,0,0,.12) 3px,rgba(0,0,0,.12) 4px);pointer-events:none;z-index:2}
+@keyframes mq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}.mqt{display:flex;animation:mq 35s linear infinite;width:max-content}
+.ts{-webkit-text-stroke:1.5px var(--svd);color:transparent}
+.hl{overflow:hidden;display:block}.hl span{display:inline-block;transform:translateY(110%);transition:transform 1s cubic-bezier(.22,1,.36,1)}.iv .hl span{transform:translateY(0)}.hl:nth-child(2) span{transition-delay:.1s}.hl:nth-child(3) span{transition-delay:.2s}
+.sm{display:inline-flex;align-items:center;gap:.75rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.2em;color:var(--ac);text-transform:uppercase}.sm::before{content:'';width:32px;height:1px;background:var(--ac)}
+.nl{position:relative;font-family:'Oswald',sans-serif;font-size:.85rem;letter-spacing:.18em;text-transform:uppercase;color:var(--fgd);transition:color .3s}.nl:hover{color:var(--fg)}.nl::before{content:'';position:absolute;left:-14px;top:50%;transform:translateY(-50%) scaleY(0);width:4px;height:4px;background:var(--ac);transition:transform .3s}.nl:hover::before{transform:translateY(-50%) scaleY(1)}
+.inr{filter:grayscale(100%) contrast(1.4) brightness(.7);transition:filter .8s,transform .8s}
+.ic{background:var(--bc);border:1px solid var(--bd);transition:border-color .4s,background .4s}.ic:hover{border-color:var(--acd);background:var(--bch)}
+.nc{position:relative}.nc::before,.nc::after{content:'';position:absolute;width:14px;height:14px;border:1px solid var(--ac);pointer-events:none}.nc::before{top:-1px;left:-1px;border-right:none;border-bottom:none}.nc::after{bottom:-1px;right:-1px;border-left:none;border-top:none}
+.fi{background:transparent;border:none;border-bottom:1px solid var(--bdl);color:var(--fg);padding:.85rem 0;font-family:'Oswald',sans-serif;font-size:1.1rem;width:100%;transition:border-color .3s;letter-spacing:.04em}.fi:focus{outline:none;border-color:var(--ac)}.fi::placeholder{color:var(--mt);text-transform:uppercase;letter-spacing:.15em;font-size:.8rem}
+.cp{cursor:pointer;padding:.5rem 1.1rem;border:1px solid var(--bdl);background:transparent;color:var(--fgd);font-family:'Oswald',sans-serif;font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;transition:all .3s;white-space:nowrap}.cp:hover{border-color:var(--svd);color:var(--fg)}.cp.acl{background:var(--ac);border-color:var(--ac);color:#000;font-weight:600}
+.acard{transition:transform .5s cubic-bezier(.22,1,.36,1),border-color .4s,background .4s}.acard:hover{transform:translateY(-6px)}.acard .aimg{transition:transform .8s cubic-bezier(.22,1,.36,1),filter .8s}.acard:hover .aimg{transform:scale(1.06);filter:grayscale(70%) contrast(1.4) brightness(.75)}
+.bf{background:linear-gradient(135deg,rgba(255,77,0,.04) 0%,transparent 50%,rgba(255,77,0,.02) 100%);border:1px solid var(--bd);position:relative}.bf::before{content:'';position:absolute;top:0;left:0;width:50px;height:50px;border-top:2px solid var(--ac);border-left:2px solid var(--ac)}.bf::after{content:'';position:absolute;bottom:0;right:0;width:50px;height:50px;border-bottom:2px solid var(--ac);border-right:2px solid var(--ac)}
+.pbar{height:1px;background:rgba(255,255,255,.1);overflow:hidden}.pbf{height:100%;background:var(--ac);width:0%;transition:width .1s linear}
+.ndd{font-variant-numeric:tabular-nums}
+@keyframes pc{0%,100%{box-shadow:0 0 0 0 rgba(255,77,0,.6),0 0 40px rgba(255,77,0,.25)}50%{box-shadow:0 0 0 16px rgba(255,77,0,0),0 0 40px rgba(255,77,0,.25)}}.pbtn{animation:pc 2.4s ease-out infinite}
+@keyframes rbl{0%,100%{opacity:1}50%{opacity:.3}}.rdd{animation:rbl 1.5s ease-in-out infinite}
+.toast{position:fixed;top:90px;right:24px;background:var(--bc);border:1px solid var(--ac);border-left:3px solid var(--ac);padding:1rem 1.5rem;z-index:300;transform:translateX(120%);transition:transform .5s cubic-bezier(.22,1,.36,1);max-width:380px}.toast.v{transform:translateX(0)}
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);z-index:250;opacity:0;pointer-events:none;transition:opacity .4s}.mo.op{opacity:1;pointer-events:all}
+.mp{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.92);z-index:260;background:var(--bc);border:1px solid var(--bd);max-width:560px;width:92%;max-height:90vh;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .4s,transform .4s cubic-bezier(.22,1,.36,1)}.mp.op{opacity:1;pointer-events:all;transform:translate(-50%,-50%) scale(1)}
+.ap{position:fixed;top:0;right:0;bottom:0;width:460px;max-width:95vw;background:var(--bgd);border-left:1px solid var(--bd);z-index:280;transform:translateX(110%);transition:transform .5s cubic-bezier(.22,1,.36,1);overflow-y:auto}.ap.op{transform:translateX(0)}
+.ao{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:275;opacity:0;pointer-events:none;transition:opacity .4s}.ao.op{opacity:1;pointer-events:all}
+.ax{background:var(--bc);border:1px solid var(--bdl);color:var(--fg);padding:.6rem .8rem;font-family:'Oswald',sans-serif;font-size:.95rem;width:100%;transition:border-color .3s;letter-spacing:.04em}.ax:focus{outline:none;border-color:var(--ac)}.ax::placeholder{color:var(--mt);font-size:.8rem}
+.pst{position:relative;padding-left:2rem}.pst::before{content:attr(data-s);position:absolute;left:0;top:0;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:1px solid var(--ac);font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--ac)}
+.dz{border:2px dashed var(--bdl);padding:1.5rem;text-align:center;cursor:pointer;transition:border-color .3s,background .3s}.dz:hover,.dz.dov{border-color:var(--ac);background:rgba(255,77,0,.05)}.dz img{max-height:100px;margin:0 auto;border:1px solid var(--bdl)}
+.lc2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.le{border-left:2px solid var(--ac);padding:.5rem 0 .5rem .75rem;margin-bottom:.75rem}
+.pdd{width:14px;height:14px;border:2px solid var(--ac);border-radius:50%;transition:all .3s}.pdd.fl{background:var(--ac)}
+.pnb{width:60px;height:60px;border:1px solid var(--bdl);background:transparent;color:var(--fg);font-family:'Bebas Neue',sans-serif;font-size:1.8rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}.pnb:hover{border-color:var(--ac);background:rgba(255,77,0,.1)}.pnb:active{background:var(--ac);color:#000}
+@keyframes sucIn{0%{transform:scale(.8);opacity:0}100%{transform:scale(1);opacity:1}}.suc-anim{animation:sucIn .5s cubic-bezier(.22,1,.36,1) forwards}
+@keyframes cirD{0%{stroke-dashoffset:226}100%{stroke-dashoffset:0}}@keyframes chkD{0%{stroke-dashoffset:50}100%{stroke-dashoffset:0}}
+.suc-cir{stroke-dasharray:226;stroke-dashoffset:226;animation:cirD .6s ease forwards}.suc-chk{stroke-dasharray:50;stroke-dashoffset:50;animation:chkD .4s .4s ease forwards}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bgd)}::-webkit-scrollbar-thumb{background:var(--acd)}
+.bgt{background-color:var(--bg);background-image:radial-gradient(circle at 20% 30%,rgba(255,77,0,.05) 0%,transparent 40%),radial-gradient(circle at 80% 70%,rgba(80,80,80,.05) 0%,transparent 40%),url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='r'><feTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23r)' opacity='0.35'/></svg>");background-blend-mode:normal,normal,overlay}
+@media(max-width:768px){.ap{width:100%}.pnb{width:52px;height:52px;font-size:1.5rem}}
+</style>
+</head>
+<body class="bgt">
+<div class="grain"></div>
+<div class="toast" id="toast"><div class="flex items-start gap-3"><i class="fas fa-check-circle text-[var(--ac)] mt-0.5"></i><div><div class="fh text-sm tracking-wider uppercase" id="toastT"></div><div class="text-xs mt-1" id="toastM"></div></div></div></div>
+
+<!-- PIN MODAL -->
+<div class="mo" id="pinOv" onclick="closePin()"></div>
+<div class="mp" id="pinMod" style="max-width:340px"><div class="p-8 text-center">
+<div class="w-14 h-14 border border-[var(--ac)] flex items-center justify-center mx-auto mb-5"><i class="fas fa-lock text-[var(--ac)] text-xl"></i></div>
+<div class="fd text-3xl tracking-wider mb-1">ADMIN ACCESS</div>
+<div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] mb-6">ENTER YOUR 4-DIGIT PIN</div>
+<div class="flex justify-center gap-3 mb-5" id="pinDots"><div class="pdd"></div><div class="pdd"></div><div class="pdd"></div><div class="pdd"></div></div>
+<div class="text-red-400 text-xs fm tracking-wider mb-4 hidden" id="pinErr">Wrong PIN. Try again.</div>
+<div class="grid grid-cols-3 gap-2 max-w-[210px] mx-auto">
+<button class="pnb" onclick="pi(1)">1</button><button class="pnb" onclick="pi(2)">2</button><button class="pnb" onclick="pi(3)">3</button>
+<button class="pnb" onclick="pi(4)">4</button><button class="pnb" onclick="pi(5)">5</button><button class="pnb" onclick="pi(6)">6</button>
+<button class="pnb" onclick="pi(7)">7</button><button class="pnb" onclick="pi(8)">8</button><button class="pnb" onclick="pi(9)">9</button>
+<button class="pnb" onclick="pcl()" style="font-size:1rem"><i class="fas fa-delete-left"></i></button><button class="pnb" onclick="pi(0)">0</button><button class="pnb" onclick="psb()" style="font-size:.9rem"><i class="fas fa-check"></i></button>
+</div>
+<button onclick="closePin()" class="mt-5 fm text-[10px] text-[var(--mt)] tracking-wider hover:text-[var(--fg)] transition-colors">Cancel</button>
+<div class="mt-4 fm text-[9px] text-[var(--svd)] tracking-wider">Default PIN: 1234</div>
+</div></div>
+
+<!-- BOOKING MODAL -->
+<div class="mo" id="bkOv" onclick="closeBk()"></div>
+<div class="mp" id="bkMod"><div class="p-0">
+<div id="bkFormV">
+<div class="relative h-48 overflow-hidden"><img id="bkImg" src="" class="w-full h-full object-cover inr" alt=""><div class="absolute inset-0 bg-gradient-to-t from-[var(--bc)] via-transparent to-transparent"></div><button onclick="closeBk()" class="absolute top-4 right-4 w-9 h-9 border border-white/20 flex items-center justify-center hover:border-[var(--ac)] bg-black/40 transition-all"><i class="fas fa-xmark text-sm"></i></button><div class="absolute bottom-4 left-6 right-6"><div class="fm text-[10px] text-[var(--ac)] tracking-[.2em] mb-1" id="bkMeta"></div><div class="fd text-3xl" id="bkTitle"></div></div></div>
+<div class="p-6">
+<div class="flex items-center justify-between mb-5 pb-4 border-b border-[var(--bdl)]"><div><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase">Price</div><div class="fd text-4xl text-[var(--ac)]" id="bkPrice"></div></div><div class="text-right"><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase">Size</div><div class="fh text-sm" id="bkSize"></div></div></div>
+<div class="bg-[var(--bg)] border border-[var(--bd)] p-3 mb-5"><p class="text-[var(--fgd)] text-xs leading-relaxed"><i class="fas fa-bolt text-[var(--ac)] mr-1"></i> Sends artist a <b class="text-[var(--fg)]">WhatsApp + Email</b> at the same time.</p></div>
+<form onsubmit="doBk(event)"><div class="space-y-4"><div class="grid grid-cols-2 gap-4"><div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Full Name *</label><input type="text" class="fi" id="bkN" required placeholder="Your name"></div><div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Phone *</label><input type="tel" class="fi" id="bkP" required placeholder="+254 ..."></div></div><div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Email</label><input type="email" class="fi" id="bkE" placeholder="your@email.com"></div><div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Message</label><textarea class="fi resize-none" id="bkM" rows="2" placeholder="Any questions..."></textarea></div></div>
+<button type="submit" class="w-full mt-6 fh text-sm tracking-[.15em] uppercase bg-[var(--ac)] text-black py-3.5 hover:bg-[var(--acb)] transition-colors"><i class="fab fa-whatsapp mr-2"></i><i class="fas fa-envelope mr-2"></i>Send Booking Request</button>
+<button type="button" onclick="closeBk()" class="w-full fh text-xs tracking-[.15em] uppercase border border-[var(--bdl)] py-2.5 mt-2 hover:border-[var(--mt)] transition-colors">Cancel</button></form>
+</div></div>
+<div id="bkSucV" class="hidden p-10 text-center">
+<div class="suc-anim"><svg class="w-20 h-20 mx-auto mb-6" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="none" stroke="var(--ac)" stroke-width="3" class="suc-cir"/><polyline points="24,42 36,54 56,30" fill="none" stroke="var(--ac)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="suc-chk"/></svg></div>
+<div class="fd text-4xl tracking-wider mb-2">BOOKING SENT</div>
+<div class="fm text-[11px] text-[var(--ac)] tracking-[.2em] uppercase mb-6">WhatsApp & Email opened</div>
+<div class="bg-[var(--bg)] border border-[var(--bd)] p-5 text-left mb-6">
+<div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mb-3">What happens next:</div>
+<div class="space-y-3 text-sm text-[var(--fgd)]">
+<div class="flex items-start gap-3"><i class="fab fa-whatsapp text-green-500 mt-0.5"></i><span>WhatsApp opened — <b class="text-[var(--fg)]">just press send</b></span></div>
+<div class="flex items-start gap-3"><i class="fas fa-envelope text-[var(--ac)] mt-0.5"></i><span>Email opened — <b class="text-[var(--fg)]">just press send</b></span></div>
+<div class="flex items-start gap-3"><i class="fas fa-clock text-[var(--svd)] mt-0.5"></i><span>Artist will respond to confirm availability</span></div>
+</div></div>
+<button onclick="closeBk()" class="fh text-sm tracking-[.15em] uppercase bg-[var(--ac)] text-black px-8 py-3 hover:bg-[var(--acb)] transition-colors">Done</button>
+</div></div></div>
+
+<!-- ADMIN -->
+<div class="ao" id="admOv" onclick="togAdm()"></div>
+<div class="ap" id="admPan">
+<div class="p-5 border-b border-[var(--bd)] flex items-center justify-between sticky top-0 bg-[var(--bgd)] z-10"><div><div class="fd text-xl tracking-wider">ADMIN PANEL</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] mt-0.5">MANAGE ART & BOOKINGS</div></div><button onclick="togAdm()" class="w-8 h-8 border border-[var(--bdl)] flex items-center justify-center hover:border-[var(--ac)] transition-colors"><i class="fas fa-xmark text-sm"></i></button></div>
+<div class="flex border-b border-[var(--bd)]">
+<button class="atb flex-1 py-3 fm text-[10px] tracking-[.12em] uppercase text-center" data-t="art" onclick="swTab('art')"><i class="fas fa-palette mr-1"></i>Art</button>
+<button class="atb flex-1 py-3 fm text-[10px] tracking-[.12em] uppercase text-center text-[var(--mt)]" data-t="blog" onclick="swTab('blog')"><i class="fas fa-bell mr-1"></i>Bookings <span class="bg-[var(--ac)] text-black px-1.5 rounded-full text-[9px] ml-1 hidden" id="bkBadge">0</span></button>
+<button class="atb flex-1 py-3 fm text-[10px] tracking-[.12em] uppercase text-center text-[var(--mt)]" data-t="set" onclick="swTab('set')"><i class="fas fa-gear mr-1"></i>Settings</button>
+</div>
+<div class="atc p-5" id="t-art"><button onclick="openEd()" class="w-full fh text-sm tracking-[.12em] uppercase border border-dashed border-[var(--acd)] text-[var(--ac)] py-3 hover:bg-[var(--ac)] hover:text-black transition-all mb-4"><i class="fas fa-plus mr-2"></i>Add New Artwork</button><div id="admList" class="space-y-2.5"></div></div>
+<div class="atc p-5 hidden" id="t-blog"><div class="flex items-center justify-between mb-4"><div class="fh text-sm tracking-wider uppercase">Booking Log</div><button onclick="clrBlog()" class="fm text-[9px] text-[var(--mt)] tracking-wider uppercase hover:text-red-400 transition-colors">Clear All</button></div><div class="bg-[var(--bg)] border border-[var(--bd)] p-3 mb-4"><p class="text-xs leading-relaxed"><i class="fas fa-check-double text-green-500 mr-1"></i>Every booking sends <b>WhatsApp + Email</b>. All logged here.</p></div><div id="blogList"></div><div id="noBlog" class="text-center py-8"><i class="fas fa-bell-slash text-2xl text-[var(--mt)] mb-2"></i><div class="fm text-[10px] text-[var(--mt)] tracking-wider">No bookings yet</div></div></div>
+<div class="atc p-5 hidden" id="t-set"><div class="space-y-4">
+<div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Admin PIN (4 digits)</label><input type="password" class="ax" id="sPin" placeholder="1234" maxlength="4"><p class="text-[var(--mt)] text-[9px] fm mt-1">Current: <span id="curPin">1234</span></p></div>
+<div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">WhatsApp Number</label><input type="text" class="ax" id="sWa" placeholder="254114255987"></div>
+<div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Email</label><input type="email" class="ax" id="sEm" placeholder="injuguna308@gmail.com"></div>
+<div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Phone on Site</label><input type="text" class="ax" id="sPh" placeholder="0143374333"></div>
+<div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Studio Name</label><input type="text" class="ax" id="sNm" placeholder="STNCL"></div>
+<button onclick="saveSet()" class="w-full fh text-sm tracking-[.12em] uppercase bg-[var(--ac)] text-black py-3 hover:bg-[var(--acb)] transition-colors"><i class="fas fa-save mr-2"></i>Save All Settings</button>
+<div class="pt-4 border-t border-[var(--bd)]"><button onclick="resetArt()" class="w-full fh text-xs tracking-[.12em] uppercase border border-red-900/50 text-red-400 py-2.5 hover:bg-red-900/20 transition-colors"><i class="fas fa-rotate-left mr-2"></i>Reset Gallery to Defaults</button></div>
+</div></div>
+<div class="hidden border-t border-[var(--bd)]" id="artEd"><div class="p-5">
+<div class="flex items-center justify-between mb-4"><div class="fh text-sm tracking-[.12em] uppercase" id="edTitle">New Artwork</div><button onclick="closeEd()" class="text-[var(--mt)] hover:text-[var(--fg)] transition-colors"><i class="fas fa-xmark"></i></button></div>
+<div class="space-y-4">
+<input type="hidden" id="eId">
+<div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1.5">Photo *</label><div class="dz" id="dz" onclick="document.getElementById('fIn').click()"><div id="dzC"><i class="fas fa-cloud-upload-alt text-2xl text-[var(--mt)] mb-2"></i><div class="fm text-[10px] text-[var(--mt)] tracking-wider">Tap to upload</div><div class="fm text-[9px] text-[var(--svd)] mt-1">JPG/PNG</div></div><img id="dzP" src="" class="hidden" alt=""></div><input type="file" id="fIn" accept="image/*" class="hidden" onchange="hFile(event)"><div class="mt-2 flex items-center gap-2"><div class="flex-1 h-px bg-[var(--bdl)]"></div><span class="fm text-[9px] text-[var(--mt)]">or URL</span><div class="flex-1 h-px bg-[var(--bdl)]"></div></div><input type="url" class="ax mt-2" id="eImg" placeholder="https://..."></div>
+<div class="grid grid-cols-2 gap-3"><div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Title *</label><input type="text" class="ax" id="eTi" placeholder="TITLE"></div><div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Price (KES) *</label><input type="number" class="ax" id="ePr" placeholder="15000" min="0"></div></div>
+<div class="grid grid-cols-2 gap-3"><div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Category</label><select class="ax" id="eCa"><option value="portrait">Portrait</option><option value="urban">Urban</option><option value="abstract">Abstract</option><option value="typography">Typography</option><option value="nature">Nature</option></select></div><div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Size</label><input type="text" class="ax" id="eSz" placeholder="60 x 80 cm"></div></div>
+<div class="grid grid-cols-2 gap-3"><div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Medium</label><input type="text" class="ax" id="eMd" placeholder="Spray paint on canvas"></div><div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Layers</label><input type="text" class="ax" id="eLy" placeholder="4 layers"></div></div>
+<div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Description</label><textarea class="ax resize-none" id="eDe" rows="2" placeholder="Brief description..."></textarea></div>
+<div class="flex items-center gap-3"><input type="checkbox" id="eAv" checked class="accent-[var(--ac)]"><label for="eAv" class="fm text-[10px] tracking-[.15em] uppercase">Available</label></div>
+<button onclick="saveArt()" class="w-full fh text-sm tracking-[.12em] uppercase bg-[var(--ac)] text-black py-3 hover:bg-[var(--acb)] transition-colors"><i class="fas fa-save mr-2"></i>Save Artwork</button>
+</div></div></div>
+</div>
+
+<!-- HEADER -->
+<header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-black/50 border-b border-white/5">
+<div class="max-w-[1600px] mx-auto px-6 lg:px-10 py-4 flex items-center justify-between">
+<a href="#" class="flex items-center gap-3"><div class="w-9 h-9 bg-[var(--ac)] flex items-center justify-center"><i class="fas fa-spray-can text-black text-sm"></i></div><div><div class="fd text-2xl leading-none tracking-wider" id="logoN">STNCL</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.3em] mt-0.5">STENCIL ART STUDIO</div></div></a>
+<nav class="hidden lg:flex items-center gap-10"><a href="#gallery" class="nl">Gallery</a><a href="#process" class="nl">Process</a><a href="#about" class="nl">About</a><a href="#contact" class="nl">Contact</a></nav>
+<div class="flex items-center gap-3">
+<div class="hidden md:flex items-center gap-2 fm text-[10px] text-[var(--mt)]"><span class="rdd w-2 h-2 bg-[var(--ac)] rounded-full inline-block"></span><span class="tracking-[.15em]">ACCEPTING COMMISSIONS</span></div>
+<button onclick="openPin()" class="w-9 h-9 border border-[var(--bdl)] flex items-center justify-center hover:border-[var(--ac)] hover:text-[var(--ac)] transition-all" title="Admin"><i class="fas fa-lock text-xs"></i></button>
+<a href="#gallery" class="hidden sm:inline-block fh text-xs tracking-[.2em] uppercase text-black bg-[var(--sv)] px-5 py-2.5 hover:bg-white transition-colors">View Art</a>
+</div></div></header>
+
+<!-- HERO -->
+<section class="relative h-screen min-h-[700px] w-full overflow-hidden">
+<div class="absolute inset-0"><div class="rf ac"><img src="https://picsum.photos/seed/stnclH1/1920/1080.jpg" alt=""></div><div class="rf"><img src="https://picsum.photos/seed/stnclH2/1920/1080.jpg" alt=""></div><div class="rf"><img src="https://picsum.photos/seed/stnclH3/1920/1080.jpg" alt=""></div></div>
+<div class="hov"></div><div class="sl"></div>
+<div class="relative z-10 h-full max-w-[1600px] mx-auto px-6 lg:px-10 flex flex-col justify-end pb-24 pt-32">
+<div class="rv iv max-w-5xl">
+<div class="sm mb-6"><span>Stencil Art Studio</span></div>
+<h1 class="fd text-[14vw] md:text-[10vw] lg:text-[8.5vw] leading-[.85] mb-8"><span class="hl"><span>CUT WITH</span></span><span class="hl"><span class="ts">PRECISION.</span></span><span class="hl"><span>SPRAYED WITH <span class="text-[var(--ac)]">SOUL.</span></span></span></h1>
+<p class="max-w-xl text-[var(--fgd)] text-base md:text-lg leading-relaxed">Hand-cut multi-layer stencil art — each piece built from precisely cut layers, sprayed with raw energy. Original works available for collectors.</p>
+</div>
+<div class="mt-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+<a href="#gallery" class="inline-flex items-center gap-3 fh text-sm tracking-[.15em] uppercase bg-[var(--ac)] text-black px-7 py-3.5 hover:bg-[var(--acb)] transition-colors pbtn w-fit"><span>Explore Available Works</span><i class="fas fa-arrow-down"></i></a>
+<div class="flex items-center gap-6 max-w-sm w-full lg:w-auto"><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em]"><span id="chN">01</span> / 03</div><div class="flex-1 pbar"><div class="pbf" id="rProg"></div></div><div class="fm text-[10px] text-[var(--ac)] tracking-[.2em]">REEL</div></div>
+</div></div>
+<div class="absolute bottom-0 left-0 right-0 border-t border-white/5 bg-black/60 backdrop-blur-sm py-3 overflow-hidden z-10"><div class="mqt fd text-sm tracking-[.25em] text-[var(--svd)]"><span class="px-8">HAND-CUT STENCILS</span><span class="text-[var(--ac)]">/</span><span class="px-8">MULTI-LAYER PROCESS</span><span class="text-[var(--ac)]">/</span><span class="px-8">ORIGINAL WORKS ONLY</span><span class="text-[var(--ac)]">/</span><span class="px-8">NO PRINTS NO REPRODUCTIONS</span><span class="text-[var(--ac)]">/</span><span class="px-8">EACH PIECE IS ONE OF ONE</span><span class="text-[var(--ac)]">/</span><span class="px-8">HAND-CUT STENCILS</span><span class="text-[var(--ac)]">/</span><span class="px-8">MULTI-LAYER PROCESS</span><span class="text-[var(--ac)]">/</span><span class="px-8">ORIGINAL WORKS ONLY</span><span class="text-[var(--ac)]">/</span><span class="px-8">NO PRINTS NO REPRODUCTIONS</span><span class="text-[var(--ac)]">/</span><span class="px-8">EACH PIECE IS ONE OF ONE</span><span class="text-[var(--ac)]">/</span></div></div>
+</section>
+
+<!-- STATS -->
+<section class="border-y border-[var(--bd)] bg-[var(--bgd)]"><div class="max-w-[1600px] mx-auto px-6 lg:px-10 py-14"><div class="rst grid grid-cols-2 lg:grid-cols-4 gap-y-8 gap-x-6">
+<div class="border-l border-[var(--bdl)] pl-6"><div class="fd text-5xl md:text-6xl ndd" data-count="6">0</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mt-1">Years cutting stencils</div></div>
+<div class="border-l border-[var(--bdl)] pl-6"><div class="fd text-5xl md:text-6xl text-[var(--ac)] ndd" data-count="48">0</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mt-1">Originals sold</div></div>
+<div class="border-l border-[var(--bdl)] pl-6"><div class="fd text-5xl md:text-6xl ndd" data-count="12">0</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mt-1">Private collections</div></div>
+<div class="border-l border-[var(--bdl)] pl-6"><div class="fd text-5xl md:text-6xl ndd" data-count="7">0</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mt-1">Max layers per piece</div></div>
+</div></div></section>
+
+<!-- GALLERY — NOTE: no "rs" class here, that was the bug -->
+<section class="relative py-24 lg:py-32" id="gallery"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
+<div class="rv grid lg:grid-cols-12 gap-8 mb-14"><div class="lg:col-span-6"><div class="sm mb-6"><span>01 — Available Works</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">Original stencil<br>art for <span class="text-[var(--ac)]">collectors.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed mb-5">Every piece is one-of-one. Select a piece to book — artist gets notified via WhatsApp and email instantly.</p><div class="flex flex-wrap gap-2" id="catF"><span class="cp acl" data-c="all">All</span><span class="cp" data-c="portrait">Portrait</span><span class="cp" data-c="urban">Urban</span><span class="cp" data-c="abstract">Abstract</span><span class="cp" data-c="typography">Typography</span><span class="cp" data-c="nature">Nature</span></div></div></div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="artG"></div>
+<div class="text-center mt-12 hidden" id="empG"><div class="fd text-4xl text-[var(--mt)] mb-3">No pieces here</div></div>
+</div></section>
+
+<!-- PROCESS -->
+<section class="relative py-24 lg:py-32 border-t border-[var(--bd)] bg-[var(--bgd)]" id="process"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
+<div class="rv grid lg:grid-cols-12 gap-8 mb-16"><div class="lg:col-span-6"><div class="sm mb-6"><span>02 — The Process</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">From digital<br>to <span class="ts">physical.</span><br><span class="text-[var(--ac)]">Layer by layer.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed">No shortcuts — blades, acetate, spray cans, and patience.</p></div></div>
+<div class="rst grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="ic p-6"><div class="pst" data-s="01"><h3 class="fd text-3xl mb-3">DESIGN</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Digital composition broken into individual color layers.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">LAYER SEPARATION</div></div></div></div>
+<div class="ic p-6"><div class="pst" data-s="02"><h3 class="fd text-3xl mb-3">CUT</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Each layer hand-cut from acetate with precision blades.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">HAND-CUT</div></div></div></div>
+<div class="ic p-6"><div class="pst" data-s="03"><h3 class="fd text-3xl mb-3">SPRAY</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Stencils layered one at a time with controlled overspray.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">LAYER-BY-LAYER</div></div></div></div>
+<div class="ic p-6"><div class="pst" data-s="04"><h3 class="fd text-3xl mb-3">FINISH</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Freehand details, UV varnish, signed and catalogued.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">SEALED & SIGNED</div></div></div></div>
+</div></div></section>
+
+<!-- ABOUT -->
+<section class="relative py-24 lg:py-32 border-t border-[var(--bd)]" id="about"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
+<div class="rv grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+<div class="lg:col-span-5"><div class="relative"><div class="nc"><img src="https://picsum.photos/seed/spraycans99/600/750.jpg" class="w-full aspect-[4/5] object-cover inr" alt="Studio"></div><div class="absolute -bottom-4 -right-4 bg-[var(--ac)] text-black p-5 fd text-center"><div class="text-4xl leading-none">6+</div><div class="text-[10px] fm tracking-[.2em] mt-1">YEARS</div></div></div></div>
+<div class="lg:col-span-6 lg:col-start-7">
+<div class="sm mb-6"><span>03 — The Artist</span></div>
+<h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9] mb-6">Obsessed with<br><span class="text-[var(--ac)]">layers.</span></h2>
+<p class="text-[var(--fgd)] text-base leading-relaxed mb-5">I started cutting stencils six years ago — a craft knife and a can of black spray paint became an all-consuming practice. The tension between control and chaos: precision of a hand-cut stencil meeting the unpredictability of aerosol.</p>
+<p class="text-[var(--fgd)] text-base leading-relaxed mb-8">Every piece is original. No prints, no reproductions. When you collect my work, you get something that cannot be replicated.</p>
+<div class="grid grid-cols-3 gap-4 pt-6 border-t border-[var(--bdl)]">
+<div><div class="fd text-3xl text-[var(--ac)]">48</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase mt-1">Works Sold</div></div>
+<div><div class="fd text-3xl">7</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase mt-1">Max Layers</div></div>
+<div><div class="fd text-3xl">3</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase mt-1">Exhibitions</div></div>
+</div></div></div></div></section>
+
+<!-- CONTACT -->
+<section class="relative py-24 lg:py-32 border-t border-[var(--bd)] bg-[var(--bgd)]" id="contact"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
+<div class="rv grid lg:grid-cols-12 gap-8 mb-14"><div class="lg:col-span-6"><div class="sm mb-6"><span>04 — Get In Touch</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">Commission a<br>piece. <span class="ts">Ask anything.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed">Open for commissions. WhatsApp for fastest response.</p></div></div>
+<div class="rv grid lg:grid-cols-12 gap-8">
+<div class="lg:col-span-7"><div class="bf p-8 lg:p-10">
+<form onsubmit="doContact(event)">
+<div class="grid sm:grid-cols-2 gap-x-6 gap-y-5"><div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Name *</label><input type="text" class="fi" id="cN" required placeholder="Your name"></div><div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Phone *</label><input type="tel" class="fi" id="cP" required placeholder="+254 ..."></div></div>
+<div class="mt-5"><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Subject</label><input type="text" class="fi" id="cS" placeholder="Commission inquiry..."></div>
+<div class="mt-5"><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Message *</label><textarea class="fi resize-none" id="cM" rows="4" required placeholder="Tell me about your idea..."></textarea></div>
+<button type="submit" class="mt-7 fh text-sm tracking-[.15em] uppercase bg-[var(--ac)] text-black px-8 py-3.5 hover:bg-[var(--acb)] transition-colors"><i class="fab fa-whatsapp mr-2"></i>Send via WhatsApp</button>
+</form></div></div>
+<div class="lg:col-span-4 lg:col-start-9 flex flex-col gap-5">
+<a id="waLk" href="https://wa.me/254114255987" target="_blank" class="ic p-5 flex items-center gap-4 hover:border-green-600 transition-colors group"><div class="w-10 h-10 bg-green-600 flex items-center justify-center flex-shrink-0"><i class="fab fa-whatsapp text-white text-lg"></i></div><div><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase">WhatsApp (fastest)</div><div class="fh text-sm" id="dWa">+254 114 255987</div></div><i class="fas fa-arrow-right text-[var(--mt)] group-hover:text-green-500 ml-auto"></i></a>
+<a id="emLk" href="mailto:injuguna308@gmail.com" class="ic p-5 flex items-center gap-4 hover:border-[var(--ac)] transition-colors group"><div class="w-10 h-10 bg-[var(--ac)] flex items-center justify-center flex-shrink-0"><i class="fas fa-envelope text-black text-sm"></i></div><div><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase">Email</div><div class="fh text-sm" id="dEm">injuguna308@gmail.com</div></div><i class="fas fa-arrow-right text-[var(--mt)] group-hover:text-[var(--ac)] ml-auto"></i></a>
+<div class="ic p-5 flex items-center gap-4"><div class="w-10 h-10 border border-[var(--bdl)] flex items-center justify-center flex-shrink-0"><i class="fas fa-phone text-[var(--ac)]"></i></div><div><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase">Phone</div><div class="fh text-sm" id="dPh">0143374333</div></div></div>
+<div class="ic p-5"><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase mb-3">Social</div><div class="flex gap-3"><a href="#" class="w-10 h-10 border border-[var(--bdl)] flex items-center justify-center hover:border-[var(--ac)] hover:text-[var(--ac)] transition-all"><i class="fab fa-instagram"></i></a><a href="#" class="w-10 h-10 border border-[var(--bdl)] flex items-center justify-center hover:border-[var(--ac)] hover:text-[var(--ac)] transition-all"><i class="fab fa-tiktok"></i></a><a href="#" class="w-10 h-10 border border-[var(--bdl)] flex items-center justify-center hover:border-[var(--ac)] hover:text-[var(--ac)] transition-all"><i class="fab fa-twitter"></i></a></div></div>
+</div></div></div></section>
+
+<!-- FOOTER -->
+<footer class="border-t border-[var(--bd)] bg-[var(--bgd)] py-10"><div class="max-w-[1600px] mx-auto px-6 lg:px-10 flex flex-col md:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-3"><div class="w-7 h-7 bg-[var(--ac)] flex items-center justify-center"><i class="fas fa-spray-can text-black text-[10px]"></i></div><span class="fd text-xl tracking-wider" id="ftN">STNCL</span></div>
+<div class="fm text-[10px] text-[var(--mt)] tracking-[.2em]">ALL WORKS ONE-OF-ONE ORIGINALS &copy; 2024</div>
+<div class="fm text-[10px] text-[var(--mt)] tracking-[.15em]">Tap <i class="fas fa-lock text-[var(--ac)] mx-1"></i> for admin</div>
+</div></footer>
+
+<script>
+var SA='stncl_a',SS='stncl_s',SL='stncl_l';
+var defArt=[
+{id:1,title:"URBAN REBEL",cat:"portrait",price:15000,sz:"60 x 80 cm",md:"Spray paint on canvas",ly:"4 layers",img:"https://picsum.photos/seed/sA1/800/1000.jpg",desc:"Multi-layered stencil portrait exploring urban defiance.",av:true,yr:"2024"},
+{id:2,title:"CONCRETE JUNGLE",cat:"urban",price:12000,sz:"50 x 70 cm",md:"Acrylic & spray on wood",ly:"6 layers",img:"https://picsum.photos/seed/sA2/800/1000.jpg",desc:"Layered cityscape through hand-cut stencils.",av:true,yr:"2024"},
+{id:3,title:"SILENCE BREAKER",cat:"abstract",price:18000,sz:"80 x 100 cm",md:"Spray paint on canvas",ly:"5 layers",img:"https://picsum.photos/seed/sA3/800/1000.jpg",desc:"Bold abstract with overlapping stencils.",av:true,yr:"2024"},
+{id:4,title:"WORD ON THE STREET",cat:"typography",price:10000,sz:"40 x 60 cm",md:"Spray on reclaimed metal",ly:"3 layers",img:"https://picsum.photos/seed/sA4/800/1000.jpg",desc:"Typographic stencil on found metal.",av:true,yr:"2023"},
+{id:5,title:"NOCTURNAL",cat:"portrait",price:22000,sz:"90 x 120 cm",md:"Spray & acrylic on canvas",ly:"7 layers",img:"https://picsum.photos/seed/sA5/800/1000.jpg",desc:"Large-scale 7-layer portrait.",av:true,yr:"2024"},
+{id:6,title:"DECONSTRUCTED",cat:"abstract",price:14000,sz:"60 x 60 cm",md:"Mixed media on canvas",ly:"5 layers",img:"https://picsum.photos/seed/sA6/800/1000.jpg",desc:"Geometric deconstruction.",av:false,yr:"2024"},
+{id:7,title:"BOTANICAL CUT",cat:"nature",price:11000,sz:"45 x 60 cm",md:"Spray paint on canvas",ly:"4 layers",img:"https://picsum.photos/seed/sA7/800/1000.jpg",desc:"Organic forms meet sharp stencil edges.",av:true,yr:"2024"},
+{id:8,title:"BRICK & MORTAR",cat:"urban",price:16000,sz:"70 x 90 cm",md:"Spray on wood panel",ly:"6 layers",img:"https://picsum.photos/seed/sA8/800/1000.jpg",desc:"Architectural stencil — decay and urban memory.",av:true,yr:"2023"}
+];
+var art=[],st={},blog=[],curBk=null,curFil='all',upImg=null,pinVal='';
+
+function ld(){try{var s=localStorage.getItem(SS);st=s?JSON.parse(s):{pin:'1234',wa:'254114255987',em:'injuguna308@gmail.com',ph:'0143374333',nm:'STNCL'};if(!s)svS();var a=localStorage.getItem(SA);art=a?JSON.parse(a):JSON.parse(JSON.stringify(defArt));if(!a)svA();var l=localStorage.getItem(SL);blog=l?JSON.parse(l):[]}catch(e){st={pin:'1234',wa:'254114255987',em:'injuguna308@gmail.com',ph:'0143374333',nm:'STNCL'};art=JSON.parse(JSON.stringify(defArt));blog=[]}}
+function svA(){localStorage.setItem(SA,JSON.stringify(art))}function svS(){localStorage.setItem(SS,JSON.stringify(st))}function svL(){localStorage.setItem(SL,JSON.stringify(blog))}
+function toast(t,m){var el=document.getElementById('toast');document.getElementById('toastT').textContent=t;document.getElementById('toastM').textContent=m;el.classList.add('v');setTimeout(function(){el.classList.remove('v')},5000)}
+
+/* PIN */
+function openPin(){pinVal='';updDots();document.getElementById('pinErr').classList.add('hidden');document.getElementById('pinMod').classList.add('op');document.getElementById('pinOv').classList.add('op')}
+function closePin(){document.getElementById('pinMod').classList.remove('op');document.getElementById('pinOv').classList.remove('op')}
+function pi(n){if(pinVal.length>=4)return;pinVal+=n;updDots()}
+function pcl(){pinVal=pinVal.slice(0,-1);updDots()}
+function psb(){if(pinVal.length!==4)return;if(pinVal===st.pin){closePin();togAdm()}else{document.getElementById('pinErr').classList.remove('hidden');pinVal='';setTimeout(updDots,50);setTimeout(function(){document.getElementById('pinErr').classList.add('hidden')},2000)}}
+function updDots(){var d=document.getElementById('pinDots').children;for(var i=0;i<4;i++){if(i<pinVal.length)d[i].classList.add('fl');else d[i].classList.remove('fl')}}
+
+/* ADMIN */
+function togAdm(){var p=document.getElementById('admPan'),o=document.getElementById('admOv');if(p.classList.contains('op')){p.classList.remove('op');o.classList.remove('op');document.body.style.overflow='';closeEd()}else{renAdmList();renBlog();ldSet();p.classList.add('op');o.classList.add('op');document.body.style.overflow='hidden'}}
+function swTab(t){document.querySelectorAll('.atb').forEach(function(b){b.style.color=b.dataset.t===t?'var(--ac)':'var(--mt)';b.style.borderBottom=b.dataset.t===t?'1px solid var(--ac)':'none'});document.getElementById('t-art').classList.toggle('hidden',t!=='art');document.getElementById('t-blog').classList.toggle('hidden',t!=='blog');document.getElementById('t-set').classList.toggle('hidden',t!=='set');closeEd();if(t==='blog')renBlog()}
+function ldSet(){document.getElementById('sPin').value=st.pin;document.getElementById('sWa').value=st.wa;document.getElementById('sEm').value=st.em;document.getElementById('sPh').value=st.ph;document.getElementById('sNm').value=st.nm;document.getElementById('curPin').textContent=st.pin}
+function saveSet(){var np=document.getElementById('sPin').value.trim();if(np&&/^\d{4}$/.test(np))st.pin=np;st.wa=document.getElementById('sWa').value.trim().replace(/\D/g,'')||'254114255987';st.em=document.getElementById('sEm').value.trim()||'injuguna308@gmail.com';st.ph=document.getElementById('sPh').value.trim()||'0143374333';st.nm=document.getElementById('sNm').value.trim()||'STNCL';svS();updDisp();document.getElementById('curPin').textContent=st.pin;toast('Saved','PIN, WhatsApp, email updated.')}
+function updDisp(){var n=st.nm||'STNCL';document.getElementById('logoN').textContent=n;document.getElementById('ftN').textContent=n;document.getElementById('dEm').textContent=st.em;document.getElementById('dPh').textContent=st.ph;var w=st.wa||'254114255987';document.getElementById('dWa').textContent='+'+w.slice(0,3)+' '+w.slice(3,6)+w.slice(6);document.getElementById('waLk').href='https://wa.me/'+w;document.getElementById('emLk').href='mailto:'+st.em}
+
+/* ========== GALLERY — THE FIX IS HERE ========== */
+/* The gallery grid does NOT use the "rs/rst" CSS classes anymore. */
+/* Instead, renGal() directly controls each card's visibility via JS. */
+/* This means when admin replaces the HTML, the new cards are always visible. */
+function renGal(){
+  var g=document.getElementById('artG'),e=document.getElementById('empG');
+  var f=curFil==='all'?art:art.filter(function(a){return a.cat===curFil});
+  if(!f.length){g.innerHTML='';e.classList.remove('hidden');return}
+  e.classList.add('hidden');
+  // Build HTML
+  g.innerHTML=f.map(function(a){
+    var ps=typeof a.price==='number'&&a.price>999?a.price.toLocaleString():a.price;
+    return '<article class="acard ic group" style="opacity:0;transform:translateY(30px)"><div class="relative overflow-hidden aspect-[3/4]"><img src="'+a.img+'" class="aimg w-full h-full object-cover inr" alt="'+a.title+'" loading="lazy" onerror="this.src=\'https://picsum.photos/seed/fb'+a.id+'/800/1000.jpg\'"><div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>'+(a.av?'<div class="absolute top-4 right-4 px-3 py-1 bg-[var(--ac)] text-black fm text-[10px] tracking-[.2em]">AVAILABLE</div>':'<div class="absolute top-4 right-4 px-3 py-1 bg-red-700/90 text-white fm text-[10px] tracking-[.2em]">SOLD</div>')+'</div><div class="p-5"><div class="flex items-start justify-between mb-2"><h3 class="fd text-2xl leading-none">'+a.title+'</h3><span class="fm text-[9px] text-[var(--mt)] tracking-[.12em] mt-1.5 uppercase">'+a.cat+'</span></div><p class="text-[var(--fgd)] text-xs leading-relaxed mb-4 lc2">'+a.desc+'</p><div class="flex items-center justify-between pt-3 border-t border-[var(--bdl)]"><div class="fd text-3xl text-[var(--ac)]">'+ps+'</div>'+(a.av?'<button class="bbk fh text-[11px] tracking-[.12em] uppercase px-4 py-2.5 border border-[var(--ac)] text-[var(--ac)] hover:bg-[var(--ac)] hover:text-black transition-all" data-id="'+a.id+'">Book This Piece</button>':'<span class="fh text-[11px] tracking-[.12em] uppercase px-4 py-2.5 border border-[var(--mt)] text-[var(--mt)]">Sold</span>')+'</div></div></article>'
+  }).join('');
+  // Attach booking buttons
+  g.querySelectorAll('.bbk').forEach(function(b){b.addEventListener('click',function(ev){ev.stopPropagation();openBk(parseInt(b.dataset.id))})});
+  // Stagger-animate cards in using setTimeout (reliable, no rAF issues)
+  var cards=g.querySelectorAll('.acard');
+  for(var i=0;i<cards.length;i++){
+    (function(card,delay){
+      setTimeout(function(){
+        card.style.transition='opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1)';
+        card.style.opacity='1';
+        card.style.transform='translateY(0)';
+      },delay);
+    })(cards[i], i*80);
+  }
+}
+
+document.getElementById('catF').addEventListener('click',function(e){var p=e.target.closest('.cp');if(!p)return;document.querySelectorAll('.cp').forEach(function(x){x.classList.remove('acl')});p.classList.add('acl');curFil=p.dataset.c;renGal()});
+
+/* BOOKING */
+function openBk(id){var a=art.find(function(x){return x.id===id});if(!a||!a.av)return;curBk=a;document.getElementById('bkImg').src=a.img;document.getElementById('bkTitle').textContent=a.title;document.getElementById('bkMeta').textContent=a.md+' · '+a.ly+' · '+a.yr;var ps=typeof a.price==='number'&&a.price>999?a.price.toLocaleString():a.price;document.getElementById('bkPrice').textContent=ps;document.getElementById('bkSize').textContent=a.sz;document.getElementById('bkN').value='';document.getElementById('bkP').value='';document.getElementById('bkE').value='';document.getElementById('bkM').value='';document.getElementById('bkFormV').classList.remove('hidden');document.getElementById('bkSucV').classList.add('hidden');document.getElementById('bkMod').classList.add('op');document.getElementById('bkOv').classList.add('op');document.body.style.overflow='hidden'}
+function closeBk(){document.getElementById('bkMod').classList.remove('op');document.getElementById('bkOv').classList.remove('op');document.body.style.overflow='';curBk=null}
+function doBk(ev){ev.preventDefault();if(!curBk)return;var a=curBk,nm=document.getElementById('bkN').value.trim(),ph=document.getElementById('bkP').value.trim(),em=document.getElementById('bkE').value.trim(),mg=document.getElementById('bkM').value.trim();var ps=typeof a.price==='number'&&a.price>999?a.price.toLocaleString():a.price;var msg='NEW BOOKING REQUEST\n========================\n\nARTWORK: '+a.title+'\nPRICE: '+ps+'\nSIZE: '+a.sz+'\nMEDIUM: '+a.md+'\nLAYERS: '+a.ly+'\n\nBUYER INFO:\nName: '+nm+'\nPhone: '+ph+'\nEmail: '+(em||'Not provided')+'\n\nMESSAGE:\n'+(mg||'No message')+'\n\n========================\nPlease respond to confirm.';var wa=st.wa.replace(/\D/g,'');window.open('https://wa.me/'+wa+'?text='+encodeURIComponent(msg),'_blank');window.location.href='mailto:'+st.em+'?subject='+encodeURIComponent('Art Booking: '+a.title+' — '+ps)+'&body='+encodeURIComponent(msg);blog.unshift({id:Date.now(),ts:new Date().toISOString(),art:a.title,aid:a.id,price:a.price,nm:nm,ph:ph,em:em,mg:mg,read:false});svL();updBadge();document.getElementById('bkFormV').classList.add('hidden');document.getElementById('bkSucV').classList.remove('hidden');var an=document.querySelector('.suc-anim');if(an){an.style.animation='none';an.offsetHeight;an.style.animation=''}var ci=document.querySelector('.suc-cir');if(ci){ci.style.animation='none';ci.offsetHeight;ci.style.animation=''}var ck=document.querySelector('.suc-chk');if(ck){ck.style.animation='none';ck.offsetHeight;ck.style.animation=''}}
+
+/* BOOKING LOG */
+function renBlog(){var l=document.getElementById('blogList'),n=document.getElementById('noBlog');if(!blog.length){l.innerHTML='';n.classList.remove('hidden');return}n.classList.add('hidden');blog.forEach(function(b){b.read=true});svL();updBadge();l.innerHTML=blog.map(function(b){var d=new Date(b.ts),ds=d.toLocaleDateString('en-KE',{day:'numeric',month:'short',year:'numeric'}),ts=d.toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'});var ps=typeof b.price==='number'&&b.price>999?b.price.toLocaleString():b.price;return '<div class="le"><div class="flex items-center justify-between mb-1"><span class="fd text-lg">'+b.art+'</span><span class="fm text-[9px] text-[var(--ac)]">'+ps+'</span></div><div class="grid grid-cols-2 gap-x-4 gap-y-1 text-xs mb-1.5"><div><i class="fas fa-user text-[var(--mt)] w-4 text-center mr-1.5"></i>'+b.nm+'</div><div><i class="fas fa-phone text-[var(--mt)] w-4 text-center mr-1.5"></i>'+b.ph+'</div>'+(b.em?'<div class="col-span-2"><i class="fas fa-envelope text-[var(--mt)] w-4 text-center mr-1.5"></i>'+b.em+'</div>':'')+'</div>'+(b.mg?'<div class="text-[var(--mt)] text-xs italic mb-1.5 pl-5">"'+b.mg+'"</div>':'')+'<div class="flex items-center gap-3 pl-5"><span class="fm text-[9px] text-[var(--mt)]">'+ds+' '+ts+'</span>'+(b.ph.replace(/\D/g,'')?'<a href="https://wa.me/'+b.ph.replace(/\D/g,'')+'" target="_blank" class="fm text-[9px] text-green-400 hover:text-green-300"><i class="fab fa-whatsapp mr-1"></i>Reply</a>':'')+'</div></div>'}).join('')}
+function clrBlog(){blog=[];svL();renBlog();updBadge();toast('Cleared','Booking records removed.')}
+function updBadge(){var b=document.getElementById('bkBadge'),u=blog.filter(function(x){return!x.read}).length;if(u>0){b.textContent=u;b.classList.remove('hidden')}else b.classList.add('hidden')}
+
+/* CONTACT */
+function doContact(ev){ev.preventDefault();var nm=document.getElementById('cN').value.trim(),ph=document.getElementById('cP').value.trim(),su=document.getElementById('cS').value.trim(),mg=document.getElementById('cM').value.trim();window.open('https://wa.me/'+st.wa.replace(/\D/g,'')+'?text='+encodeURIComponent('NEW MESSAGE FROM WEBSITE\n========================\n\nFrom: '+nm+'\nPhone: '+ph+'\nSubject: '+(su||'General')+'\n\nMESSAGE:\n'+mg),'_blank');document.getElementById('cN').value='';document.getElementById('cP').value='';document.getElementById('cS').value='';document.getElementById('cM').value='';toast('WhatsApp Opened','Your message is ready — just hit send!')}
+
+/* ADMIN ART LIST */
+function renAdmList(){var l=document.getElementById('admList');if(!art.length){l.innerHTML='<div class="text-center py-8 text-[var(--mt)] fm text-[11px] tracking-wider">No artworks yet.</div>';return}l.innerHTML=art.map(function(a){var ps=typeof a.price==='number'&&a.price>999?a.price.toLocaleString():a.price;return '<div class="flex gap-3 p-3 border border-[var(--bd)] bg-[var(--bc)] hover:border-[var(--acd)] transition-colors"><img src="'+a.img+'" class="w-12 h-12 object-cover inr flex-shrink-0" onerror="this.src=\'https://picsum.photos/seed/fb'+a.id+'/100/100.jpg\'"><div class="flex-1 min-w-0"><div class="flex items-center justify-between"><div class="fd text-base leading-none truncate">'+a.title+'</div><div class="fd text-base text-[var(--ac)] flex-shrink-0 ml-2">'+ps+'</div></div><div class="flex items-center gap-3 mt-1"><span class="fm text-[8px] text-[var(--mt)] tracking-[.1em] uppercase">'+a.cat+' · '+a.sz+'</span><span class="fm text-[8px] '+(a.av?'text-green-500':'text-red-400')+'">'+(a.av?'AVAILABLE':'SOLD')+'</span></div></div><div class="flex flex-col gap-1 flex-shrink-0"><button onclick="openEd('+a.id+')" class="w-7 h-7 border border-[var(--bdl)] flex items-center justify-center hover:border-[var(--ac)] hover:text-[var(--ac)] transition-all text-[10px]"><i class="fas fa-pen"></i></button><button onclick="togAv('+a.id+')" class="w-7 h-7 border border-[var(--bdl)] flex items-center justify-center hover:border-yellow-600 hover:text-yellow-500 transition-all text-[10px]"><i class="fas fa-'+(a.av?'eye':'eye-slash')+'"></i></button><button onclick="delArt('+a.id+')" class="w-7 h-7 border border-[var(--bdl)] flex items-center justify-center hover:border-red-600 hover:text-red-500 transition-all text-[10px]"><i class="fas fa-trash"></i></button></div></div>'}).join('')}
+function togAv(id){var a=art.find(function(x){return x.id===id});if(a){a.av=!a.av;svA();renAdmList();renGal();toast('Updated','"'+a.title+'" is now '+(a.av?'available':'sold'))}}
+function delArt(id){var a=art.find(function(x){return x.id===id});if(!a)return;var l=document.getElementById('admList'),old=l.querySelector('.cfm');if(old)old.remove();var bar=document.createElement('div');bar.className='cfm p-3 bg-red-950/50 border border-red-800/50 flex items-center justify-between';bar.innerHTML='<span class="fm text-[10px] text-red-300 tracking-wider">Delete "'+a.title+'"?</span><div class="flex gap-2"><button class="cfy fh text-[10px] tracking-wider uppercase px-3 py-1.5 bg-red-600 text-white hover:bg-red-500 transition-colors">Yes</button><button class="cfn fh text-[10px] tracking-wider uppercase px-3 py-1.5 border border-[var(--bdl)] hover:border-[var(--mt)] transition-colors">No</button></div>';l.prepend(bar);bar.querySelector('.cfy').onclick=function(){art=art.filter(function(x){return x.id!==id});svA();renAdmList();renGal();toast('Deleted','"'+a.title+'" removed.');bar.remove()};bar.querySelector('.cfn').onclick=function(){bar.remove()}}
+
+/* ART EDITOR */
+function openEd(id){var ed=document.getElementById('artEd');ed.classList.remove('hidden');upImg=null;document.getElementById('dzP').classList.add('hidden');document.getElementById('dzC').classList.remove('hidden');document.getElementById('fIn').value='';if(id){var a=art.find(function(x){return x.id===id});if(!a)return;document.getElementById('edTitle').textContent='Edit: '+a.title;document.getElementById('eId').value=a.id;document.getElementById('eTi').value=a.title;document.getElementById('ePr').value=a.price;document.getElementById('eCa').value=a.cat;document.getElementById('eSz').value=a.sz;document.getElementById('eMd').value=a.md;document.getElementById('eLy').value=a.ly;document.getElementById('eImg').value=a.img.startsWith('data:')?'':a.img;document.getElementById('eDe').value=a.desc;document.getElementById('eAv').checked=a.av;if(a.img.startsWith('data:')){document.getElementById('dzP').src=a.img;document.getElementById('dzP').classList.remove('hidden');document.getElementById('dzC').classList.add('hidden');upImg=a.img}}else{document.getElementById('edTitle').textContent='New Artwork';document.getElementById('eId').value='';document.getElementById('eTi').value='';document.getElementById('ePr').value='';document.getElementById('eCa').value='portrait';document.getElementById('eSz').value='';document.getElementById('eMd').value='Spray paint on canvas';document.getElementById('eLy').value='';document.getElementById('eImg').value='';document.getElementById('eDe').value='';document.getElementById('eAv').checked=true}ed.scrollIntoView({behavior:'smooth'})}
+function closeEd(){document.getElementById('artEd').classList.add('hidden');upImg=null}
+
+/* IMAGE UPLOAD */
+var dz=document.getElementById('dz');dz.addEventListener('dragover',function(e){e.preventDefault();dz.classList.add('dov')});dz.addEventListener('dragleave',function(){dz.classList.remove('dov')});dz.addEventListener('drop',function(e){e.preventDefault();dz.classList.remove('dov');if(e.dataTransfer.files.length)pFile(e.dataTransfer.files[0])});
+function hFile(e){if(e.target.files.length)pFile(e.target.files[0])}
+function pFile(f){if(!f.type.startsWith('image/')){toast('Invalid','Select an image.');return}if(f.size>15*1024*1024){toast('Too Large','Under 15MB.');return}var r=new FileReader();r.onload=function(e){var img=new Image();img.onload=function(){var mx=800,w=img.width,h=img.height;if(w>mx||h>mx){if(w>h){h=Math.round(h*mx/w);w=mx}else{w=Math.round(w*mx/h);h=mx}}var c=document.createElement('canvas');c.width=w;c.height=h;var x=c.getContext('2d');x.drawImage(img,0,0,w,h);upImg=c.toDataURL('image/jpeg',0.75);document.getElementById('dzP').src=upImg;document.getElementById('dzP').classList.remove('hidden');document.getElementById('dzC').classList.add('hidden');document.getElementById('eImg').value='';toast('Image Ready','Photo uploaded.')};img.src=e.target.result};r.readAsDataURL(f)}
+
+function saveArt(){var id=document.getElementById('eId').value,ti=document.getElementById('eTi').value.trim(),pr=parseInt(document.getElementById('ePr').value),iu=document.getElementById('eImg').value.trim(),im=upImg||iu;if(!ti){toast('Missing','Enter a title.');return}if(isNaN(pr)||pr<0){toast('Invalid','Enter a valid price.');return}if(!im){toast('Missing','Upload a photo or paste URL.');return}var d={title:ti,price:pr,image:im,cat:document.getElementById('eCa').value,sz:document.getElementById('eSz').value.trim()||'Not specified',md:document.getElementById('eMd').value.trim()||'Mixed media',ly:document.getElementById('eLy').value.trim()||'Multi-layer',desc:document.getElementById('eDe').value.trim()||'Original stencil artwork.',av:document.getElementById('eAv').checked,yr:new Date().getFullYear().toString()};if(id){var a=art.find(function(x){return x.id===parseInt(id)});if(a)Object.assign(a,d);toast('Updated','"'+ti+'" updated.')}else{d.id=Date.now();art.unshift(d);toast('Added','"'+ti+'" added to gallery.')}svA();renAdmList();renGal();closeEd()}
+function resetArt(){art=JSON.parse(JSON.stringify(defArt));svA();renAdmList();renGal();toast('Reset','Gallery restored.')}
+
+/* HERO REEL */
+(function(){var fr=document.querySelectorAll('.rf'),pg=document.getElementById('rProg'),cn=document.getElementById('chN'),cur=0,tot=fr.length,iv=5000;function nx(){fr[cur].classList.remove('ac');cur=(cur+1)%tot;fr[cur].classList.add('ac');cn.textContent=String(cur+1).padStart(2,'0')}var st=Date.now();function tk(){var el=(Date.now()-st)%iv;pg.style.width=(el/iv*100)+'%';if(el<50)nx();requestAnimationFrame(tk)}requestAnimationFrame(tk)})();
+
+/* SCROLL REVEAL — only for sections with "rv" and "rst" classes, NOT the gallery */
+(function(){var obs=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting)e.target.classList.add('iv')})},{threshold:.12,rootMargin:'0px 0px -40px 0px'});document.querySelectorAll('.rv,.rst').forEach(function(el){obs.observe(el)})})();
+
+/* COUNTERS */
+(function(){var obs=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){var el=e.target,tg=parseInt(el.dataset.count),c=0,s=Math.max(1,Math.floor(tg/60));var tm=setInterval(function(){c+=s;if(c>=tg){c=tg;clearInterval(tm)}el.textContent=c},25);obs.unobserve(el)}})},{threshold:.5});document.querySelectorAll('.ndd[data-count]').forEach(function(c){obs.observe(c)})})();
+
+/* KEYBOARD */
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closePin();closeBk();if(document.getElementById('admPan').classList.contains('op'))togAdm()}});
+
+/* INIT */
+ld();renGal();updDisp();updBadge();
+</script>
+</body>
+</html>
