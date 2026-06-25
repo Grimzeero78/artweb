@@ -41,7 +41,7 @@
 .ao{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:275;opacity:0;pointer-events:none;transition:opacity .4s}.ao.op{opacity:1;pointer-events:all}
 .ax{background:var(--bc);border:1px solid var(--bdl);color:var(--fg);padding:.6rem .8rem;font-family:'Oswald',sans-serif;font-size:.95rem;width:100%;transition:border-color .3s;letter-spacing:.04em}.ax:focus{outline:none;border-color:var(--ac)}.ax::placeholder{color:var(--mt);font-size:.8rem}
 .pst{position:relative;padding-left:2rem}.pst::before{content:attr(data-s);position:absolute;left:0;top:0;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:1px solid var(--ac);font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--ac)}
-.dz{border:2px dashed var(--bdl);padding:2rem;text-align:center;cursor:pointer;transition:border-color .3s,background .3s;min-height:160px;display:flex;align-items:center;justify-content:center;flex-direction:column}.dz:hover,.dz.dov{border-color:var(--ac);background:rgba(255,77,0,.05)}.dz img{max-height:140px;max-width:100%;object-fit:contain;border:1px solid var(--bdl)}
+.dz{border:2px dashed var(--bdl);padding:2rem;text-align:center;cursor:pointer;transition:border-color .3s,background .3s;min-height:140px;display:flex;align-items:center;justify-content:center;flex-direction:column}.dz:hover,.dz.dov{border-color:var(--ac);background:rgba(255,77,0,.05)}.dz img{max-height:130px;max-width:100%;object-fit:contain;border:1px solid var(--bdl)}
 .lc2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .le{border-left:2px solid var(--ac);padding:.5rem 0 .5rem .75rem;margin-bottom:.75rem}
 .pdd{width:14px;height:14px;border:2px solid var(--ac);border-radius:50%;transition:all .3s}.pdd.fl{background:var(--ac)}
@@ -52,21 +52,50 @@
 ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bgd)}::-webkit-scrollbar-thumb{background:var(--acd)}
 .bgt{background-color:var(--bg);background-image:radial-gradient(circle at 20% 30%,rgba(255,77,0,.05) 0%,transparent 40%),radial-gradient(circle at 80% 70%,rgba(80,80,80,.05) 0%,transparent 40%),url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='r'><feTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23r)' opacity='0.35'/></svg>");background-blend-mode:normal,normal,overlay}
 @media(max-width:768px){.ap{width:100%}.pnb{width:52px;height:52px;font-size:1.5rem}}
-.img-loading{position:relative;overflow:hidden}.img-loading::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,77,0,.1),transparent);animation:shimmer 1.5s infinite}
-@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
-.adm-art-item{display:flex;align-items:center;gap:12px;padding:10px;border:1px solid var(--bd);background:var(--bg);transition:border-color .3s}.adm-art-item:hover{border-color:var(--acd)}
-.adm-art-thumb{width:50px;height:65px;object-fit:cover;border:1px solid var(--bdl);flex-shrink:0}
-.adm-art-info{flex:1;min-width:0}
-.adm-art-actions{display:flex;gap:6px;flex-shrink:0}
-.adm-btn{width:32px;height:32px;border:1px solid var(--bdl);background:transparent;color:var(--fgd);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;font-size:12px}
-.adm-btn:hover{border-color:var(--ac);color:var(--ac)}
-.adm-btn.danger:hover{border-color:#ef4444;color:#ef4444}
-.adm-btn.success:hover{border-color:#22c55e;color:#22c55e}
+
+/* Admin art row */
+.ai-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--bd);background:var(--bg);transition:border-color .3s,background .3s}
+.ai-row:hover{border-color:var(--bdl);background:var(--bch)}
+.ai-thumb{width:48px;height:60px;object-fit:cover;border:1px solid var(--bdl);flex-shrink:0;background:var(--bc)}
+.ai-thumb-none{width:48px;height:60px;border:1px solid var(--bdl);flex-shrink:0;background:var(--bc);display:flex;align-items:center;justify-content:center;color:var(--svd);font-size:10px}
+.ai-info{flex:1;min-width:0;overflow:hidden}
+.ai-title{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ai-meta{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--mt);margin-top:3px;display:flex;align-items:center;gap:6px}
+.ai-status{font-size:8px;padding:1px 6px;border-radius:2px;text-transform:uppercase;letter-spacing:.1em;font-family:'JetBrains Mono',monospace}
+.ai-status.avail{background:rgba(34,197,94,.15);color:#22c55e;border:1px solid rgba(34,197,94,.3)}
+.ai-status.sold{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3)}
+.ai-btns{display:flex;gap:4px;flex-shrink:0}
+.ai-btn{width:34px;height:34px;border:1px solid var(--bdl);background:transparent;color:var(--fgd);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .25s;font-size:13px}
+.ai-btn:hover{border-color:var(--ac);color:var(--ac);background:rgba(255,77,0,.08)}
+.ai-btn.eye-on{border-color:rgba(34,197,94,.4);color:#22c55e}
+.ai-btn.eye-on:hover{background:rgba(34,197,94,.1);border-color:#22c55e}
+.ai-btn.eye-off{border-color:rgba(239,68,68,.3);color:#ef4444}
+.ai-btn.eye-off:hover{background:rgba(239,68,68,.1);border-color:#ef4444}
+.ai-btn.del:hover{border-color:#ef4444;color:#ef4444;background:rgba(239,68,68,.08)}
+
+/* Preview overlay in admin */
+.preview-ov{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:290;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.preview-ov.show{opacity:1;pointer-events:all}
+.preview-ov img{max-width:85vw;max-height:85vh;object-fit:contain;border:1px solid var(--bdl)}
+.preview-ov .close-prev{position:absolute;top:20px;right:20px;width:40px;height:40px;border:1px solid var(--bdl);background:var(--bc);color:var(--fg);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:all .3s}
+.preview-ov .close-prev:hover{border-color:var(--ac);color:var(--ac)}
+.preview-ov .prev-info{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);text-align:center}
 </style>
 </head>
 <body class="bgt">
 <div class="grain"></div>
 <div class="toast" id="toast"><div class="flex items-start gap-3"><i class="fas fa-check-circle text-[var(--ac)] mt-0.5"></i><div><div class="fh text-sm tracking-wider uppercase" id="toastT"></div><div class="text-xs mt-1" id="toastM"></div></div></div></div>
+
+<!-- IMAGE PREVIEW OVERLAY -->
+<div class="preview-ov" id="prevOv" onclick="closePrev(event)">
+  <button class="close-prev" onclick="closePrev(event)"><i class="fas fa-xmark"></i></button>
+  <img id="prevImg" src="" alt="">
+  <div class="prev-info">
+    <div class="fd text-3xl" id="prevTitle"></div>
+    <div class="fm text-[10px] text-[var(--mt)] mt-1 tracking-wider" id="prevMeta"></div>
+    <div class="fm text-[9px] text-[var(--svd)] mt-2">Click anywhere to close</div>
+  </div>
+</div>
 
 <!-- PIN MODAL -->
 <div class="mo" id="pinOv" onclick="closePin()"></div>
@@ -112,62 +141,91 @@
 <button onclick="closeBk()" class="fh text-sm tracking-[.15em] uppercase bg-[var(--ac)] text-black px-8 py-3 hover:bg-[var(--acb)] transition-colors">Done</button>
 </div></div></div>
 
-<!-- ADMIN -->
+<!-- ADMIN PANEL -->
 <div class="ao" id="admOv" onclick="togAdm()"></div>
 <div class="ap" id="admPan">
-<div class="p-5 border-b border-[var(--bd)] flex items-center justify-between sticky top-0 bg-[var(--bgd)] z-10"><div><div class="fd text-xl tracking-wider">ADMIN PANEL</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] mt-0.5">MANAGE ART & BOOKINGS</div></div><button onclick="togAdm()" class="w-8 h-8 border border-[var(--bdl)] flex items-center justify-center hover:border-[var(--ac)] transition-colors"><i class="fas fa-xmark text-sm"></i></button></div>
+<div class="p-5 border-b border-[var(--bd)] flex items-center justify-between sticky top-0 bg-[var(--bgd)] z-10">
+  <div><div class="fd text-xl tracking-wider">ADMIN PANEL</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] mt-0.5">MANAGE YOUR ART</div></div>
+  <button onclick="togAdm()" class="w-8 h-8 border border-[var(--bdl)] flex items-center justify-center hover:border-[var(--ac)] transition-colors"><i class="fas fa-xmark text-sm"></i></button>
+</div>
 <div class="flex border-b border-[var(--bd)]">
-<button class="atb flex-1 py-3 fm text-[10px] tracking-[.12em] uppercase text-center" data-t="art" onclick="swTab('art')" style="color:var(--ac);border-bottom:1px solid var(--ac)"><i class="fas fa-palette mr-1"></i>Art</button>
-<button class="atb flex-1 py-3 fm text-[10px] tracking-[.12em] uppercase text-center text-[var(--mt)]" data-t="blog" onclick="swTab('blog')"><i class="fas fa-bell mr-1"></i>Bookings <span class="bg-[var(--ac)] text-black px-1.5 rounded-full text-[9px] ml-1 hidden" id="bkBadge">0</span></button>
-<button class="atb flex-1 py-3 fm text-[10px] tracking-[.12em] uppercase text-center text-[var(--mt)]" data-t="set" onclick="swTab('set')"><i class="fas fa-gear mr-1"></i>Settings</button>
+  <button class="atb flex-1 py-3 fm text-[10px] tracking-[.12em] uppercase text-center" data-t="art" onclick="swTab('art')" style="color:var(--ac);border-bottom:1px solid var(--ac)"><i class="fas fa-palette mr-1"></i>Art</button>
+  <button class="atb flex-1 py-3 fm text-[10px] tracking-[.12em] uppercase text-center text-[var(--mt)]" data-t="blog" onclick="swTab('blog')"><i class="fas fa-bell mr-1"></i>Bookings <span class="bg-[var(--ac)] text-black px-1.5 rounded-full text-[9px] ml-1 hidden" id="bkBadge">0</span></button>
+  <button class="atb flex-1 py-3 fm text-[10px] tracking-[.12em] uppercase text-center text-[var(--mt)]" data-t="set" onclick="swTab('set')"><i class="fas fa-gear mr-1"></i>Settings</button>
 </div>
+
+<!-- ART TAB -->
 <div class="atc p-5" id="t-art">
-<div class="flex items-center justify-between mb-4">
-<button onclick="openEd()" class="fh text-sm tracking-[.12em] uppercase border border-dashed border-[var(--acd)] text-[var(--ac)] px-4 py-2.5 hover:bg-[var(--ac)] hover:text-black transition-all"><i class="fas fa-plus mr-2"></i>Add New</button>
-<div class="fm text-[10px] text-[var(--mt)]"><span id="artCount">0</span> pieces · <span id="soldCount">0</span> sold</div>
+  <div class="flex items-center justify-between mb-4">
+    <button onclick="openEd()" class="fh text-sm tracking-[.12em] uppercase border border-dashed border-[var(--acd)] text-[var(--ac)] px-4 py-2.5 hover:bg-[var(--ac)] hover:text-black transition-all"><i class="fas fa-plus mr-2"></i>Add New Artwork</button>
+    <div class="fm text-[10px] text-[var(--mt)]"><span id="artCount">0</span> total · <span id="soldCount">0</span> sold</div>
+  </div>
+  <div id="admList" class="space-y-2"></div>
 </div>
-<div id="admList" class="space-y-2.5"></div>
+
+<!-- BOOKINGS TAB -->
+<div class="atc p-5 hidden" id="t-blog">
+  <div class="flex items-center justify-between mb-4"><div class="fh text-sm tracking-wider uppercase">Booking Log</div><button onclick="clrBlog()" class="fm text-[9px] text-[var(--mt)] tracking-wider uppercase hover:text-red-400 transition-colors">Clear All</button></div>
+  <div class="bg-[var(--bg)] border border-[var(--bd)] p-3 mb-4"><p class="text-xs leading-relaxed"><i class="fas fa-check-double text-green-500 mr-1"></i>Every booking sends <b>WhatsApp + Email</b>. All logged here.</p></div>
+  <div id="blogList"></div>
+  <div id="noBlog" class="text-center py-8"><i class="fas fa-bell-slash text-2xl text-[var(--mt)] mb-2"></i><div class="fm text-[10px] text-[var(--mt)] tracking-wider">No bookings yet</div></div>
 </div>
-<div class="atc p-5 hidden" id="t-blog"><div class="flex items-center justify-between mb-4"><div class="fh text-sm tracking-wider uppercase">Booking Log</div><button onclick="clrBlog()" class="fm text-[9px] text-[var(--mt)] tracking-wider uppercase hover:text-red-400 transition-colors">Clear All</button></div>
-<div class="bg-[var(--bg)] border border-[var(--bd)] p-3 mb-4"><p class="text-xs leading-relaxed"><i class="fas fa-check-double text-green-500 mr-1"></i>Every booking sends <b>WhatsApp + Email</b>. All logged here.</p></div>
-<div id="blogList"></div>
-<div id="noBlog" class="text-center py-8"><i class="fas fa-bell-slash text-2xl text-[var(--mt)] mb-2"></i><div class="fm text-[10px] text-[var(--mt)] tracking-wider">No bookings yet</div></div></div>
+
+<!-- SETTINGS TAB -->
 <div class="atc p-5 hidden" id="t-set"><div class="space-y-4">
 <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Admin PIN (4 digits)</label><input type="password" class="ax" id="sPin" placeholder="1234" maxlength="4"><p class="text-[var(--mt)] text-[9px] fm mt-1">Current: <span id="curPin">1234</span></p></div>
 <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">WhatsApp Number</label><input type="text" class="ax" id="sWa" placeholder="254114255987"></div>
 <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Email</label><input type="email" class="ax" id="sEm" placeholder="injuguna308@gmail.com"></div>
 <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Phone on Site</label><input type="text" class="ax" id="sPh" placeholder="0143374333"></div>
 <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Studio Name</label><input type="text" class="ax" id="sNm" placeholder="STNCL"></div>
-<div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Years Active (auto-calculated but can override)</label><input type="number" class="ax" id="sYr" placeholder="Auto"></div>
+<div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Years Active (leave blank for auto)</label><input type="number" class="ax" id="sYr" placeholder="Auto"></div>
 <button onclick="saveSet()" class="w-full fh text-sm tracking-[.12em] uppercase bg-[var(--ac)] text-black py-3 hover:bg-[var(--acb)] transition-colors"><i class="fas fa-save mr-2"></i>Save All Settings</button>
 <div class="pt-4 border-t border-[var(--bd)]"><button onclick="resetArt()" class="w-full fh text-xs tracking-[.12em] uppercase border border-red-900/50 text-red-400 py-2.5 hover:bg-red-900/20 transition-colors"><i class="fas fa-rotate-left mr-2"></i>Reset Gallery to Defaults</button></div>
 </div></div>
-<div class="hidden border-t border-[var(--bd)]" id="artEd"><div class="p-5">
-<div class="flex items-center justify-between mb-4"><div class="fh text-sm tracking-[.12em] uppercase" id="edTitle">New Artwork</div><button onclick="closeEd()" class="text-[var(--mt)] hover:text-[var(--fg)] transition-colors"><i class="fas fa-xmark"></i></button></div>
-<div class="space-y-4">
-<input type="hidden" id="eId">
-<div>
-<label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1.5">Photo * <span class="text-[var(--ac)]">(from your PC)</span></label>
-<div class="dz" id="dz" onclick="document.getElementById('fIn').click()">
-<div id="dzC">
-<i class="fas fa-cloud-upload-alt text-3xl text-[var(--mt)] mb-3"></i>
-<div class="fm text-[11px] text-[var(--mt)] tracking-wider">Click to upload from PC</div>
-<div class="fm text-[9px] text-[var(--svd)] mt-1">JPG, PNG, WEBP</div>
-<div class="fm text-[8px] text-[var(--svd)] mt-2">Recommended: 800x1000px</div>
+
+<!-- ART EDITOR (slides open below the list) -->
+<div class="hidden border-t border-[var(--bd)]" id="artEd">
+  <div class="p-5">
+    <div class="flex items-center justify-between mb-4">
+      <div class="fh text-sm tracking-[.12em] uppercase" id="edTitle">New Artwork</div>
+      <button onclick="closeEd()" class="text-[var(--mt)] hover:text-[var(--fg)] transition-colors text-lg"><i class="fas fa-xmark"></i></button>
+    </div>
+    <div class="space-y-4">
+      <input type="hidden" id="eId">
+      <div>
+        <label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1.5">Photo * <span class="text-[var(--ac)]">(from your PC only)</span></label>
+        <div class="dz" id="dz" onclick="document.getElementById('fIn').click()">
+          <div id="dzC">
+            <i class="fas fa-cloud-upload-alt text-3xl text-[var(--mt)] mb-3"></i>
+            <div class="fm text-[11px] text-[var(--mt)] tracking-wider">Click to upload from PC</div>
+            <div class="fm text-[9px] text-[var(--svd)] mt-1">JPG, PNG, WEBP — Max 2MB</div>
+          </div>
+          <img id="dzP" src="" class="hidden" alt="">
+        </div>
+        <input type="file" id="fIn" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="hFile(event)">
+        <div id="imgErr" class="text-red-400 text-[10px] fm mt-2 hidden"><i class="fas fa-exclamation-triangle mr-1"></i>Please upload an image from your PC</div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Title *</label><input type="text" class="ax" id="eTi" placeholder="TITLE"></div>
+        <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Price (KES) *</label><input type="number" class="ax" id="ePr" placeholder="15000" min="0"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Category</label><select class="ax" id="eCa"><option value="portrait">Portrait</option><option value="urban">Urban</option><option value="abstract">Abstract</option><option value="typography">Typography</option><option value="nature">Nature</option></select></div>
+        <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Size</label><input type="text" class="ax" id="eSz" placeholder="60 x 80 cm"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Medium</label><input type="text" class="ax" id="eMd" placeholder="Spray paint on canvas"></div>
+        <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Layers</label><input type="text" class="ax" id="eLy" placeholder="4 layers"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Year</label><input type="number" class="ax" id="eYr" placeholder="2024" min="2020" max="2030"></div>
+        <div class="flex items-end"><div class="flex items-center gap-3 pb-2"><input type="checkbox" id="eAv" checked class="accent-[var(--ac)] w-4 h-4"><label for="eAv" class="fm text-[10px] tracking-[.15em] uppercase">Available</label></div></div>
+      </div>
+      <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Description</label><textarea class="ax resize-none" id="eDe" rows="2" placeholder="Brief description..."></textarea></div>
+      <button onclick="saveArt()" class="w-full fh text-sm tracking-[.12em] uppercase bg-[var(--ac)] text-black py-3 hover:bg-[var(--acb)] transition-colors"><i class="fas fa-save mr-2"></i><span id="saveBtnText">Save Artwork</span></button>
+    </div>
+  </div>
 </div>
-<img id="dzP" src="" class="hidden" alt="">
-</div>
-<input type="file" id="fIn" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="hFile(event)">
-<div id="imgErr" class="text-red-400 text-[10px] fm mt-2 hidden">Please upload an image</div>
-</div>
-<div class="grid grid-cols-2 gap-3"><div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Title *</label><input type="text" class="ax" id="eTi" placeholder="TITLE"></div><div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Price (KES) *</label><input type="number" class="ax" id="ePr" placeholder="15000" min="0"></div></div>
-<div class="grid grid-cols-2 gap-3"><div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Category</label><select class="ax" id="eCa"><option value="portrait">Portrait</option><option value="urban">Urban</option><option value="abstract">Abstract</option><option value="typography">Typography</option><option value="nature">Nature</option></select></div><div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Size</label><input type="text" class="ax" id="eSz" placeholder="60 x 80 cm"></div></div>
-<div class="grid grid-cols-2 gap-3"><div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Medium</label><input type="text" class="ax" id="eMd" placeholder="Spray paint on canvas"></div><div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Layers</label><input type="text" class="ax" id="eLy" placeholder="4 layers"></div></div>
-<div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Year</label><input type="number" class="ax" id="eYr" placeholder="2024" min="2020" max="2030"></div>
-<div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Description</label><textarea class="ax resize-none" id="eDe" rows="2" placeholder="Brief description..."></textarea></div>
-<div class="flex items-center gap-3"><input type="checkbox" id="eAv" checked class="accent-[var(--ac)]"><label for="eAv" class="fm text-[10px] tracking-[.15em] uppercase">Available</label></div>
-<button onclick="saveArt()" class="w-full fh text-sm tracking-[.12em] uppercase bg-[var(--ac)] text-black py-3 hover:bg-[var(--acb)] transition-colors"><i class="fas fa-save mr-2"></i>Save Artwork</button>
-</div></div></div>
 </div>
 
 <!-- HEADER -->
@@ -198,7 +256,7 @@
 <div class="absolute bottom-0 left-0 right-0 border-t border-white/5 bg-black/60 backdrop-blur-sm py-3 overflow-hidden z-10"><div class="mqt fd text-sm tracking-[.25em] text-[var(--svd)]"><span class="px-8">HAND-CUT STENCILS</span><span class="text-[var(--ac)]">/</span><span class="px-8">MULTI-LAYER PROCESS</span><span class="text-[var(--ac)]">/</span><span class="px-8">ORIGINAL WORKS ONLY</span><span class="text-[var(--ac)]">/</span><span class="px-8">NO PRINTS NO REPRODUCTIONS</span><span class="text-[var(--ac)]">/</span><span class="px-8">EACH PIECE IS ONE OF ONE</span><span class="text-[var(--ac)]">/</span><span class="px-8">HAND-CUT STENCILS</span><span class="text-[var(--ac)]">/</span><span class="px-8">MULTI-LAYER PROCESS</span><span class="text-[var(--ac)]">/</span><span class="px-8">ORIGINAL WORKS ONLY</span><span class="text-[var(--ac)]">/</span><span class="px-8">NO PRINTS NO REPRODUCTIONS</span><span class="text-[var(--ac)]">/</span><span class="px-8">EACH PIECE IS ONE OF ONE</span><span class="text-[var(--ac)]">/</span></div></div>
 </section>
 
-<!-- STATS - DYNAMIC -->
+<!-- STATS -->
 <section class="border-y border-[var(--bd)] bg-[var(--bgd)]"><div class="max-w-[1600px] mx-auto px-6 lg:px-10 py-14"><div class="rst iv grid grid-cols-2 lg:grid-cols-4 gap-y-8 gap-x-6">
 <div class="border-l border-[var(--bdl)] pl-6"><div class="fd text-5xl md:text-6xl ndd" id="statYears">0</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mt-1">Years cutting stencils</div></div>
 <div class="border-l border-[var(--bdl)] pl-6"><div class="fd text-5xl md:text-6xl text-[var(--ac)] ndd" id="statSold">0</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mt-1">Originals sold</div></div>
@@ -233,7 +291,7 @@
 <p class="text-[var(--fgd)] text-base leading-relaxed mb-5">I started cutting stencils years ago — a craft knife and a can of black spray paint became an all-consuming practice. The tension between control and chaos: precision of a hand-cut stencil meeting the unpredictability of aerosol.</p>
 <p class="text-[var(--fgd)] text-base leading-relaxed mb-8">Every piece is original. No prints, no reproductions. When you collect my work, you get something that cannot be replicated.</p>
 <div class="grid grid-cols-3 gap-4 pt-6 border-t border-[var(--bdl)]">
-<div><div class="fd text-3xl text-[var(--ac)]" id="aboutSold">48</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase mt-1">Works Sold</div></div>
+<div><div class="fd text-3xl text-[var(--ac)]" id="aboutSold">0</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase mt-1">Works Sold</div></div>
 <div><div class="fd text-3xl" id="aboutLayers">7</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase mt-1">Max Layers</div></div>
 <div><div class="fd text-3xl">3</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase mt-1">Exhibitions</div></div>
 </div></div></div></div></section>
@@ -265,17 +323,24 @@
 
 <script>
 var SA='stncl_a',SS='stncl_s',SL='stncl_l';
+
+/* Default art - NO images, user must upload */
 var defArt=[
-{id:1,title:"URBAN REBEL",cat:"portrait",price:15000,sz:"60 x 80 cm",md:"Spray paint on canvas",ly:"4 layers",img:"",desc:"Multi-layered stencil portrait exploring urban defiance.",av:true,yr:"2024"},
-{id:2,title:"CONCRETE JUNGLE",cat:"urban",price:12000,sz:"50 x 70 cm",md:"Acrylic & spray on wood",ly:"6 layers",img:"",desc:"Layered cityscape through hand-cut stencils.",av:true,yr:"2024"},
-{id:3,title:"SILENCE BREAKER",cat:"abstract",price:18000,sz:"80 x 100 cm",md:"Spray paint on canvas",ly:"5 layers",img:"",desc:"Bold abstract with overlapping stencils.",av:true,yr:"2024"},
-{id:4,title:"WORD ON THE STREET",cat:"typography",price:10000,sz:"40 x 60 cm",md:"Spray on reclaimed metal",ly:"3 layers",img:"",desc:"Typographic stencil on found metal.",av:false,yr:"2023"},
-{id:5,title:"NOCTURNAL",cat:"portrait",price:22000,sz:"90 x 120 cm",md:"Spray & acrylic on canvas",ly:"7 layers",img:"",desc:"Large-scale 7-layer portrait.",av:true,yr:"2024"},
-{id:6,title:"DECONSTRUCTED",cat:"abstract",price:14000,sz:"60 x 60 cm",md:"Mixed media on canvas",ly:"5 layers",img:"",desc:"Geometric deconstruction.",av:false,yr:"2024"},
-{id:7,title:"BOTANICAL CUT",cat:"nature",price:11000,sz:"45 x 60 cm",md:"Spray paint on canvas",ly:"4 layers",img:"",desc:"Organic forms meet sharp stencil edges.",av:true,yr:"2024"},
-{id:8,title:"BRICK & MORTAR",cat:"urban",price:16000,sz:"70 x 90 cm",md:"Spray on wood panel",ly:"6 layers",img:"",desc:"Architectural stencil — decay and urban memory.",av:false,yr:"2023"}
+  {id:1,title:"URBAN REBEL",cat:"portrait",price:15000,sz:"60 x 80 cm",md:"Spray paint on canvas",ly:"4 layers",img:"",desc:"Multi-layered stencil portrait exploring urban defiance.",av:true,yr:"2024"},
+  {id:2,title:"CONCRETE JUNGLE",cat:"urban",price:12000,sz:"50 x 70 cm",md:"Acrylic & spray on wood",ly:"6 layers",img:"",desc:"Layered cityscape through hand-cut stencils.",av:true,yr:"2024"},
+  {id:3,title:"SILENCE BREAKER",cat:"abstract",price:18000,sz:"80 x 100 cm",md:"Spray paint on canvas",ly:"5 layers",img:"",desc:"Bold abstract with overlapping stencils.",av:true,yr:"2024"},
+  {id:4,title:"WORD ON THE STREET",cat:"typography",price:10000,sz:"40 x 60 cm",md:"Spray on reclaimed metal",ly:"3 layers",img:"",desc:"Typographic stencil on found metal.",av:false,yr:"2023"},
+  {id:5,title:"NOCTURNAL",cat:"portrait",price:22000,sz:"90 x 120 cm",md:"Spray & acrylic on canvas",ly:"7 layers",img:"",desc:"Large-scale 7-layer portrait.",av:true,yr:"2024"},
+  {id:6,title:"DECONSTRUCTED",cat:"abstract",price:14000,sz:"60 x 60 cm",md:"Mixed media on canvas",ly:"5 layers",img:"",desc:"Geometric deconstruction.",av:false,yr:"2024"},
+  {id:7,title:"BOTANICAL CUT",cat:"nature",price:11000,sz:"45 x 60 cm",md:"Spray paint on canvas",ly:"4 layers",img:"",desc:"Organic forms meet sharp stencil edges.",av:true,yr:"2024"},
+  {id:8,title:"BRICK & MORTAR",cat:"urban",price:16000,sz:"70 x 90 cm",md:"Spray on wood panel",ly:"6 layers",img:"",desc:"Architectural stencil — decay and urban memory.",av:false,yr:"2023"}
 ];
+
 var art=[],st={},blog=[],curBk=null,curFil='all',upImg=null,pinVal='';
+
+/* Placeholder SVG for artworks without images */
+var noImgSvg="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000"><rect width="800" height="1000" fill="#111"/><line x1="0" y1="0" x2="800" y2="1000" stroke="#222" stroke-width="1"/><line x1="800" y1="0" x2="0" y2="1000" stroke="#222" stroke-width="1"/><text x="400" y="480" text-anchor="middle" fill="#333" font-family="sans-serif" font-size="16">NO IMAGE</text><text x="400" y="520" text-anchor="middle" fill="#444" font-family="sans-serif" font-size="12">Upload in admin</text></svg>');
+var noImgSm="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="48" height="60"><rect width="48" height="60" fill="#111"/><text x="24" y="34" text-anchor="middle" fill="#444" font-family="sans-serif" font-size="8">NO IMG</text></svg>');
 
 function ld(){
   try{
@@ -293,12 +358,12 @@ function ld(){
     blog=[]
   }
 }
-function svA(){localStorage.setItem(SA,JSON.stringify(art))}
+function svA(){try{localStorage.setItem(SA,JSON.stringify(art))}catch(e){toast('Storage Full','Delete some artwork or use smaller images.')}}
 function svS(){localStorage.setItem(SS,JSON.stringify(st))}
 function svL(){localStorage.setItem(SL,JSON.stringify(blog))}
-function toast(t,m){var el=document.getElementById('toast');document.getElementById('toastT').textContent=t;document.getElementById('toastM').textContent=m;el.classList.add('v');setTimeout(function(){el.classList.remove('v')},5000)}
+function toast(t,m){var el=document.getElementById('toast');document.getElementById('toastT').textContent=t;document.getElementById('toastM').textContent=m;el.classList.add('v');setTimeout(function(){el.classList.remove('v')},4000)}
 
-/* CALCULATE DYNAMIC STATS */
+/* ====== DYNAMIC STATS ====== */
 function getStats(){
   var sold=art.filter(function(a){return !a.av}).length;
   var years=st.yr?parseInt(st.yr):0;
@@ -310,6 +375,7 @@ function getStats(){
   }
   var maxLayers=0;
   art.forEach(function(a){if(a.ly){var m=parseInt(a.ly);if(m>maxLayers)maxLayers=m}});
+  if(!maxLayers)maxLayers=7;
   var collections=Math.max(1,Math.floor(sold/4));
   return{sold:sold,years:years,maxLayers:maxLayers,collections:collections}
 }
@@ -317,17 +383,16 @@ function updStats(){
   var s=getStats();
   document.getElementById('statSold').textContent=s.sold;
   document.getElementById('statYears').textContent=s.years;
-  document.getElementById('statLayers').textContent=s.maxLayers||7;
+  document.getElementById('statLayers').textContent=s.maxLayers;
   document.getElementById('statCollections').textContent=s.collections;
   document.getElementById('aboutSold').textContent=s.sold;
   document.getElementById('aboutYears').textContent=s.years+'+';
-  document.getElementById('aboutLayers').textContent=s.maxLayers||7;
-  // Update admin counts
+  document.getElementById('aboutLayers').textContent=s.maxLayers;
   document.getElementById('artCount').textContent=art.length;
   document.getElementById('soldCount').textContent=s.sold;
 }
 
-/* PIN */
+/* ====== PIN ====== */
 function openPin(){pinVal='';updDots();document.getElementById('pinErr').classList.add('hidden');document.getElementById('pinMod').classList.add('op');document.getElementById('pinOv').classList.add('op')}
 function closePin(){document.getElementById('pinMod').classList.remove('op');document.getElementById('pinOv').classList.remove('op')}
 function pi(n){if(pinVal.length>=4)return;pinVal+=n;updDots()}
@@ -335,20 +400,12 @@ function pcl(){pinVal=pinVal.slice(0,-1);updDots()}
 function psb(){if(pinVal.length!==4)return;if(pinVal===st.pin){closePin();togAdm()}else{document.getElementById('pinErr').classList.remove('hidden');pinVal='';setTimeout(updDots,50);setTimeout(function(){document.getElementById('pinErr').classList.add('hidden')},2000)}}
 function updDots(){var d=document.getElementById('pinDots').children;for(var i=0;i<4;i++){if(i<pinVal.length)d[i].classList.add('fl');else d[i].classList.remove('fl')}}
 
-/* FILE UPLOAD - CONVERT TO BASE64 */
+/* ====== FILE UPLOAD ====== */
 function hFile(ev){
   var file=ev.target.files[0];
   if(!file)return;
-  // Validate file type
-  if(!file.type.match(/^image\/(jpeg|png|webp)$/)){
-    toast('Error','Only JPG, PNG, WEBP allowed');
-    return;
-  }
-  // Validate file size (max 2MB for localStorage)
-  if(file.size>2*1024*1024){
-    toast('Error','Image too large. Max 2MB. Try compressing.');
-    return;
-  }
+  if(!file.type.match(/^image\/(jpeg|png|webp)$/)){toast('Error','Only JPG, PNG, WEBP allowed');return}
+  if(file.size>2*1024*1024){toast('Error','Image too large — max 2MB. Compress it first.');return}
   var reader=new FileReader();
   reader.onload=function(e){
     upImg=e.target.result;
@@ -361,7 +418,7 @@ function hFile(ev){
   reader.readAsDataURL(file);
 }
 
-/* ADMIN */
+/* ====== ADMIN PANEL ====== */
 function togAdm(){
   var p=document.getElementById('admPan'),o=document.getElementById('admOv');
   if(p.classList.contains('op')){
@@ -381,87 +438,104 @@ function swTab(t){
   document.getElementById('t-set').classList.toggle('hidden',t!=='set');
   closeEd();
   if(t==='blog')renBlog();
-  if(t==='art')updStats();
-}
-function ldSet(){
-  document.getElementById('sPin').value=st.pin;
-  document.getElementById('sWa').value=st.wa;
-  document.getElementById('sEm').value=st.em;
-  document.getElementById('sPh').value=st.ph;
-  document.getElementById('sNm').value=st.nm;
-  document.getElementById('sYr').value=st.yr||'';
-  document.getElementById('curPin').textContent=st.pin;
-}
-function saveSet(){
-  var np=document.getElementById('sPin').value.trim();
-  if(np&&/^\d{4}$/.test(np))st.pin=np;
-  st.wa=document.getElementById('sWa').value.trim().replace(/\D/g,'')||'254114255987';
-  st.em=document.getElementById('sEm').value.trim()||'injuguna308@gmail.com';
-  st.ph=document.getElementById('sPh').value.trim()||'0143374333';
-  st.nm=document.getElementById('sNm').value.trim()||'STNCL';
-  st.yr=document.getElementById('sYr').value.trim()||'';
-  svS();updDisp();updStats();
-  document.getElementById('curPin').textContent=st.pin;
-  toast('Saved','All settings updated.')
-}
-function updDisp(){
-  var n=st.nm||'STNCL';
-  document.getElementById('logoN').textContent=n;
-  document.getElementById('ftN').textContent=n;
-  document.getElementById('dEm').textContent=st.em;
-  document.getElementById('dPh').textContent=st.ph;
-  var w=st.wa||'254114255987';
-  document.getElementById('dWa').textContent='+'+w.slice(0,3)+' '+w.slice(3,6)+w.slice(6);
-  document.getElementById('waLk').href='https://wa.me/'+w;
-  document.getElementById('emLk').href='mailto:'+st.em;
+  if(t==='art'){renAdmList();updStats()}
 }
 
-/* ADMIN ART LIST */
+/* ====== ADMIN ART LIST ====== */
 function renAdmList(){
   var c=document.getElementById('admList');
   if(!art.length){
-    c.innerHTML='<div class="text-center py-8"><i class="fas fa-image text-2xl text-[var(--mt)] mb-2"></i><div class="fm text-[10px] text-[var(--mt)] tracking-wider">No artwork yet. Add your first piece!</div></div>';
+    c.innerHTML='<div class="text-center py-10"><i class="fas fa-image text-3xl text-[var(--svd)] mb-3"></i><div class="fm text-[10px] text-[var(--mt)] tracking-wider">No artwork yet</div><div class="fm text-[9px] text-[var(--svd)] mt-1">Click "Add New Artwork" to start</div></div>';
     return;
   }
-  c.innerHTML=art.map(function(a){
-    var thumb=a.img?a.img:'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="50" height="65" fill="#1a1a1a"><rect width="50" height="65"/><text x="25" y="35" text-anchor="middle" fill="#666" font-size="10">No img</text></svg>');
-    return '<div class="adm-art-item" data-id="'+a.id+'">'+
-      '<img src="'+thumb+'" class="adm-art-thumb" alt="">'+
-      '<div class="adm-art-info">'+
-        '<div class="fd text-lg leading-none">'+a.title+'</div>'+
-        '<div class="fm text-[9px] text-[var(--mt)] mt-1">'+a.cat+' · '+a.yr+' · '+(a.av?'<span class="text-green-500">Available</span>':'<span class="text-red-400">Sold</span>')+'</div>'+
-      '</div>'+
-      '<div class="adm-art-actions">'+
-        (a.av?'<button class="adm-btn success" onclick="markSold('+a.id+')" title="Mark as Sold"><i class="fas fa-check"></i></button>':'<button class="adm-btn" onclick="markAvail('+a.id+')" title="Mark as Available"><i class="fas fa-undo"></i></button>')+
-        '<button class="adm-btn" onclick="editArt('+a.id+')" title="Edit"><i class="fas fa-pen"></i></button>'+
-        '<button class="adm-btn danger" onclick="delArt('+a.id+')" title="Delete"><i class="fas fa-trash"></i></button>'+
-      '</div>'+
-    '</div>';
-  }).join('');
+  var html='';
+  for(var i=0;i<art.length;i++){
+    var a=art[i];
+    var hasImg=a.img&&a.img.length>10;
+    var thumbSrc=hasImg?a.img:noImgSm;
+    var ps=(typeof a.price==='number'&&a.price>999)?a.price.toLocaleString():a.price;
+
+    html+='<div class="ai-row" data-id="'+a.id+'">';
+
+    // Thumbnail
+    if(hasImg){
+      html+='<img src="'+thumbSrc+'" class="ai-thumb" alt="'+a.title+'">';
+    }else{
+      html+='<div class="ai-thumb-none"><i class="fas fa-image"></i></div>';
+    }
+
+    // Info
+    html+='<div class="ai-info">';
+    html+='<div class="ai-title">'+a.title+'</div>';
+    html+='<div class="ai-meta">';
+    html+='<span>'+a.cat+'</span>';
+    html+='<span>·</span>';
+    html+='<span>'+a.yr+'</span>';
+    html+='<span>·</span>';
+    html+='<span>KES '+ps+'</span>';
+    html+='</div>';
+    html+='<div class="ai-meta" style="margin-top:4px">';
+    if(a.av){
+      html+='<span class="ai-status avail"><i class="fas fa-eye" style="margin-right:3px"></i>Available</span>';
+    }else{
+      html+='<span class="ai-status sold"><i class="fas fa-eye-slash" style="margin-right:3px"></i>Sold</span>';
+    }
+    if(!hasImg){
+      html+='<span style="color:#eab308;font-size:8px;margin-left:6px"><i class="fas fa-exclamation-circle"></i> No image</span>';
+    }
+    html+='</div>';
+    html+='</div>';
+
+    // Buttons: Edit | Eye | Delete
+    html+='<div class="ai-btns">';
+
+    // Edit button
+    html+='<button class="ai-btn" onclick="editArt('+a.id+')" title="Edit artwork"><i class="fas fa-pen"></i></button>';
+
+    // Eye button - toggles available/sold
+    if(a.av){
+      html+='<button class="ai-btn eye-on" onclick="toggleAvail('+a.id+')" title="Currently visible — click to mark as sold"><i class="fas fa-eye"></i></button>';
+    }else{
+      html+='<button class="ai-btn eye-off" onclick="toggleAvail('+a.id+')" title="Currently sold — click to make available again"><i class="fas fa-eye-slash"></i></button>';
+    }
+
+    // Delete button
+    html+='<button class="ai-btn del" onclick="delArt('+a.id+')" title="Delete artwork completely"><i class="fas fa-trash-can"></i></button>';
+
+    html+='</div>';
+    html+='</div>';
+  }
+  c.innerHTML=html;
 }
 
-/* MARK AS SOLD - UPDATES STATS */
-function markSold(id){
+/* ====== EYE - TOGGLE AVAILABLE/SOLD ====== */
+function toggleAvail(id){
   var a=art.find(function(x){return x.id===id});
   if(!a)return;
-  a.av=false;
-  svA();renAdmList();renGal();updStats();
-  toast('Marked Sold','"'+a.title+'" marked as sold. Stats updated!');
-}
-function markAvail(id){
-  var a=art.find(function(x){return x.id===id});
-  if(!a)return;
-  a.av=true;
-  svA();renAdmList();renGal();updStats();
-  toast('Marked Available','"'+a.title+'" is now available.')
+  a.av=!a.av;
+  svA();
+  renAdmList();
+  renGal();
+  updStats();
+  if(a.av){
+    toast('Now Available','"'+a.title+'" is visible on the gallery');
+  }else{
+    toast('Marked as Sold','"'+a.title+'" — sold count updated');
+  }
 }
 
-/* EDIT ART */
+/* ====== EDIT ART ====== */
 function editArt(id){
   var a=art.find(function(x){return x.id===id});
   if(!a)return;
-  openEd();
-  document.getElementById('edTitle').textContent='Edit Artwork';
+
+  // Show editor
+  document.getElementById('artEd').classList.remove('hidden');
+  document.getElementById('artEd').scrollIntoView({behavior:'smooth',block:'nearest'});
+  document.getElementById('edTitle').textContent='Edit: '+a.title;
+  document.getElementById('saveBtnText').textContent='Update Artwork';
+
+  // Fill form
   document.getElementById('eId').value=a.id;
   document.getElementById('eTi').value=a.title;
   document.getElementById('ePr').value=a.price;
@@ -472,6 +546,8 @@ function editArt(id){
   document.getElementById('eYr').value=a.yr||'';
   document.getElementById('eDe').value=a.desc||'';
   document.getElementById('eAv').checked=a.av;
+
+  // Load existing image
   upImg=a.img||null;
   if(upImg){
     document.getElementById('dzP').src=upImg;
@@ -481,23 +557,39 @@ function editArt(id){
     document.getElementById('dzP').classList.add('hidden');
     document.getElementById('dzC').classList.remove('hidden');
   }
+  document.getElementById('imgErr').classList.add('hidden');
 }
 
-/* DELETE ART */
+/* ====== DELETE ART ====== */
 function delArt(id){
   var a=art.find(function(x){return x.id===id});
   if(!a)return;
-  if(!confirm('Delete "'+a.title+'"? This cannot be undone.'))return;
+
+  // Custom confirm via a simple approach
+  var name=a.title;
+  if(!confirm('Delete "'+name+'"?\nThis removes the image and all details completely.'))return;
+
   art=art.filter(function(x){return x.id!==id});
-  svA();renAdmList();renGal();updStats();
-  toast('Deleted','"'+a.title+'" removed from gallery.')
+  svA();
+  renAdmList();
+  renGal();
+  updStats();
+
+  // Close editor if this was being edited
+  if(parseInt(document.getElementById('eId').value)===id){
+    closeEd();
+  }
+
+  toast('Deleted','"'+name+'" removed from gallery');
 }
 
-/* OPEN/CLOSE EDITOR */
+/* ====== OPEN/CLOSE EDITOR ====== */
 function openEd(){
   document.getElementById('artEd').classList.remove('hidden');
   document.getElementById('edTitle').textContent='New Artwork';
+  document.getElementById('saveBtnText').textContent='Save Artwork';
   clearEdForm();
+  setTimeout(function(){document.getElementById('artEd').scrollIntoView({behavior:'smooth',block:'nearest'})},50);
 }
 function closeEd(){
   document.getElementById('artEd').classList.add('hidden');
@@ -521,14 +613,15 @@ function clearEdForm(){
   document.getElementById('imgErr').classList.add('hidden');
 }
 
-/* SAVE ART */
+/* ====== SAVE ART ====== */
 function saveArt(){
   var title=document.getElementById('eTi').value.trim();
   var price=parseInt(document.getElementById('ePr').value);
-  if(!title){toast('Error','Title is required');return}
-  if(!price||price<0){toast('Error','Valid price is required');return}
-  if(!upImg){document.getElementById('imgErr').classList.remove('hidden');toast('Error','Please upload an image');return}
-  
+
+  if(!title){toast('Error','Title is required');document.getElementById('eTi').focus();return}
+  if(!price&&price!==0){toast('Error','Enter a valid price');document.getElementById('ePr').focus();return}
+  if(!upImg){document.getElementById('imgErr').classList.remove('hidden');toast('Error','Upload an image from your PC');return}
+
   var editId=document.getElementById('eId').value;
   var artData={
     title:title,
@@ -537,58 +630,99 @@ function saveArt(){
     sz:document.getElementById('eSz').value.trim(),
     md:document.getElementById('eMd').value.trim(),
     ly:document.getElementById('eLy').value.trim(),
-    yr:document.getElementById('eYr').value.trim()||new Date().getFullYear().toString(),
+    yr:document.getElementById('eYr').value.trim()||String(new Date().getFullYear()),
     desc:document.getElementById('eDe').value.trim(),
     av:document.getElementById('eAv').checked,
     img:upImg
   };
-  
+
   if(editId){
-    // Update existing
     var idx=art.findIndex(function(a){return a.id===parseInt(editId)});
-    if(idx>-1){
-      artData.id=parseInt(editId);
-      art[idx]=artData;
-    }
-    toast('Updated','"'+title+'" updated successfully!')
+    if(idx>-1){artData.id=parseInt(editId);art[idx]=artData}
+    toast('Updated','"'+title+'" updated successfully');
   }else{
-    // Add new
     artData.id=art.length?Math.max.apply(null,art.map(function(a){return a.id}))+1:1;
     art.unshift(artData);
-    toast('Added','"'+title+'" added to gallery!')
+    toast('Added','"'+title+'" added to gallery');
   }
-  
+
   svA();renAdmList();renGal();updStats();closeEd();
 }
 
-/* GALLERY */
+/* ====== IMAGE PREVIEW ====== */
+function openPrev(id){
+  var a=art.find(function(x){return x.id===id});
+  if(!a||!a.img){toast('No Image','This artwork has no image uploaded yet');return}
+  document.getElementById('prevImg').src=a.img;
+  document.getElementById('prevTitle').textContent=a.title;
+  var ps=(typeof a.price==='number'&&a.price>999)?a.price.toLocaleString():a.price;
+  document.getElementById('prevMeta').textContent=(a.md||'')+' · '+(a.sz||'')+' · KES '+ps+(a.av?' · Available':' · Sold');
+  document.getElementById('prevOv').classList.add('show');
+}
+function closePrev(ev){
+  if(ev&&ev.target&&ev.target.tagName==='IMG')return;
+  document.getElementById('prevOv').classList.remove('show');
+}
+
+/* ====== GALLERY RENDER ====== */
 function renGal(){
   var g=document.getElementById('artG'),e=document.getElementById('empG');
   var f=curFil==='all'?art:art.filter(function(a){return a.cat===curFil});
   if(!f.length){g.innerHTML='';e.classList.remove('hidden');return}
   e.classList.add('hidden');
-  g.innerHTML=f.map(function(a){
-    var ps=typeof a.price==='number'&&a.price>999?a.price.toLocaleString():a.price;
-    var imgSrc=a.img||'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" fill="#1a1a1a"><rect width="800" height="1000"/><text x="400" y="500" text-anchor="middle" fill="#666" font-size="24">No Image</text></svg>');
-    return '<article class="acard ic group" style="opacity:0;transform:translateY(30px)"><div class="relative overflow-hidden aspect-[3/4]"><img src="'+imgSrc+'" class="aimg w-full h-full object-cover inr" alt="'+a.title+'" loading="lazy">' +
-      '<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>' +
-      (a.av?'<div class="absolute top-4 right-4 px-3 py-1 bg-[var(--ac)] text-black fm text-[10px] tracking-[.2em]">AVAILABLE</div>':'<div class="absolute top-4 right-4 px-3 py-1 bg-red-700/90 text-white fm text-[10px] tracking-[.2em]">SOLD</div>') +
-      '</div><div class="p-5"><div class="flex items-start justify-between mb-2"><h3 class="fd text-2xl leading-none">'+a.title+'</h3><span class="fm text-[9px] text-[var(--mt)] tracking-[.12em] mt-1.5 uppercase">'+a.cat+'</span></div>' +
-      '<p class="text-[var(--fgd)] text-xs leading-relaxed mb-4 lc2">'+(a.desc||'')+'</p>' +
-      '<div class="flex items-center justify-between pt-3 border-t border-[var(--bdl)]"><div class="fd text-3xl text-[var(--ac)]">'+ps+'</div>' +
-      (a.av?'<button class="bbk fh text-[11px] tracking-[.12em] uppercase px-4 py-2.5 border border-[var(--ac)] text-[var(--ac)] hover:bg-[var(--ac)] hover:text-black transition-all" data-id="'+a.id+'">Book This Piece</button>':'<span class="fh text-[11px] tracking-[.12em] uppercase px-4 py-2.5 border border-[var(--mt)] text-[var(--mt)]">Sold</span>') +
-      '</div></div></article>'
-  }).join('');
-  g.querySelectorAll('.bbk').forEach(function(b){b.addEventListener('click',function(ev){ev.stopPropagation();openBk(parseInt(b.dataset.id))})});
+
+  var html='';
+  for(var i=0;i<f.length;i++){
+    var a=f[i];
+    var hasImg=a.img&&a.img.length>10;
+    var imgSrc=hasImg?a.img:noImgSvg;
+    var ps=(typeof a.price==='number'&&a.price>999)?a.price.toLocaleString():a.price;
+
+    html+='<article class="acard ic group" style="opacity:0;transform:translateY(30px)">';
+    html+='<div class="relative overflow-hidden aspect-[3/4]">';
+    html+='<img src="'+imgSrc+'" class="aimg w-full h-full object-cover inr" alt="'+a.title+'" loading="lazy">';
+    html+='<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>';
+    if(a.av){
+      html+='<div class="absolute top-4 right-4 px-3 py-1 bg-[var(--ac)] text-black fm text-[10px] tracking-[.2em]">AVAILABLE</div>';
+    }else{
+      html+='<div class="absolute top-4 right-4 px-3 py-1 bg-red-700/90 text-white fm text-[10px] tracking-[.2em]">SOLD</div>';
+    }
+    if(!hasImg){
+      html+='<div class="absolute bottom-4 left-4 px-2 py-1 bg-black/70 text-yellow-500 fm text-[9px] tracking-wider"><i class="fas fa-exclamation-circle mr-1"></i>NO IMAGE</div>';
+    }
+    html+='</div>';
+    html+='<div class="p-5">';
+    html+='<div class="flex items-start justify-between mb-2"><h3 class="fd text-2xl leading-none">'+a.title+'</h3><span class="fm text-[9px] text-[var(--mt)] tracking-[.12em] mt-1.5 uppercase">'+a.cat+'</span></div>';
+    html+='<p class="text-[var(--fgd)] text-xs leading-relaxed mb-4 lc2">'+(a.desc||'')+'</p>';
+    html+='<div class="flex items-center justify-between pt-3 border-t border-[var(--bdl)]">';
+    html+='<div class="fd text-3xl text-[var(--ac)]">'+ps+'</div>';
+    if(a.av){
+      html+='<button class="bbk fh text-[11px] tracking-[.12em] uppercase px-4 py-2.5 border border-[var(--ac)] text-[var(--ac)] hover:bg-[var(--ac)] hover:text-black transition-all" data-id="'+a.id+'">Book This Piece</button>';
+    }else{
+      html+='<span class="fh text-[11px] tracking-[.12em] uppercase px-4 py-2.5 border border-[var(--mt)] text-[var(--mt)]">Sold</span>';
+    }
+    html+='</div></div></article>';
+  }
+  g.innerHTML=html;
+
+  // Attach booking buttons
+  g.querySelectorAll('.bbk').forEach(function(b){
+    b.addEventListener('click',function(ev){
+      ev.stopPropagation();
+      openBk(parseInt(b.dataset.id));
+    })
+  });
+
+  // Animate cards in
   var cards=g.querySelectorAll('.acard');
-  for(var i=0;i<cards.length;i++){
+  for(var j=0;j<cards.length;j++){
     (function(card,delay){
       setTimeout(function(){
         card.style.transition='opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1)';
         card.style.opacity='1';
         card.style.transform='translateY(0)';
       },delay);
-    })(cards[i], i*80);
+    })(cards[j], j*80);
   }
 }
 
@@ -601,81 +735,77 @@ document.getElementById('catF').addEventListener('click',function(e){
   renGal()
 });
 
-/* BOOKING */
+/* ====== BOOKING ====== */
 function openBk(id){
   var a=art.find(function(x){return x.id===id});
   if(!a||!a.av)return;
   curBk=a;
-  var imgSrc=a.img||'';
-  document.getElementById('bkImg').src=imgSrc;
+  var hasImg=a.img&&a.img.length>10;
+  document.getElementById('bkImg').src=hasImg?a.img:noImgSvg;
   document.getElementById('bkTitle').textContent=a.title;
   document.getElementById('bkMeta').textContent=(a.md||'')+' · '+(a.ly||'')+' · '+a.yr;
-  var ps=typeof a.price==='number'&&a.price>999?a.price.toLocaleString():a.price;
+  var ps=(typeof a.price==='number'&&a.price>999)?a.price.toLocaleString():a.price;
   document.getElementById('bkPrice').textContent=ps;
   document.getElementById('bkSize').textContent=a.sz||'';
-  document.getElementById('bkN').value='';
-  document.getElementById('bkP').value='';
-  document.getElementById('bkE').value='';
-  document.getElementById('bkM').value='';
+  document.getElementById('bkN').value='';document.getElementById('bkP').value='';document.getElementById('bkE').value='';document.getElementById('bkM').value='';
   document.getElementById('bkFormV').classList.remove('hidden');
   document.getElementById('bkSucV').classList.add('hidden');
-  document.getElementById('bkMod').classList.add('op');
-  document.getElementById('bkOv').classList.add('op');
-  document.body.style.overflow='hidden'
+  document.getElementById('bkMod').classList.add('op');document.getElementById('bkOv').classList.add('op');document.body.style.overflow='hidden'
 }
-function closeBk(){
-  document.getElementById('bkMod').classList.remove('op');
-  document.getElementById('bkOv').classList.remove('op');
-  document.body.style.overflow='';
-  curBk=null
-}
+function closeBk(){document.getElementById('bkMod').classList.remove('op');document.getElementById('bkOv').classList.remove('op');document.body.style.overflow='';curBk=null}
 function doBk(ev){
-  ev.preventDefault();
-  if(!curBk)return;
+  ev.preventDefault();if(!curBk)return;
   var a=curBk,nm=document.getElementById('bkN').value.trim(),ph=document.getElementById('bkP').value.trim(),em=document.getElementById('bkE').value.trim(),mg=document.getElementById('bkM').value.trim();
-  var ps=typeof a.price==='number'&&a.price>999?a.price.toLocaleString():a.price;
+  var ps=(typeof a.price==='number'&&a.price>999)?a.price.toLocaleString():a.price;
   var msg='NEW BOOKING REQUEST\n========================\n\nARTWORK: '+a.title+'\nPRICE: '+ps+'\nSIZE: '+(a.sz||'')+'\nMEDIUM: '+(a.md||'')+'\nLAYERS: '+(a.ly||'')+'\n\nBUYER INFO\nName: '+nm+'\nPhone: '+ph+(em?'\nEmail: '+em:'')+(mg?'\nMessage: '+mg:'')+'\n\nSent: '+new Date().toLocaleString();
-  
-  // Log booking
   blog.unshift({id:Date.now(),art:a.title,price:ps,name:nm,phone:ph,email:em,msg:mg,date:new Date().toISOString()});
   svL();
-  
-  // Open WhatsApp
-  var waUrl='https://wa.me/'+st.wa+'?text='+encodeURIComponent(msg);
-  window.open(waUrl,'_blank');
-  
-  // Open Email
-  var subj='BOOKING: '+a.title+' - '+ps;
-  var emUrl='mailto:'+st.em+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(msg);
-  window.open(emUrl,'_blank');
-  
-  // Show success
+  window.open('https://wa.me/'+st.wa+'?text='+encodeURIComponent(msg),'_blank');
+  window.open('mailto:'+st.em+'?subject='+encodeURIComponent('BOOKING: '+a.title+' - '+ps)+'&body='+encodeURIComponent(msg),'_blank');
   document.getElementById('bkFormV').classList.add('hidden');
   document.getElementById('bkSucV').classList.remove('hidden');
-  
-  // Update badge
-  var badge=document.getElementById('bkBadge');
-  badge.textContent=blog.length;
-  badge.classList.remove('hidden')
+  var badge=document.getElementById('bkBadge');badge.textContent=blog.length;badge.classList.remove('hidden')
 }
 function renBlog(){
   var c=document.getElementById('blogList'),n=document.getElementById('noBlog'),b=document.getElementById('bkBadge');
   if(blog.length){b.textContent=blog.length;b.classList.remove('hidden');n.classList.add('hidden');
-    c.innerHTML=blog.map(function(l){
-      return '<div class="le"><div class="flex items-center justify-between mb-1"><span class="fd text-lg">'+l.art+'</span><span class="fm text-[9px] text-[var(--ac)]">'+l.price+'</span></div><div class="fm text-[9px] text-[var(--mt)]">'+l.name+' · '+l.phone+' · '+new Date(l.date).toLocaleDateString()+'</div>'+(l.msg?'<div class="text-xs text-[var(--fgd)] mt-1">'+l.msg+'</div>':'')+'</div>'
-    }).join('')
+    c.innerHTML=blog.map(function(l){return '<div class="le"><div class="flex items-center justify-between mb-1"><span class="fd text-lg">'+l.art+'</span><span class="fm text-[9px] text-[var(--ac)]">'+l.price+'</span></div><div class="fm text-[9px] text-[var(--mt)]">'+l.name+' · '+l.phone+' · '+new Date(l.date).toLocaleDateString()+'</div>'+(l.msg?'<div class="text-xs text-[var(--fgd)] mt-1">'+l.msg+'</div>':'')+'</div>'}).join('')
   }else{b.classList.add('hidden');n.classList.remove('hidden');c.innerHTML=''}
 }
 function clrBlog(){if(!blog.length)return;if(!confirm('Clear all booking logs?'))return;blog=[];svL();renBlog();toast('Cleared','Booking logs cleared.')}
 
+/* ====== SETTINGS ====== */
+function ldSet(){
+  document.getElementById('sPin').value=st.pin;document.getElementById('sWa').value=st.wa;
+  document.getElementById('sEm').value=st.em;document.getElementById('sPh').value=st.ph;
+  document.getElementById('sNm').value=st.nm;document.getElementById('sYr').value=st.yr||'';
+  document.getElementById('curPin').textContent=st.pin;
+}
+function saveSet(){
+  var np=document.getElementById('sPin').value.trim();
+  if(np&&/^\d{4}$/.test(np))st.pin=np;
+  st.wa=document.getElementById('sWa').value.trim().replace(/\D/g,'')||'254114255987';
+  st.em=document.getElementById('sEm').value.trim()||'injuguna308@gmail.com';
+  st.ph=document.getElementById('sPh').value.trim()||'0143374333';
+  st.nm=document.getElementById('sNm').value.trim()||'STNCL';
+  st.yr=document.getElementById('sYr').value.trim()||'';
+  svS();updDisp();updStats();document.getElementById('curPin').textContent=st.pin;
+  toast('Saved','All settings updated.')
+}
+function updDisp(){
+  var n=st.nm||'STNCL';
+  document.getElementById('logoN').textContent=n;document.getElementById('ftN').textContent=n;
+  document.getElementById('dEm').textContent=st.em;document.getElementById('dPh').textContent=st.ph;
+  var w=st.wa||'254114255987';
+  document.getElementById('dWa').textContent='+'+w.slice(0,3)+' '+w.slice(3,6)+w.slice(6);
+  document.getElementById('waLk').href='https://wa.me/'+w;document.getElementById('emLk').href='mailto:'+st.em;
+}
 function resetArt(){
-  if(!confirm('Reset gallery to default artworks? This will delete all your custom art!'))return;
-  art=JSON.parse(JSON.stringify(defArt));
-  svA();renAdmList();renGal();updStats();
-  toast('Reset','Gallery reset to defaults.')
+  if(!confirm('Reset gallery to defaults?\nThis deletes ALL your artwork and images!'))return;
+  art=JSON.parse(JSON.stringify(defArt));svA();renAdmList();renGal();updStats();toast('Reset','Gallery reset to defaults.')
 }
 
-/* CONTACT */
+/* ====== CONTACT ====== */
 function doContact(ev){
   ev.preventDefault();
   var nm=document.getElementById('cN').value.trim(),ph=document.getElementById('cP').value.trim(),sj=document.getElementById('cS').value.trim(),mg=document.getElementById('cM').value.trim();
@@ -685,32 +815,28 @@ function doContact(ev){
   document.getElementById('cN').value='';document.getElementById('cP').value='';document.getElementById('cS').value='';document.getElementById('cM').value=''
 }
 
-/* HERO REEL */
+/* ====== HERO REEL ====== */
 var rSlides=document.querySelectorAll('.rf'),rIdx=0,rTimer=null;
 function startReel(){rTimer=setInterval(function(){rSlides[rIdx].classList.remove('ac');rIdx=(rIdx+1)%rSlides.length;rSlides[rIdx].classList.add('ac');document.getElementById('chN').textContent=String(rIdx+1).padStart(2,'0');updProg()},5000)}
 function updProg(){var p=document.getElementById('rProg'),w=0;var iv=setInterval(function(){w+=2;p.style.width=w+'%';if(w>=100)clearInterval(iv)},100)}
 startReel();updProg();
 
-/* SCROLL ANIMATIONS */
+/* ====== SCROLL ANIMATIONS ====== */
 var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('iv')})},{threshold:.1});
 document.querySelectorAll('.rv,.rst').forEach(function(el){obs.observe(el)});
 
-/* INIT */
-ld();updDisp();renGal();updStats();
-
-/* DRAG & DROP */
+/* ====== DRAG & DROP ====== */
 var dz=document.getElementById('dz');
 dz.addEventListener('dragover',function(e){e.preventDefault();dz.classList.add('dov')});
 dz.addEventListener('dragleave',function(){dz.classList.remove('dov')});
 dz.addEventListener('drop',function(e){
   e.preventDefault();dz.classList.remove('dov');
   var file=e.dataTransfer.files[0];
-  if(file){
-    var dt=new DataTransfer();dt.items.add(file);
-    document.getElementById('fIn').files=dt.files;
-    hFile({target:{files:[file]}});
-  }
+  if(file)hFile({target:{files:[file]}});
 });
+
+/* ====== INIT ====== */
+ld();updDisp();renGal();updStats();
 </script>
 </body>
 </html>
