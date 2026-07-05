@@ -221,6 +221,11 @@
             <div class="fm text-[11px] text-[var(--mt)] tracking-wider">Click to Upload from PC</div>
             <div class="fm text-[9px] text-[var(--svd)] mt-1">JPG, PNG, WEBP — Max 2MB</div>
           </div>
+          <div id="dzUp" class="hidden w-full text-center">
+            <div class="fm text-[10px] text-[var(--ac)] tracking-wider mb-2" id="upProgText">Uploading... 0%</div>
+            <div class="w-full bg-[var(--bg)] h-1 border border-[var(--bdl)]"><div class="h-full bg-[var(--ac)] transition-all duration-150" id="upProgBar" style="width:0%"></div></div>
+            <div class="fm text-[9px] text-[var(--svd)] mt-2">Please wait...</div>
+          </div>
           <img id="dzP" src="" class="hidden" alt="">
         </div>
         <input type="file" id="fIn" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="hFile(event)">
@@ -508,13 +513,14 @@ function hFile(ev){
   
   // --- NEW: Upload to Firebase Storage ---
   // 1. Show a temporary local preview while uploading
-  var localUrl = URL.createObjectURL(file);
-  document.getElementById('dzP').src = localUrl;
-  document.getElementById('dzP').classList.remove('hidden');
+  document.getElementById('dzUp').classList.remove('hidden');
   document.getElementById('dzC').classList.add('hidden');
   document.getElementById('imgErr').classList.add('hidden');
-  toast('Uploading...', 'Image is being uploaded. Please wait.');
-
+  document.getElementById('upProgBar').style.width = '0%';
+  document.getElementById('upProgText').textContent = 'Uploading... 0%';
+  // Disable save button during upload
+  document.querySelector('#artEd button[onclick="saveArt()"]').disabled = true;
+  
   // 2. Create a unique file name
   const fileName = `art/${Date.now()}-${file.name}`;
   const storageRef = storage.ref(fileName);
@@ -525,19 +531,29 @@ function hFile(ev){
   // 4. Get the public URL back after upload is complete
   uploadTask.on('state_changed', 
     (snapshot) => {
-      // Optional: show upload progress
+      // Show upload progress
       var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      console.log('Upload is ' + progress + '% done');
+      document.getElementById('upProgBar').style.width = progress + '%';
+      document.getElementById('upProgText').textContent = 'Uploading... ' + Math.round(progress) + '%';
     }, 
     (error) => {
       console.error("Upload failed:", error);
       toast('Upload Failed', 'Could not upload image to storage.');
+      document.getElementById('dzUp').classList.add('hidden');
+      document.getElementById('dzC').classList.remove('hidden');
+      document.querySelector('#artEd button[onclick="saveArt()"]').disabled = false;
     }, 
     () => {
       uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
         console.log('File available at', downloadURL);
         upImg = downloadURL; // This is the URL we will save to the database
         toast('Upload Complete', 'Image is ready to be saved.');
+        // Show preview of uploaded image
+        document.getElementById('dzP').src = downloadURL;
+        document.getElementById('dzP').classList.remove('hidden');
+        document.getElementById('dzUp').classList.add('hidden');
+        // Re-enable save button
+        document.querySelector('#artEd button[onclick="saveArt()"]').disabled = false;
       });
     }
   );
@@ -735,6 +751,7 @@ function clearEdForm(){
   document.getElementById('dzP').classList.add('hidden');
   document.getElementById('dzC').classList.remove('hidden');
   document.getElementById('fIn').value='';
+  document.getElementById('eUrl').value='';
   document.getElementById('imgErr').classList.add('hidden');
 }
 function loadUrl(){var u=document.getElementById('eUrl').value.trim();if(!u)return;upImg=u;document.getElementById('dzP').src=u;document.getElementById('dzP').classList.remove('hidden');document.getElementById('dzC').classList.add('hidden');document.getElementById('imgErr').classList.add('hidden')}
