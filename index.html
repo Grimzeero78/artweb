@@ -82,6 +82,14 @@
 .preview-ov .close-prev:hover{border-color:var(--ac);color:var(--ac)}
 .preview-ov .prev-info{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);text-align:center}
 </style>
+<style>
+/* Fullscreen drag overlay */
+.drag-overlay{position:fixed;inset:0;background:rgba(255,77,0,.1);border:2px dashed var(--ac);z-index:9999;display:none;align-items:center;justify-content:center;pointer-events:none}
+.drag-overlay.show{display:flex}
+.drag-overlay-content{background:var(--bgd);padding:2rem 3rem;border:1px solid var(--bd);text-align:center}
+.drag-overlay-content i{font-size:3rem;color:var(--ac);margin-bottom:.5rem}
+.drag-overlay-content div{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.1em}
+</style>
 </head>
 <body class="bgt">
 <div class="grain"></div>
@@ -95,6 +103,14 @@
     <div class="fd text-3xl" id="prevTitle"></div>
     <div class="fm text-[10px] text-[var(--mt)] mt-1 tracking-wider" id="prevMeta"></div>
     <div class="fm text-[9px] text-[var(--svd)] mt-2">Click anywhere to close</div>
+  </div>
+</div>
+
+<!-- DRAG & DROP OVERLAY -->
+<div class="drag-overlay" id="dragOv">
+  <div class="drag-overlay-content">
+    <i class="fas fa-file-image"></i>
+    <div>Drop image to upload</div>
   </div>
 </div>
 
@@ -925,12 +941,26 @@ document.querySelectorAll('.rv,.rst').forEach(function(el){obs.observe(el)});
 
 /* ====== DRAG & DROP ====== */
 var dz=document.getElementById('dz');
-dz.addEventListener('dragover',function(e){e.preventDefault();dz.classList.add('dov')});
-dz.addEventListener('dragleave',function(){dz.classList.remove('dov')});
+var dragOv=document.getElementById('dragOv');
+var dragCounter=0;
+
+window.addEventListener('dragenter',function(e){e.preventDefault();dragCounter++;dragOv.classList.add('show')});
+window.addEventListener('dragleave',function(e){e.preventDefault();dragCounter--;if(dragCounter===0)dragOv.classList.remove('show')});
+window.addEventListener('dragover',function(e){e.preventDefault()});
+window.addEventListener('drop',function(e){
+  e.preventDefault();
+  dragCounter=0;
+  dragOv.classList.remove('show');
+  // Only handle drop if it's over the admin panel editor
+  if(document.getElementById('artEd').contains(e.target)){
+    var file=e.dataTransfer.files[0];
+    if(file)hFile({target:{files:[file]}});
+  }
+});
+
 dz.addEventListener('drop',function(e){
-  e.preventDefault();dz.classList.remove('dov');
-  var file=e.dataTransfer.files[0];
-  if(file)hFile({target:{files:[file]}});
+  // Stop window drop from firing as well
+  e.stopPropagation();
 });
 
 /* ====== INIT ====== */
