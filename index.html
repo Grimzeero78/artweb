@@ -392,18 +392,17 @@ var noImgSvg="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3
 var noImgSm="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="48" height="60"><rect width="48" height="60" fill="#111"/><text x="24" y="34" text-anchor="middle" fill="#444" font-family="sans-serif" font-size="8">NO IMG</text></svg>');
 
 function ld() {
-  // Load all data from Firebase
-  db.ref().on('value', (snapshot) => {
+  // Use .once() for a reliable initial load, which is less prone to proxy/firewall issues.
+  db.ref().once('value').then(snapshot => {
     const data = snapshot.val();
     const defaultSettings = {pin:'1234',wa:'254114255987',em:'injuguna308@gmail.com',ph:'0143374333',nm:'STNCL',yr:''};
 
     if (data) {
       st = data.settings || defaultSettings;
-      // Firebase stores arrays as objects, so we convert back if needed
       art = data.art ? Object.values(data.art) : JSON.parse(JSON.stringify(defArt));
       blog = data.log ? Object.values(data.log) : [];
     } else {
-      // First time load or empty database, use defaults and save them
+      // Database is empty, populate with defaults and save.
       st = defaultSettings;
       art = JSON.parse(JSON.stringify(defArt));
       blog = [];
@@ -412,21 +411,34 @@ function ld() {
       svL();
     }
 
-    // Once data is loaded, update the UI
+    // Initial UI render
     updDisp();
     renGal();
     updStats();
     renAdmList();
     renBlog();
 
-    // Mark data as loaded and update PIN modal if it's open
+    // Mark data as loaded and enable PIN modal
     isDataLoaded = true;
     if (document.getElementById('pinMod').classList.contains('op')) {
       document.getElementById('pinLoad').classList.add('hidden');
       document.querySelector('#pinMod .grid').classList.remove('hidden');
     }
-  }, (error) => {
-    console.error("Firebase read failed: " + error.code);
+
+    // Now that initial load is complete, attach the real-time listener for subsequent updates.
+    db.ref().on('value', (subsequentSnapshot) => {
+      const updatedData = subsequentSnapshot.val();
+      if (updatedData) {
+        st = updatedData.settings || st;
+        art = updatedData.art ? Object.values(updatedData.art) : art;
+        blog = updatedData.log ? Object.values(updatedData.log) : blog;
+        // Re-render UI with new data
+        updDisp(); renGal(); updStats(); renAdmList(); renBlog();
+      }
+    });
+
+  }).catch(error => {
+    console.error("Firebase initial read failed: " + error.code, error);
     toast('Connection Error', 'Could not load data from the database.');
   });
 }
