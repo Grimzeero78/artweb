@@ -322,6 +322,30 @@
 <div class="fm text-[10px] text-[var(--mt)] tracking-[.15em]">Tap <i class="fas fa-lock text-[var(--ac)] mx-1"></i> for admin</div>
 </div></footer>
 
+<!-- START FIREBASE INTEGRATION -->
+<!-- 1. Add Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+
+<!-- 2. Initialize Firebase -->
+<script>
+  // TODO: Replace with your own Firebase project configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyD1z9igwUSBJD0cfSQ53YoYQbB_sAV9_n8",
+    authDomain: "artweb-b8a82.firebaseapp.com",
+    databaseURL: "https://artweb-b8a82-default-rtdb.firebaseio.com",
+    projectId: "artweb-b8a82",
+    storageBucket: "artweb-b8a82.appspot.com",
+    messagingSenderId: "456716979318",
+    appId: "1:456716979318:web:f669b470adad5f9b69a357"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  const storage = firebase.storage();
+</script>
+<!-- END FIREBASE INTEGRATION -->
+
 <script>
 var SA='stncl_a',SS='stncl_s',SL='stncl_l';
 
@@ -343,25 +367,41 @@ var art=[],st={},blog=[],curBk=null,curFil='all',upImg=null,pinVal='';
 var noImgSvg="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000"><rect width="800" height="1000" fill="#111"/><line x1="0" y1="0" x2="800" y2="1000" stroke="#222" stroke-width="1"/><line x1="800" y1="0" x2="0" y2="1000" stroke="#222" stroke-width="1"/><text x="400" y="480" text-anchor="middle" fill="#333" font-family="sans-serif" font-size="16">NO IMAGE</text><text x="400" y="520" text-anchor="middle" fill="#444" font-family="sans-serif" font-size="12">Upload in admin</text></svg>');
 var noImgSm="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="48" height="60"><rect width="48" height="60" fill="#111"/><text x="24" y="34" text-anchor="middle" fill="#444" font-family="sans-serif" font-size="8">NO IMG</text></svg>');
 
-function ld(){
-  try{
-    var s=localStorage.getItem(SS);
-    st=s?JSON.parse(s):{pin:'1234',wa:'254114255987',em:'injuguna308@gmail.com',ph:'0143374333',nm:'STNCL',yr:''};
-    if(!s)svS();
-    var a=localStorage.getItem(SA);
-    art=a?JSON.parse(a):JSON.parse(JSON.stringify(defArt));
-    if(!a)svA();
-    var l=localStorage.getItem(SL);
-    blog=l?JSON.parse(l):[]
-  }catch(e){
-    st={pin:'1234',wa:'254114255987',em:'injuguna308@gmail.com',ph:'0143374333',nm:'STNCL',yr:''};
-    art=JSON.parse(JSON.stringify(defArt));
-    blog=[]
-  }
+function ld() {
+  // Load all data from Firebase
+  db.ref().on('value', (snapshot) => {
+    const data = snapshot.val();
+    const defaultSettings = {pin:'1234',wa:'254114255987',em:'injuguna308@gmail.com',ph:'0143374333',nm:'STNCL',yr:''};
+
+    if (data) {
+      st = data.settings || defaultSettings;
+      // Firebase stores arrays as objects, so we convert back if needed
+      art = data.art ? Object.values(data.art) : JSON.parse(JSON.stringify(defArt));
+      blog = data.log ? Object.values(data.log) : [];
+    } else {
+      // First time load or empty database, use defaults and save them
+      st = defaultSettings;
+      art = JSON.parse(JSON.stringify(defArt));
+      blog = [];
+      svS();
+      svA();
+      svL();
+    }
+
+    // Once data is loaded, update the UI
+    updDisp();
+    renGal();
+    updStats();
+    renAdmList();
+    renBlog();
+  }, (error) => {
+    console.error("Firebase read failed: " + error.code);
+    toast('Connection Error', 'Could not load data from the database.');
+  });
 }
-function svA(){try{localStorage.setItem(SA,JSON.stringify(art))}catch(e){toast('Storage Full','Delete some artwork or use smaller images.')}}
-function svS(){localStorage.setItem(SS,JSON.stringify(st))}
-function svL(){localStorage.setItem(SL,JSON.stringify(blog))}
+function svA(){ db.ref('art').set(art).catch(e => toast('Save Failed', 'Could not save artwork: ' + e.message)); }
+function svS(){ db.ref('settings').set(st).catch(e => toast('Save Failed', 'Could not save settings: ' + e.message)); }
+function svL(){ db.ref('log').set(blog).catch(e => toast('Save Failed', 'Could not save booking log: ' + e.message)); }
 function toast(t,m){var el=document.getElementById('toast');document.getElementById('toastT').textContent=t;document.getElementById('toastM').textContent=m;el.classList.add('v');setTimeout(function(){el.classList.remove('v')},4000)}
 
 /* ====== DYNAMIC STATS ====== */
@@ -405,18 +445,44 @@ function updDots(){var d=document.getElementById('pinDots').children;for(var i=0
 function hFile(ev){
   var file=ev.target.files[0];
   if(!file)return;
-  if(!file.type.match(/^image\/(jpeg|png|webp)$/)){toast('Error','Only JPG, PNG, WEBP allowed');return}
-  if(file.size>2*1024*1024){toast('Error','Image too large — max 2MB. Compress it first.');return}
-  var reader=new FileReader();
-  reader.onload=function(e){
-    upImg=e.target.result;
-    document.getElementById('dzP').src=upImg;
-    document.getElementById('dzP').classList.remove('hidden');
-    document.getElementById('dzC').classList.add('hidden');
-    document.getElementById('imgErr').classList.add('hidden');
-  };
-  reader.onerror=function(){toast('Error','Failed to read file')};
-  reader.readAsDataURL(file);
+  if(!file.type.match(/^image\/(jpeg|png|webp)$/)){toast('Invalid File','Only JPG, PNG, or WEBP images are allowed.');return}
+  if(file.size > 2 * 1024 * 1024){toast('File Too Large','Image must be under 2MB. Please compress it first.');return}
+  
+  // --- NEW: Upload to Firebase Storage ---
+  // 1. Show a temporary local preview while uploading
+  var localUrl = URL.createObjectURL(file);
+  document.getElementById('dzP').src = localUrl;
+  document.getElementById('dzP').classList.remove('hidden');
+  document.getElementById('dzC').classList.add('hidden');
+  document.getElementById('imgErr').classList.add('hidden');
+  toast('Uploading...', 'Image is being uploaded. Please wait.');
+
+  // 2. Create a unique file name
+  const fileName = `art/${Date.now()}-${file.name}`;
+  const storageRef = storage.ref(fileName);
+
+  // 3. Upload the file
+  const uploadTask = storageRef.put(file);
+
+  // 4. Get the public URL back after upload is complete
+  uploadTask.on('state_changed', 
+    (snapshot) => {
+      // Optional: show upload progress
+      var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      console.log('Upload is ' + progress + '% done');
+    }, 
+    (error) => {
+      console.error("Upload failed:", error);
+      toast('Upload Failed', 'Could not upload image to storage.');
+    }, 
+    () => {
+      uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+        console.log('File available at', downloadURL);
+        upImg = downloadURL; // This is the URL we will save to the database
+        toast('Upload Complete', 'Image is ready to be saved.');
+      });
+    }
+  );
 }
 
 /* ====== ADMIN PANEL ====== */
@@ -837,7 +903,7 @@ dz.addEventListener('drop',function(e){
 });
 
 /* ====== INIT ====== */
-ld();updDisp();renGal();updStats();
+ld(); // ld() will now call the rendering functions once data is loaded from Firebase.
 </script>
 </body>
 </html>
