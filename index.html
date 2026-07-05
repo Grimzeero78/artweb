@@ -112,6 +112,7 @@
 <button class="pnb" onclick="pi(7)">7</button><button class="pnb" onclick="pi(8)">8</button><button class="pnb" onclick="pi(9)">9</button>
 <button class="pnb" onclick="pcl()" style="font-size:1rem"><i class="fas fa-delete-left"></i></button><button class="pnb" onclick="pi(0)">0</button><button class="pnb" onclick="psb()" style="font-size:.9rem"><i class="fas fa-check"></i></button>
 </div>
+<div class="fm text-[10px] text-[var(--mt)] tracking-wider mt-5 hidden" id="pinLoad"><i class="fas fa-spinner fa-spin mr-2"></i>Connecting...</div>
 <button onclick="closePin()" class="mt-5 fm text-[10px] text-[var(--mt)] tracking-wider hover:text-[var(--fg)] transition-colors">Cancel</button>
 <div class="mt-4 fm text-[9px] text-[var(--svd)] tracking-wider">Default PIN: 1234</div>
 </div></div>
@@ -368,7 +369,7 @@ var defArt=[
   {id:8,title:"BRICK & MORTAR",cat:"urban",price:16000,sz:"70 x 90 cm",md:"Spray on wood panel",ly:"6 layers",img:"",desc:"Architectural stencil — decay and urban memory.",av:false,yr:"2023"}
 ];
 
-var art=[],st={},blog=[],curBk=null,curFil='all',upImg=null,pinVal='';
+var art=[],st={},blog=[],curBk=null,curFil='all',upImg=null,pinVal='',isDataLoaded=false;
 
 /* Placeholder SVG for artworks without images */
 var noImgSvg="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000"><rect width="800" height="1000" fill="#111"/><line x1="0" y1="0" x2="800" y2="1000" stroke="#222" stroke-width="1"/><line x1="800" y1="0" x2="0" y2="1000" stroke="#222" stroke-width="1"/><text x="400" y="480" text-anchor="middle" fill="#333" font-family="sans-serif" font-size="16">NO IMAGE</text><text x="400" y="520" text-anchor="middle" fill="#444" font-family="sans-serif" font-size="12">Upload in admin</text></svg>');
@@ -401,6 +402,13 @@ function ld() {
     updStats();
     renAdmList();
     renBlog();
+
+    // Mark data as loaded and update PIN modal if it's open
+    isDataLoaded = true;
+    if (document.getElementById('pinMod').classList.contains('op')) {
+      document.getElementById('pinLoad').classList.add('hidden');
+      document.querySelector('#pinMod .grid').classList.remove('hidden');
+    }
   }, (error) => {
     console.error("Firebase read failed: " + error.code);
     toast('Connection Error', 'Could not load data from the database.');
@@ -441,17 +449,25 @@ function updStats(){
 }
 
 /* ====== PIN ====== */
-function openPin(){pinVal='';updDots();document.getElementById('pinErr').classList.add('hidden');document.getElementById('pinMod').classList.add('op');document.getElementById('pinOv').classList.add('op')}
+function openPin(){
+  pinVal='';
+  updDots();
+  document.getElementById('pinErr').classList.add('hidden');
+  if (!isDataLoaded) {
+    document.getElementById('pinLoad').classList.remove('hidden');
+    document.querySelector('#pinMod .grid').classList.add('hidden');
+  } else {
+    document.getElementById('pinLoad').classList.add('hidden');
+    document.querySelector('#pinMod .grid').classList.remove('hidden');
+  }
+  document.getElementById('pinMod').classList.add('op');
+  document.getElementById('pinOv').classList.add('op');
+}
 function closePin(){document.getElementById('pinMod').classList.remove('op');document.getElementById('pinOv').classList.remove('op')}
 function pi(n){if(pinVal.length>=4)return;pinVal+=n;updDots()}
 function pcl(){pinVal=pinVal.slice(0,-1);updDots()}
 function psb(){
-  if(pinVal.length!==4)return;
-  // Ensure settings are loaded before checking PIN
-  if(!st || !st.pin){
-    toast('Loading...', 'Data is still loading, please try again in a moment.');
-    return;
-  }
+  if(pinVal.length!==4 || !isDataLoaded)return;
   if(pinVal===st.pin){closePin();togAdm()}else{document.getElementById('pinErr').classList.remove('hidden');pinVal='';setTimeout(updDots,50);setTimeout(function(){document.getElementById('pinErr').classList.add('hidden')},2000)}}
 function updDots(){var d=document.getElementById('pinDots').children;for(var i=0;i<4;i++){if(i<pinVal.length)d[i].classList.add('fl');else d[i].classList.remove('fl')}}
 
