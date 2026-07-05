@@ -194,16 +194,23 @@
     <div class="space-y-4">
       <input type="hidden" id="eId">
       <div>
-        <label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1.5">Photo * <span class="text-[var(--ac)]">(from your PC only)</span></label>
+        <label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1.5">Photo *</label>
+        <div class="bg-[var(--bg)] border border-[var(--bd)] p-3 mb-3">
+          <p class="text-xs leading-relaxed"><i class="fas fa-info-circle text-[var(--ac)] mr-1"></i> You can either <b class="text-[var(--fg)]">upload a file</b> from your PC OR <b class="text-[var(--fg)]">paste an image URL</b> below.</p>
+        </div>
         <div class="dz" id="dz" onclick="document.getElementById('fIn').click()">
           <div id="dzC">
             <i class="fas fa-cloud-upload-alt text-3xl text-[var(--mt)] mb-3"></i>
-            <div class="fm text-[11px] text-[var(--mt)] tracking-wider">Click to upload from PC</div>
+            <div class="fm text-[11px] text-[var(--mt)] tracking-wider">Click to Upload from PC</div>
             <div class="fm text-[9px] text-[var(--svd)] mt-1">JPG, PNG, WEBP — Max 2MB</div>
           </div>
           <img id="dzP" src="" class="hidden" alt="">
         </div>
         <input type="file" id="fIn" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="hFile(event)">
+        <div class="relative flex items-center mt-3">
+          <input type="text" class="ax pr-20" id="eUrl" placeholder="Or paste image URL (e.g., from Imgur)">
+          <button onclick="loadUrl()" class="absolute right-1 top-1 bottom-1 text-xs fm tracking-wider bg-[var(--bch)] px-2 hover:bg-[var(--bdl)] transition-colors">PREVIEW</button>
+        </div>
         <div id="imgErr" class="text-red-400 text-[10px] fm mt-2 hidden"><i class="fas fa-exclamation-triangle mr-1"></i>Please upload an image from your PC</div>
       </div>
       <div class="grid grid-cols-2 gap-3">
@@ -438,7 +445,14 @@ function openPin(){pinVal='';updDots();document.getElementById('pinErr').classLi
 function closePin(){document.getElementById('pinMod').classList.remove('op');document.getElementById('pinOv').classList.remove('op')}
 function pi(n){if(pinVal.length>=4)return;pinVal+=n;updDots()}
 function pcl(){pinVal=pinVal.slice(0,-1);updDots()}
-function psb(){if(pinVal.length!==4)return;if(pinVal===st.pin){closePin();togAdm()}else{document.getElementById('pinErr').classList.remove('hidden');pinVal='';setTimeout(updDots,50);setTimeout(function(){document.getElementById('pinErr').classList.add('hidden')},2000)}}
+function psb(){
+  if(pinVal.length!==4)return;
+  // Ensure settings are loaded before checking PIN
+  if(!st || !st.pin){
+    toast('Loading...', 'Data is still loading, please try again in a moment.');
+    return;
+  }
+  if(pinVal===st.pin){closePin();togAdm()}else{document.getElementById('pinErr').classList.remove('hidden');pinVal='';setTimeout(updDots,50);setTimeout(function(){document.getElementById('pinErr').classList.add('hidden')},2000)}}
 function updDots(){var d=document.getElementById('pinDots').children;for(var i=0;i<4;i++){if(i<pinVal.length)d[i].classList.add('fl');else d[i].classList.remove('fl')}}
 
 /* ====== FILE UPLOAD ====== */
@@ -491,7 +505,7 @@ function togAdm(){
   if(p.classList.contains('op')){
     p.classList.remove('op');o.classList.remove('op');document.body.style.overflow='';closeEd()
   }else{
-    renAdmList();renBlog();ldSet();updStats();
+    ldSet(); // ld() already calls the render functions, just load settings into the form
     p.classList.add('op');o.classList.add('op');document.body.style.overflow='hidden'
   }
 }
@@ -679,6 +693,7 @@ function clearEdForm(){
   document.getElementById('fIn').value='';
   document.getElementById('imgErr').classList.add('hidden');
 }
+function loadUrl(){var u=document.getElementById('eUrl').value.trim();if(!u)return;upImg=u;document.getElementById('dzP').src=u;document.getElementById('dzP').classList.remove('hidden');document.getElementById('dzC').classList.add('hidden');document.getElementById('imgErr').classList.add('hidden')}
 
 /* ====== SAVE ART ====== */
 function saveArt(){
@@ -686,7 +701,7 @@ function saveArt(){
   var price=parseInt(document.getElementById('ePr').value);
 
   if(!title){toast('Error','Title is required');document.getElementById('eTi').focus();return}
-  if(!price&&price!==0){toast('Error','Enter a valid price');document.getElementById('ePr').focus();return}
+  if(isNaN(price)){toast('Error','Enter a valid price');document.getElementById('ePr').focus();return}
   if(!upImg){document.getElementById('imgErr').classList.remove('hidden');toast('Error','Upload an image from your PC');return}
 
   var editId=document.getElementById('eId').value;
