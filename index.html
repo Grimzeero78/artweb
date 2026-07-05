@@ -57,6 +57,7 @@
 /* Admin art row */
 .ai-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--bd);background:var(--bg);transition:border-color .3s,background .3s}
 .ai-row:hover{border-color:var(--bdl);background:var(--bch)}
+.ai-row.no-img{border-left:2px solid #eab308;}
 .ai-thumb{width:48px;height:60px;object-fit:cover;border:1px solid var(--bdl);flex-shrink:0;background:var(--bc)}
 .ai-thumb-none{width:48px;height:60px;border:1px solid var(--bdl);flex-shrink:0;background:var(--bc);display:flex;align-items:center;justify-content:center;color:var(--svd);font-size:10px}
 .ai-info{flex:1;min-width:0;overflow:hidden}
@@ -355,7 +356,6 @@
 <!-- 1. Add Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
 <!-- 2. Initialize Firebase -->
 <script>
@@ -371,7 +371,6 @@
   };
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
-  const storage = firebase.storage();
 </script>
 <!-- END FIREBASE INTEGRATION -->
 
@@ -510,53 +509,21 @@ function hFile(ev){
   if(!file)return;
   if(!file.type.match(/^image\/(jpeg|png|webp)$/)){toast('Invalid File','Only JPG, PNG, or WEBP images are allowed.');return}
   if(file.size > 2 * 1024 * 1024){toast('File Too Large','Image must be under 2MB. Please compress it first.');return}
-  
-  // --- NEW: Upload to Firebase Storage ---
-  // 1. Show a temporary local preview while uploading
-  document.getElementById('dzUp').classList.remove('hidden');
-  document.getElementById('dzC').classList.add('hidden');
-  document.getElementById('imgErr').classList.add('hidden');
-  document.getElementById('upProgBar').style.width = '0%';
-  document.getElementById('upProgText').textContent = 'Uploading... 0%';
-  // Disable save button during upload
-  document.querySelector('#artEd button[onclick="saveArt()"]').disabled = true;
-  
-  // 2. Create a unique file name
-  const fileName = `art/${Date.now()}-${file.name}`;
-  const storageRef = storage.ref(fileName);
 
-  // 3. Upload the file
-  const uploadTask = storageRef.put(file);
-
-  // 4. Get the public URL back after upload is complete
-  uploadTask.on('state_changed', 
-    (snapshot) => {
-      // Show upload progress
-      var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      document.getElementById('upProgBar').style.width = progress + '%';
-      document.getElementById('upProgText').textContent = 'Uploading... ' + Math.round(progress) + '%';
-    }, 
-    (error) => {
-      console.error("Upload failed:", error);
-      toast('Upload Failed', 'Could not upload image to storage.');
-      document.getElementById('dzUp').classList.add('hidden');
-      document.getElementById('dzC').classList.remove('hidden');
-      document.querySelector('#artEd button[onclick="saveArt()"]').disabled = false;
-    }, 
-    () => {
-      uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-        console.log('File available at', downloadURL);
-        upImg = downloadURL; // This is the URL we will save to the database
-        toast('Upload Complete', 'Image is ready to be saved.');
-        // Show preview of uploaded image
-        document.getElementById('dzP').src = downloadURL;
-        document.getElementById('dzP').classList.remove('hidden');
-        document.getElementById('dzUp').classList.add('hidden');
-        // Re-enable save button
-        document.querySelector('#artEd button[onclick="saveArt()"]').disabled = false;
-      });
-    }
-  );
+  // --- Convert image to Base64 text to store in the database ---
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    upImg = e.target.result; // This is the Base64 text string
+    document.getElementById('dzP').src = upImg;
+    document.getElementById('dzP').classList.remove('hidden');
+    document.getElementById('dzC').classList.add('hidden');
+    document.getElementById('imgErr').classList.add('hidden');
+    toast('Image Ready', 'Image has been loaded and is ready to save.');
+  };
+  reader.onerror = function() {
+    toast('Error', 'Failed to read file.');
+  };
+  reader.readAsDataURL(file);
 }
 
 /* ====== ADMIN PANEL ====== */
@@ -596,7 +563,7 @@ function renAdmList(){
     var thumbSrc=hasImg?a.img:noImgSm;
     var ps=(typeof a.price==='number'&&a.price>999)?a.price.toLocaleString():a.price;
 
-    html+='<div class="ai-row" data-id="'+a.id+'">';
+    html+='<div class="ai-row' + (!hasImg ? ' no-img' : '') + '" data-id="'+a.id+'">';
 
     // Thumbnail
     if(hasImg){
@@ -750,6 +717,10 @@ function clearEdForm(){
   upImg=null;
   document.getElementById('dzP').classList.add('hidden');
   document.getElementById('dzC').classList.remove('hidden');
+  // Hide the upload progress bar section if it was visible
+  document.getElementById('dzUp').classList.add('hidden');
+  // Re-enable save button in case an upload failed
+  document.querySelector('#artEd button[onclick="saveArt()"]').disabled = false;
   document.getElementById('fIn').value='';
   document.getElementById('eUrl').value='';
   document.getElementById('imgErr').classList.add('hidden');
