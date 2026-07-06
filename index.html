@@ -176,8 +176,12 @@
 <!-- ART TAB -->
 <div class="atc p-5" id="t-art">
   <div class="flex items-center justify-between mb-4">
-    <button onclick="openEd()" class="fh text-sm tracking-[.12em] uppercase border border-dashed border-[var(--acd)] text-[var(--ac)] px-4 py-2.5 hover:bg-[var(--ac)] hover:text-black transition-all"><i class="fas fa-plus mr-2"></i>Add New Artwork</button>
-    <div class="fm text-[10px] text-[var(--mt)]"><span id="artCount">0</span> total · <span id="soldCount">0</span> sold</div>
+    <button onclick="openEd()" class="fh text-sm tracking-[.12em] uppercase border border-dashed border-[var(--acd)] text-[var(--ac)] px-4 py-2.5 hover:bg-[var(--ac)] hover:text-black transition-all"><i class="fas fa-plus mr-2"></i>Add</button>
+    <div class="fm text-[10px] text-[var(--mt)] text-right"><span id="artCount">0</span> total · <span id="soldCount">0</span> sold</div>
+  </div>
+  <div class="flex items-center justify-between mb-4 border-t border-[var(--bd)] pt-4">
+    <div class="fm text-[9px] text-[var(--mt)] tracking-wider">SORT BY:</div>
+    <div class="flex gap-1" id="sortBtns"><button class="cp srt-btn acl" data-sort="newest">Newest</button><button class="cp srt-btn" data-sort="oldest">Oldest</button><button class="cp srt-btn" data-sort="price_desc">Price</button></div>
   </div>
   <div id="admList" class="space-y-2"></div>
 </div>
@@ -389,582 +393,446 @@ var defArt=[
   {id:8,title:"BRICK & MORTAR",cat:"urban",price:16000,sz:"70 x 90 cm",md:"Spray on wood panel",ly:"6 layers",img:"",desc:"Architectural stencil — decay and urban memory.",av:false,yr:"2023"}
 ];
 
-var art=[],st={},blog=[],curBk=null,curFil='all',upImg=null,pinVal='',isDataLoaded=false;
+var art=[],st={},blog=[],curBk=null,curFil='all',upImg=null,pinVal='',isDataLoaded=false,adminSort='newest';
 
 /* Placeholder SVG for artworks without images */
 var noImgSvg="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000"><rect width="800" height="1000" fill="#111"/><line x1="0" y1="0" x2="800" y2="1000" stroke="#222" stroke-width="1"/><line x1="800" y1="0" x2="0" y2="1000" stroke="#222" stroke-width="1"/><text x="400" y="480" text-anchor="middle" fill="#333" font-family="sans-serif" font-size="16">NO IMAGE</text><text x="400" y="520" text-anchor="middle" fill="#444" font-family="sans-serif" font-size="12">Upload in admin</text></svg>');
 var noImgSm="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="48" height="60"><rect width="48" height="60" fill="#111"/><text x="24" y="34" text-anchor="middle" fill="#444" font-family="sans-serif" font-size="8">NO IMG</text></svg>');
-
 function ld() {
-  // Use .once() for a reliable initial load, which is less prone to proxy/firewall issues.
-  db.ref().once('value').then(snapshot => {
-    const data = snapshot.val();
-    const defaultSettings = {pin:'1234',wa:'254114255987',em:'injuguna308@gmail.com',ph:'0143374333',nm:'STNCL',yr:''};
+  // 1. Load Settings (Local only, no need to sync these)
+  try {
+    var s = localStorage.getItem(SS);
+    st = s ? JSON.parse(s) : {pin:'1234', wa:'254114255987', em:'injuguna308@gmail.com', ph:'0143374333', nm:'STNCL', yr:''};
+    if(!s) svS();
+    var l = localStorage.getItem(SL);
+    blog = l ? JSON.parse(l) : [];
+  } catch(e) {
+    st = {pin:'1234', wa:'254114255987', em:'injuguna308@gmail.com', ph:'0143374333', nm:'STNCL', yr:''};
+    blog = [];
+  }
 
+  // 2. Load Art from Firebase (This fixes the infinite loading loop)
+  db.ref('art').once('value').then(function(snapshot) {
+    var data = snapshot.val();
     if (data) {
-      st = data.settings || defaultSettings;
-      art = data.art ? Object.values(data.art) : JSON.parse(JSON.stringify(defArt));
-      blog = data.log ? Object.values(data.log) : [];
+      // Firebase sometimes returns objects instead of arrays, fix that:
+      art = Array.isArray(data) ? data : Object.values(data);
     } else {
-      // Database is empty, populate with defaults and save.
-      st = defaultSettings;
+      // Database is empty! Push your default art to Firebase
       art = JSON.parse(JSON.stringify(defArt));
-      blog = [];
-      svS();
-      svA();
-      svL();
+      svA(); 
     }
-
-    // Initial UI render
-    updDisp();
-    renGal();
-    updStats();
-    renAdmList();
-    renBlog();
-
-    // Mark data as loaded and enable PIN modal
+    
     isDataLoaded = true;
-    if (document.getElementById('pinMod').classList.contains('op')) {
-      document.getElementById('pinLoad').classList.add('hidden');
-      document.querySelector('#pinMod .grid').classList.remove('hidden');
-    }
-
-    // Now that initial load is complete, attach the real-time listener for subsequent updates.
-    db.ref().on('value', (subsequentSnapshot) => {
-      const updatedData = subsequentSnapshot.val();
-      if (updatedData) {
-        st = updatedData.settings || st;
-        art = updatedData.art ? Object.values(updatedData.art) : art;
-        blog = updatedData.log ? Object.values(updatedData.log) : blog;
-        // Re-render UI with new data
-        updDisp(); renGal(); updStats(); renAdmList(); renBlog();
-      }
-    });
-
-  }).catch(error => {
-    console.error("Firebase initial read failed: " + error.code, error);
-    toast('Connection Error', 'Could not load data from the database.');
+    initUI(); // Start the website only AFTER data is downloaded
+    
+  }).catch(function(error) {
+    console.error("Firebase failed, using local backup:", error);
+    var a = localStorage.getItem(SA);
+    art = a ? JSON.parse(a) : JSON.parse(JSON.stringify(defArt));
+    isDataLoaded = true;
+    initUI();
   });
 }
-function svA(){ db.ref('art').set(art).catch(e => toast('Save Failed', 'Could not save artwork: ' + e.message)); }
-function svS(){ db.ref('settings').set(st).catch(e => toast('Save Failed', 'Could not save settings: ' + e.message)); }
-function svL(){ db.ref('log').set(blog).catch(e => toast('Save Failed', 'Could not save booking log: ' + e.message)); }
-function toast(t,m){var el=document.getElementById('toast');document.getElementById('toastT').textContent=t;document.getElementById('toastM').textContent=m;el.classList.add('v');setTimeout(function(){el.classList.remove('v')},4000)}
 
-/* ====== DYNAMIC STATS ====== */
-function getStats(){
-  var sold=art.filter(function(a){return !a.av}).length;
-  var years=st.yr?parseInt(st.yr):0;
-  if(!years && art.length>0){
-    var minYear=9999;
-    art.forEach(function(a){if(a.yr){var y=parseInt(a.yr);if(y<minYear)minYear=y}});
-    if(minYear<9999)years=new Date().getFullYear()-minYear;
-    if(years<1)years=1;
+function initUI() {
+  updStats();
+  renderAdmin();
+  renderGallery('all');
+  loadSet();
+  initObservers();
+}
+
+// --- SAVE FUNCTIONS ---
+function svA() { 
+  db.ref('art').set(art).catch(e => console.error(e)); 
+  try { localStorage.setItem(SA, JSON.stringify(art)); } catch(e) {}
+}
+function svS() { localStorage.setItem(SS, JSON.stringify(st)); }
+function svL() { localStorage.setItem(SL, JSON.stringify(blog)); }
+function toast(t,m) { var el=document.getElementById('toast'); document.getElementById('toastT').textContent=t; document.getElementById('toastM').textContent=m; el.classList.add('v'); setTimeout(function(){el.classList.remove('v')},4000); }
+
+// --- FILE & URL HANDLING ---
+function hFile(ev) {
+  var file = ev.target.files[0];
+  if(!file) return;
+  
+  // CRITICAL: Block files over 400KB to prevent crashing Firebase
+  if(file.size > 400000) { 
+    toast('File Too Big', 'Max 400KB for direct upload. Use the URL box below for larger images.'); 
+    return; 
   }
-  var maxLayers=0;
-  art.forEach(function(a){if(a.ly){var m=parseInt(a.ly);if(m>maxLayers)maxLayers=m}});
-  if(!maxLayers)maxLayers=7;
-  var collections=Math.max(1,Math.floor(sold/4));
-  return{sold:sold,years:years,maxLayers:maxLayers,collections:collections}
-}
-function updStats(){
-  var s=getStats();
-  document.getElementById('statSold').textContent=s.sold;
-  document.getElementById('statYears').textContent=s.years;
-  document.getElementById('statLayers').textContent=s.maxLayers;
-  document.getElementById('statCollections').textContent=s.collections;
-  document.getElementById('aboutSold').textContent=s.sold;
-  document.getElementById('aboutYears').textContent=s.years+'+';
-  document.getElementById('aboutLayers').textContent=s.maxLayers;
-  document.getElementById('artCount').textContent=art.length;
-  document.getElementById('soldCount').textContent=s.sold;
-}
-
-/* ====== PIN ====== */
-function openPin(){
-  pinVal='';
-  updDots();
-  document.getElementById('pinErr').classList.add('hidden');
-  if (!isDataLoaded) {
-    document.getElementById('pinLoad').classList.remove('hidden');
-    document.querySelector('#pinMod .grid').classList.add('hidden');
-  } else {
-    document.getElementById('pinLoad').classList.add('hidden');
-    document.querySelector('#pinMod .grid').classList.remove('hidden');
-  }
-  document.getElementById('pinMod').classList.add('op');
-  document.getElementById('pinOv').classList.add('op');
-}
-function closePin(){document.getElementById('pinMod').classList.remove('op');document.getElementById('pinOv').classList.remove('op')}
-function pi(n){if(pinVal.length>=4)return;pinVal+=n;updDots()}
-function pcl(){pinVal=pinVal.slice(0,-1);updDots()}
-function psb(){
-  if(pinVal.length!==4 || !isDataLoaded)return;
-  if(pinVal===st.pin){closePin();togAdm()}else{document.getElementById('pinErr').classList.remove('hidden');pinVal='';setTimeout(updDots,50);setTimeout(function(){document.getElementById('pinErr').classList.add('hidden')},2000)}}
-function updDots(){var d=document.getElementById('pinDots').children;for(var i=0;i<4;i++){if(i<pinVal.length)d[i].classList.add('fl');else d[i].classList.remove('fl')}}
-
-/* ====== FILE UPLOAD ====== */
-function hFile(ev){
-  var file=ev.target.files[0];
-  if(!file)return;
-  if(!file.type.match(/^image\/(jpeg|png|webp)$/)){toast('Invalid File','Only JPG, PNG, or WEBP images are allowed.');return}
-  if(file.size > 2 * 1024 * 1024){toast('File Too Large','Image must be under 2MB. Please compress it first.');return}
-
-  // --- Convert image to Base64 text to store in the database ---
+  
   var reader = new FileReader();
-  reader.onload = function(e) {
-    upImg = e.target.result; // This is the Base64 text string
+  reader.onload = function(e) { 
+    upImg = e.target.result; 
+    document.getElementById('dzC').classList.add('hidden');
     document.getElementById('dzP').src = upImg;
     document.getElementById('dzP').classList.remove('hidden');
-    document.getElementById('dzC').classList.add('hidden');
     document.getElementById('imgErr').classList.add('hidden');
-    toast('Image Ready', 'Image has been loaded and is ready to save.');
-  };
-  reader.onerror = function() {
-    toast('Error', 'Failed to read file.');
   };
   reader.readAsDataURL(file);
 }
 
-/* ====== ADMIN PANEL ====== */
-function togAdm(){
-  var p=document.getElementById('admPan'),o=document.getElementById('admOv');
-  if(p.classList.contains('op')){
-    p.classList.remove('op');o.classList.remove('op');document.body.style.overflow='';closeEd()
-  }else{
-    ldSet(); // ld() already calls the render functions, just load settings into the form
-    p.classList.add('op');o.classList.add('op');document.body.style.overflow='hidden'
-  }
-}
-function swTab(t){
-  document.querySelectorAll('.atb').forEach(function(b){
-    b.style.color=b.dataset.t===t?'var(--ac)':'var(--mt)';
-    b.style.borderBottom=b.dataset.t===t?'1px solid var(--ac)':'none'
-  });
-  document.getElementById('t-art').classList.toggle('hidden',t!=='art');
-  document.getElementById('t-blog').classList.toggle('hidden',t!=='blog');
-  document.getElementById('t-set').classList.toggle('hidden',t!=='set');
-  closeEd();
-  if(t==='blog')renBlog();
-  if(t==='art'){renAdmList();updStats()}
-}
-
-/* ====== ADMIN ART LIST ====== */
-function renAdmList(){
-  var c=document.getElementById('admList');
-  if(!art.length){
-    c.innerHTML='<div class="text-center py-10"><i class="fas fa-image text-3xl text-[var(--svd)] mb-3"></i><div class="fm text-[10px] text-[var(--mt)] tracking-wider">No artwork yet</div><div class="fm text-[9px] text-[var(--svd)] mt-1">Click "Add New Artwork" to start</div></div>';
-    return;
-  }
-  var html='';
-  for(var i=0;i<art.length;i++){
-    var a=art[i];
-    var hasImg=a.img&&a.img.length>10;
-    var thumbSrc=hasImg?a.img:noImgSm;
-    var ps=(typeof a.price==='number'&&a.price>999)?a.price.toLocaleString():a.price;
-
-    html+='<div class="ai-row' + (!hasImg ? ' no-img' : '') + '" data-id="'+a.id+'">';
-
-    // Thumbnail
-    if(hasImg){
-      html+='<img src="'+thumbSrc+'" class="ai-thumb" alt="'+a.title+'">';
-    }else{
-      html+='<div class="ai-thumb-none"><i class="fas fa-image"></i></div>';
-    }
-
-    // Info
-    html+='<div class="ai-info">';
-    html+='<div class="ai-title">'+a.title+'</div>';
-    html+='<div class="ai-meta">';
-    html+='<span>'+a.cat+'</span>';
-    html+='<span>·</span>';
-    html+='<span>'+a.yr+'</span>';
-    html+='<span>·</span>';
-    html+='<span>KES '+ps+'</span>';
-    html+='</div>';
-    html+='<div class="ai-meta" style="margin-top:4px">';
-    if(a.av){
-      html+='<span class="ai-status avail"><i class="fas fa-eye" style="margin-right:3px"></i>Available</span>';
-    }else{
-      html+='<span class="ai-status sold"><i class="fas fa-eye-slash" style="margin-right:3px"></i>Sold</span>';
-    }
-    if(!hasImg){
-      html+='<span style="color:#eab308;font-size:8px;margin-left:6px"><i class="fas fa-exclamation-circle"></i> No image</span>';
-    }
-    html+='</div>';
-    html+='</div>';
-
-    // Buttons: Edit | Eye | Delete
-    html+='<div class="ai-btns">';
-
-    // Edit button
-    html+='<button class="ai-btn" onclick="editArt('+a.id+')" title="Edit artwork"><i class="fas fa-pen"></i></button>';
-
-    // Eye button - toggles available/sold
-    if(a.av){
-      html+='<button class="ai-btn eye-on" onclick="toggleAvail('+a.id+')" title="Currently visible — click to mark as sold"><i class="fas fa-eye"></i></button>';
-    }else{
-      html+='<button class="ai-btn eye-off" onclick="toggleAvail('+a.id+')" title="Currently sold — click to make available again"><i class="fas fa-eye-slash"></i></button>';
-    }
-
-    // Delete button
-    html+='<button class="ai-btn del" onclick="delArt('+a.id+')" title="Delete artwork completely"><i class="fas fa-trash-can"></i></button>';
-
-    html+='</div>';
-    html+='</div>';
-  }
-  c.innerHTML=html;
-}
-
-/* ====== EYE - TOGGLE AVAILABLE/SOLD ====== */
-function toggleAvail(id){
-  var a=art.find(function(x){return x.id===id});
-  if(!a)return;
-  a.av=!a.av;
-  svA();
-  renAdmList();
-  renGal();
-  updStats();
-  if(a.av){
-    toast('Now Available','"'+a.title+'" is visible on the gallery');
-  }else{
-    toast('Marked as Sold','"'+a.title+'" — sold count updated');
-  }
-}
-
-/* ====== EDIT ART ====== */
-function editArt(id){
-  var a=art.find(function(x){return x.id===id});
-  if(!a)return;
-
-  // Show editor
-  document.getElementById('artEd').classList.remove('hidden');
-  document.getElementById('artEd').scrollIntoView({behavior:'smooth',block:'nearest'});
-  document.getElementById('edTitle').textContent='Edit: '+a.title;
-  document.getElementById('saveBtnText').textContent='Update Artwork';
-
-  // Fill form
-  document.getElementById('eId').value=a.id;
-  document.getElementById('eTi').value=a.title;
-  document.getElementById('ePr').value=a.price;
-  document.getElementById('eCa').value=a.cat;
-  document.getElementById('eSz').value=a.sz||'';
-  document.getElementById('eMd').value=a.md||'';
-  document.getElementById('eLy').value=a.ly||'';
-  document.getElementById('eYr').value=a.yr||'';
-  document.getElementById('eDe').value=a.desc||'';
-  document.getElementById('eAv').checked=a.av;
-
-  // Load existing image
-  upImg=a.img||null;
-  if(upImg){
-    document.getElementById('dzP').src=upImg;
-    document.getElementById('dzP').classList.remove('hidden');
-    document.getElementById('dzC').classList.add('hidden');
-  }else{
-    document.getElementById('dzP').classList.add('hidden');
-    document.getElementById('dzC').classList.remove('hidden');
-  }
+function loadUrl() {
+  var url = document.getElementById('eUrl').value.trim();
+  if(!url) return;
+  upImg = url;
+  document.getElementById('dzC').classList.add('hidden');
+  document.getElementById('dzP').src = upImg;
+  document.getElementById('dzP').classList.remove('hidden');
   document.getElementById('imgErr').classList.add('hidden');
 }
 
-/* ====== DELETE ART ====== */
-function delArt(id){
-  var a=art.find(function(x){return x.id===id});
-  if(!a)return;
-
-  // Custom confirm via a simple approach
-  var name=a.title;
-  if(!confirm('Delete "'+name+'"?\nThis removes the image and all details completely.'))return;
-
-  art=art.filter(function(x){return x.id!==id});
-  svA();
-  renAdmList();
-  renGal();
-  updStats();
-
-  // Close editor if this was being edited
-  if(parseInt(document.getElementById('eId').value)===id){
-    closeEd();
-  }
-
-  toast('Deleted','"'+name+'" removed from gallery');
-}
-
-/* ====== OPEN/CLOSE EDITOR ====== */
-function openEd(){
-  document.getElementById('artEd').classList.remove('hidden');
-  document.getElementById('edTitle').textContent='New Artwork';
-  document.getElementById('saveBtnText').textContent='Save Artwork';
-  clearEdForm();
-  setTimeout(function(){document.getElementById('artEd').scrollIntoView({behavior:'smooth',block:'nearest'})},50);
-}
-function closeEd(){
-  document.getElementById('artEd').classList.add('hidden');
-  clearEdForm();
-}
-function clearEdForm(){
-  document.getElementById('eId').value='';
-  document.getElementById('eTi').value='';
-  document.getElementById('ePr').value='';
-  document.getElementById('eCa').value='portrait';
-  document.getElementById('eSz').value='';
-  document.getElementById('eMd').value='';
-  document.getElementById('eLy').value='';
-  document.getElementById('eYr').value=new Date().getFullYear();
-  document.getElementById('eDe').value='';
-  document.getElementById('eAv').checked=true;
-  upImg=null;
-  document.getElementById('dzP').classList.add('hidden');
+// --- ADMIN UI ---
+function openEd(id) {
+  var ed = document.getElementById('artEd');
+  ed.classList.remove('hidden');
+  upImg = null;
   document.getElementById('dzC').classList.remove('hidden');
-  // Hide the upload progress bar section if it was visible
-  document.getElementById('dzUp').classList.add('hidden');
-  // Re-enable save button in case an upload failed
-  document.querySelector('#artEd button[onclick="saveArt()"]').disabled = false;
-  document.getElementById('fIn').value='';
-  document.getElementById('eUrl').value='';
+  document.getElementById('dzP').classList.add('hidden');
+  document.getElementById('eUrl').value = '';
   document.getElementById('imgErr').classList.add('hidden');
+
+  if(id) {
+    document.getElementById('edTitle').textContent = 'EDIT ARTWORK';
+    document.getElementById('saveBtnText').textContent = 'Update Artwork';
+    var a = art.find(x => x.id == id);
+    if(a) {
+      document.getElementById('eId').value = a.id;
+      document.getElementById('eTi').value = a.title;
+      document.getElementById('ePr').value = a.price;
+      document.getElementById('eCa').value = a.cat;
+      document.getElementById('eSz').value = a.sz||'';
+      document.getElementById('eMd').value = a.md||'';
+      document.getElementById('eLy').value = a.ly||'';
+      document.getElementById('eYr').value = a.yr||'';
+      document.getElementById('eDe').value = a.desc||'';
+      document.getElementById('eAv').checked = a.av;
+      if(a.img) {
+        upImg = a.img;
+        document.getElementById('dzC').classList.add('hidden');
+        document.getElementById('dzP').src = a.img;
+        document.getElementById('dzP').classList.remove('hidden');
+        if(!a.img.startsWith('data:')) document.getElementById('eUrl').value = a.img;
+      }
+    }
+  } else {
+    document.getElementById('edTitle').textContent = 'NEW ARTWORK';
+    document.getElementById('saveBtnText').textContent = 'Save Artwork';
+    document.getElementById('eId').value = '';
+    document.getElementById('eTi').value = '';
+    document.getElementById('ePr').value = '';
+    document.getElementById('eCa').value = 'portrait';
+    document.getElementById('eSz').value = '';
+    document.getElementById('eMd').value = '';
+    document.getElementById('eLy').value = '';
+    document.getElementById('eYr').value = '2024';
+    document.getElementById('eDe').value = '';
+    document.getElementById('eAv').checked = true;
+  }
+  ed.scrollIntoView({behavior:'smooth'});
 }
-function loadUrl(){var u=document.getElementById('eUrl').value.trim();if(!u)return;upImg=u;document.getElementById('dzP').src=u;document.getElementById('dzP').classList.remove('hidden');document.getElementById('dzC').classList.add('hidden');document.getElementById('imgErr').classList.add('hidden')}
 
-/* ====== SAVE ART ====== */
-function saveArt(){
-  var title=document.getElementById('eTi').value.trim();
-  var price=parseInt(document.getElementById('ePr').value);
+function closeEd() { document.getElementById('artEd').classList.add('hidden'); }
 
-  if(!title){toast('Error','Title is required');document.getElementById('eTi').focus();return}
-  if(isNaN(price)){toast('Error','Enter a valid price');document.getElementById('ePr').focus();return}
-  if(!upImg){document.getElementById('imgErr').classList.remove('hidden');toast('Error','Upload an image from your PC');return}
-
-  var editId=document.getElementById('eId').value;
-  var artData={
-    title:title,
-    price:price,
-    cat:document.getElementById('eCa').value,
-    sz:document.getElementById('eSz').value.trim(),
-    md:document.getElementById('eMd').value.trim(),
-    ly:document.getElementById('eLy').value.trim(),
-    yr:document.getElementById('eYr').value.trim()||String(new Date().getFullYear()),
-    desc:document.getElementById('eDe').value.trim(),
-    av:document.getElementById('eAv').checked,
-    img:upImg
+function saveArt() {
+  if(!upImg) { document.getElementById('imgErr').classList.remove('hidden'); return; }
+  
+  var id = document.getElementById('eId').value;
+  var obj = {
+    id: id ? parseInt(id) : Date.now(),
+    title: document.getElementById('eTi').value || 'UNTITLED',
+    cat: document.getElementById('eCa').value,
+    price: parseInt(document.getElementById('ePr').value) || 0,
+    sz: document.getElementById('eSz').value,
+    md: document.getElementById('eMd').value,
+    ly: document.getElementById('eLy').value,
+    yr: document.getElementById('eYr').value,
+    desc: document.getElementById('eDe').value,
+    img: upImg,
+    av: document.getElementById('eAv').checked
   };
 
-  if(editId){
-    var idx=art.findIndex(function(a){return a.id===parseInt(editId)});
-    if(idx>-1){artData.id=parseInt(editId);art[idx]=artData}
-    toast('Updated','"'+title+'" updated successfully');
-  }else{
-    artData.id=art.length?Math.max.apply(null,art.map(function(a){return a.id}))+1:1;
-    art.unshift(artData);
-    toast('Added','"'+title+'" added to gallery');
+  if(id) {
+    var idx = art.findIndex(a => a.id == id);
+    if(idx > -1) art[idx] = obj;
+  } else {
+    art.unshift(obj);
   }
 
-  svA();renAdmList();renGal();updStats();closeEd();
+  svA();
+  toast('Saved', obj.title + ' synced to cloud.');
+  closeEd();
+  renderAdmin();
+  renderGallery(curFil);
 }
 
-/* ====== IMAGE PREVIEW ====== */
-function openPrev(id){
-  var a=art.find(function(x){return x.id===id});
-  if(!a||!a.img){toast('No Image','This artwork has no image uploaded yet');return}
-  document.getElementById('prevImg').src=a.img;
-  document.getElementById('prevTitle').textContent=a.title;
-  var ps=(typeof a.price==='number'&&a.price>999)?a.price.toLocaleString():a.price;
-  document.getElementById('prevMeta').textContent=(a.md||'')+' · '+(a.sz||'')+' · KES '+ps+(a.av?' · Available':' · Sold');
-  document.getElementById('prevOv').classList.add('show');
-}
-function closePrev(ev){
-  if(ev&&ev.target&&ev.target.tagName==='IMG')return;
-  document.getElementById('prevOv').classList.remove('show');
+function delArt(id) {
+  if(!confirm('Delete this artwork permanently?')) return;
+  art = art.filter(a => a.id !== id);
+  svA();
+  renderAdmin();
+  renderGallery(curFil);
+  toast('Deleted', 'Artwork removed.');
 }
 
-/* ====== GALLERY RENDER ====== */
-function renGal(){
-  var g=document.getElementById('artG'),e=document.getElementById('empG');
-  var f=curFil==='all'?art:art.filter(function(a){return a.cat===curFil});
-  if(!f.length){g.innerHTML='';e.classList.remove('hidden');return}
-  e.classList.add('hidden');
+function togAv(id) {
+  var a = art.find(x => x.id == id);
+  if(a) { a.av = !a.av; svA(); renderAdmin(); renderGallery(curFil); }
+}
 
-  var html='';
-  for(var i=0;i<f.length;i++){
-    var a=f[i];
-    var hasImg=a.img&&a.img.length>10;
-    var imgSrc=hasImg?a.img:noImgSvg;
-    var ps=(typeof a.price==='number'&&a.price>999)?a.price.toLocaleString():a.price;
+function renderAdmin() {
+  var list = document.getElementById('admList');
+  var sorted = [...art];
+  if(adminSort === 'oldest') sorted.sort((a,b) => a.id - b.id);
+  else if(adminSort === 'price_desc') sorted.sort((a,b) => b.price - a.price);
+  else sorted.sort((a,b) => b.id - a.id); // newest
 
-    html+='<article class="acard ic group" style="opacity:0;transform:translateY(30px)">';
-    html+='<div class="relative overflow-hidden aspect-[3/4]">';
-    html+='<img src="'+imgSrc+'" class="aimg w-full h-full object-cover inr" alt="'+a.title+'" loading="lazy">';
-    html+='<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>';
-    if(a.av){
-      html+='<div class="absolute top-4 right-4 px-3 py-1 bg-[var(--ac)] text-black fm text-[10px] tracking-[.2em]">AVAILABLE</div>';
-    }else{
-      html+='<div class="absolute top-4 right-4 px-3 py-1 bg-red-700/90 text-white fm text-[10px] tracking-[.2em]">SOLD</div>';
-    }
-    if(!hasImg){
-      html+='<div class="absolute bottom-4 left-4 px-2 py-1 bg-black/70 text-yellow-500 fm text-[9px] tracking-wider"><i class="fas fa-exclamation-circle mr-1"></i>NO IMAGE</div>';
-    }
-    html+='</div>';
-    html+='<div class="p-5">';
-    html+='<div class="flex items-start justify-between mb-2"><h3 class="fd text-2xl leading-none">'+a.title+'</h3><span class="fm text-[9px] text-[var(--mt)] tracking-[.12em] mt-1.5 uppercase">'+a.cat+'</span></div>';
-    html+='<p class="text-[var(--fgd)] text-xs leading-relaxed mb-4 lc2">'+(a.desc||'')+'</p>';
-    html+='<div class="flex items-center justify-between pt-3 border-t border-[var(--bdl)]">';
-    html+='<div class="fd text-3xl text-[var(--ac)]">'+ps+'</div>';
-    if(a.av){
-      html+='<button class="bbk fh text-[11px] tracking-[.12em] uppercase px-4 py-2.5 border border-[var(--ac)] text-[var(--ac)] hover:bg-[var(--ac)] hover:text-black transition-all" data-id="'+a.id+'">Book This Piece</button>';
-    }else{
-      html+='<span class="fh text-[11px] tracking-[.12em] uppercase px-4 py-2.5 border border-[var(--mt)] text-[var(--mt)]">Sold</span>';
-    }
-    html+='</div></div></article>';
-  }
-  g.innerHTML=html;
+  var html = '';
+  sorted.forEach(a => {
+    var hasImg = a.img && a.img.length > 10;
+    html += `<div class="ai-row ${hasImg ? '' : 'no-img'}">
+      ${hasImg ? `<img src="${a.img}" class="ai-thumb" alt="">` : `<div class="ai-thumb-none">NO IMG</div>`}
+      <div class="ai-info">
+        <div class="ai-title">${a.title}</div>
+        <div class="ai-meta">
+          <span>KES ${a.price.toLocaleString()}</span>
+          <span>·</span>
+          <span class="ai-status ${a.av ? 'avail' : 'sold'}">${a.av ? 'Available' : 'Sold'}</span>
+        </div>
+      </div>
+      <div class="ai-btns">
+        <button class="ai-btn ${a.av ? 'eye-on' : 'eye-off'}" onclick="togAv(${a.id})" title="Toggle availability"><i class="fas fa-eye${a.av ? '' : '-slash'}"></i></button>
+        <button class="ai-btn" onclick="openEd(${a.id})" title="Edit"><i class="fas fa-pen"></i></button>
+        <button class="ai-btn del" onclick="delArt(${a.id})" title="Delete"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>`;
+  });
+  list.innerHTML = html;
+  document.getElementById('artCount').textContent = art.length;
+  document.getElementById('soldCount').textContent = art.filter(a => !a.av).length;
+}
 
-  // Attach booking buttons
-  g.querySelectorAll('.bbk').forEach(function(b){
-    b.addEventListener('click',function(ev){
-      ev.stopPropagation();
-      openBk(parseInt(b.dataset.id));
-    })
+// --- GALLERY UI ---
+function renderGallery(filter) {
+  curFil = filter || 'all';
+  var grid = document.getElementById('artG');
+  var filtered = curFil === 'all' ? art : art.filter(a => a.cat === curFil);
+  
+  document.querySelectorAll('#catF .cp').forEach(b => {
+    b.classList.toggle('acl', b.dataset.c === curFil);
   });
 
-  // Animate cards in
-  var cards=g.querySelectorAll('.acard');
-  for(var j=0;j<cards.length;j++){
-    (function(card,delay){
-      setTimeout(function(){
-        card.style.transition='opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1)';
-        card.style.opacity='1';
-        card.style.transform='translateY(0)';
-      },delay);
-    })(cards[j], j*80);
+  if(filtered.length === 0) {
+    grid.innerHTML = '';
+    document.getElementById('empG').classList.remove('hidden');
+    return;
   }
+  document.getElementById('empG').classList.add('hidden');
+
+  var html = '';
+  filtered.forEach(a => {
+    var imgSrc = a.img || noImgSvg;
+    html += `<div class="acard ic overflow-hidden cursor-pointer" onclick="openBk(${a.id})">
+      <div class="relative h-80 overflow-hidden">
+        <img src="${imgSrc}" class="aimg w-full h-full object-cover inr" alt="${a.title}" loading="lazy">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-5">
+          <div class="fm text-[9px] text-[var(--ac)] tracking-[.2em] mb-1">${a.cat.toUpperCase()} · ${a.yr}</div>
+          <div class="fd text-2xl tracking-wider">${a.title}</div>
+          <div class="flex justify-between items-end mt-3">
+            <div class="fd text-3xl text-[var(--ac)]">KES ${a.price.toLocaleString()}</div>
+            <div class="text-xs ${a.av ? 'text-green-400' : 'text-red-400'} fh tracking-wider">${a.av ? 'AVAILABLE' : 'SOLD'}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  });
+  grid.innerHTML = html;
 }
 
-document.getElementById('catF').addEventListener('click',function(e){
-  var p=e.target.closest('.cp');
-  if(!p)return;
-  document.querySelectorAll('.cp').forEach(function(x){x.classList.remove('acl')});
-  p.classList.add('acl');
-  curFil=p.dataset.c;
-  renGal()
+// Event listeners for filters and sorts
+document.addEventListener('click', function(e) {
+  if(e.target.closest('#catF .cp')) {
+    renderGallery(e.target.closest('.cp').dataset.c);
+  }
+  if(e.target.closest('.srt-btn')) {
+    document.querySelectorAll('.srt-btn').forEach(b => b.classList.remove('acl'));
+    e.target.closest('.srt-btn').classList.add('acl');
+    adminSort = e.target.closest('.srt-btn').dataset.sort;
+    renderAdmin();
+  }
 });
 
-/* ====== BOOKING ====== */
-function openBk(id){
-  var a=art.find(function(x){return x.id===id});
-  if(!a||!a.av)return;
-  curBk=a;
-  var hasImg=a.img&&a.img.length>10;
-  document.getElementById('bkImg').src=hasImg?a.img:noImgSvg;
-  document.getElementById('bkTitle').textContent=a.title;
-  document.getElementById('bkMeta').textContent=(a.md||'')+' · '+(a.ly||'')+' · '+a.yr;
-  var ps=(typeof a.price==='number'&&a.price>999)?a.price.toLocaleString():a.price;
-  document.getElementById('bkPrice').textContent=ps;
-  document.getElementById('bkSize').textContent=a.sz||'';
-  document.getElementById('bkN').value='';document.getElementById('bkP').value='';document.getElementById('bkE').value='';document.getElementById('bkM').value='';
+// --- STATS ---
+function getStats() {
+  var sold = art.filter(a => !a.av).length;
+  var years = st.yr ? parseInt(st.yr) : 0;
+  if(!years && art.length > 0) {
+    var minYear = 9999;
+    art.forEach(a => { if(a.yr) { var y = parseInt(a.yr); if(y < minYear) minYear = y; } });
+    if(minYear < 9999) years = new Date().getFullYear() - minYear;
+    if(years < 1) years = 1;
+  }
+  var maxLayers = 0;
+  art.forEach(a => { if(a.ly) { var m = parseInt(a.ly); if(m > maxLayers) maxLayers = m; } });
+  if(!maxLayers) maxLayers = 7;
+  return { sold:sold, years:years, maxLayers:maxLayers, collections: Math.max(1, Math.floor(sold/4)) };
+}
+function updStats() {
+  var s = getStats();
+  document.getElementById('statSold').textContent = s.sold;
+  document.getElementById('statYears').textContent = s.years;
+  document.getElementById('statLayers').textContent = s.maxLayers;
+  document.getElementById('statCollections').textContent = s.collections;
+  document.getElementById('aboutSold').textContent = s.sold;
+  document.getElementById('aboutYears').textContent = s.years + '+';
+  document.getElementById('aboutLayers').textContent = s.maxLayers;
+}
+
+// --- MODALS & PIN ---
+function openPin() { pinVal=''; updDots(); document.getElementById('pinErr').classList.add('hidden'); document.getElementById('pinMod').classList.add('op'); document.getElementById('pinOv').classList.add('op'); }
+function closePin() { document.getElementById('pinMod').classList.remove('op'); document.getElementById('pinOv').classList.remove('op'); }
+function pi(n) { if(pinVal.length>=4)return; pinVal+=n; updDots(); }
+function pcl() { pinVal=pinVal.slice(0,-1); updDots(); }
+function psb() { if(pinVal.length!==4)return; if(pinVal===st.pin){ closePin(); togAdm(); } else { document.getElementById('pinErr').classList.remove('hidden'); pinVal=''; setTimeout(updDots,50); setTimeout(function(){document.getElementById('pinErr').classList.add('hidden')},2000); }}
+function updDots() { var d=document.getElementById('pinDots').children; for(var i=0;i<4;i++){ if(i<pinVal.length) d[i].classList.add('fl'); else d[i].classList.remove('fl'); }}
+function togAdm() { document.getElementById('admPan').classList.toggle('op'); document.getElementById('admOv').classList.toggle('op'); }
+function swTab(t) { document.querySelectorAll('.atc').forEach(el=>el.classList.add('hidden')); document.getElementById('t-'+t).classList.remove('hidden'); document.querySelectorAll('.atb').forEach(b=>{ b.style.color='var(--mt)'; b.style.borderBottom='none'; }); document.querySelector(`.atb[data-t="${t}"]`).style.color='var(--ac)'; document.querySelector(`.atb[data-t="${t}"]`).style.borderBottom='1px solid var(--ac)'; if(t==='blog') renderBlog(); }
+
+function loadSet() {
+  document.getElementById('sPin').value = st.pin;
+  document.getElementById('curPin').textContent = st.pin;
+  document.getElementById('sWa').value = st.wa;
+  document.getElementById('sEm').value = st.em;
+  document.getElementById('sPh').value = st.ph;
+  document.getElementById('sNm').value = st.nm;
+  document.getElementById('sYr').value = st.yr;
+  document.getElementById('logoN').textContent = st.nm;
+  document.getElementById('ftN').textContent = st.nm;
+  document.getElementById('dWa').textContent = st.ph;
+  document.getElementById('dEm').textContent = st.em;
+  document.getElementById('dPh').textContent = st.ph;
+  document.getElementById('waLk').href = 'https://wa.me/' + st.wa;
+  document.getElementById('emLk').href = 'mailto:' + st.em;
+}
+function saveSet() {
+  st.pin = document.getElementById('sPin').value || '1234';
+  st.wa = document.getElementById('sWa').value;
+  st.em = document.getElementById('sEm').value;
+  st.ph = document.getElementById('sPh').value;
+  st.nm = document.getElementById('sNm').value || 'STNCL';
+  st.yr = document.getElementById('sYr').value;
+  svS();
+  loadSet();
+  toast('Saved', 'Settings updated.');
+}
+function resetArt() { if(confirm('Delete all art and reset to defaults?')) { art = JSON.parse(JSON.stringify(defArt)); svA(); renderAdmin(); renderGallery('all'); toast('Reset', 'Gallery restored to defaults.'); }}
+
+// --- BOOKING ---
+function openBk(id) {
+  var a = art.find(x => x.id === id);
+  if(!a) return;
+  curBk = a;
+  document.getElementById('bkImg').src = a.img || noImgSvg;
+  document.getElementById('bkTitle').textContent = a.title;
+  document.getElementById('bkMeta').textContent = (a.cat||'').toUpperCase() + ' · ' + (a.yr||'');
+  document.getElementById('bkPrice').textContent = 'KES ' + a.price.toLocaleString();
+  document.getElementById('bkSize').textContent = a.sz || 'N/A';
   document.getElementById('bkFormV').classList.remove('hidden');
   document.getElementById('bkSucV').classList.add('hidden');
-  document.getElementById('bkMod').classList.add('op');document.getElementById('bkOv').classList.add('op');document.body.style.overflow='hidden'
+  document.getElementById('bkMod').classList.add('op');
+  document.getElementById('bkOv').classList.add('op');
 }
-function closeBk(){document.getElementById('bkMod').classList.remove('op');document.getElementById('bkOv').classList.remove('op');document.body.style.overflow='';curBk=null}
-function doBk(ev){
-  ev.preventDefault();if(!curBk)return;
-  var a=curBk,nm=document.getElementById('bkN').value.trim(),ph=document.getElementById('bkP').value.trim(),em=document.getElementById('bkE').value.trim(),mg=document.getElementById('bkM').value.trim();
-  var ps=(typeof a.price==='number'&&a.price>999)?a.price.toLocaleString():a.price;
-  var msg='NEW BOOKING REQUEST\n========================\n\nARTWORK: '+a.title+'\nPRICE: '+ps+'\nSIZE: '+(a.sz||'')+'\nMEDIUM: '+(a.md||'')+'\nLAYERS: '+(a.ly||'')+'\n\nBUYER INFO\nName: '+nm+'\nPhone: '+ph+(em?'\nEmail: '+em:'')+(mg?'\nMessage: '+mg:'')+'\n\nSent: '+new Date().toLocaleString();
-  blog.unshift({id:Date.now(),art:a.title,price:ps,name:nm,phone:ph,email:em,msg:mg,date:new Date().toISOString()});
+function closeBk() { document.getElementById('bkMod').classList.remove('op'); document.getElementById('bkOv').classList.remove('op'); }
+function doBk(e) {
+  e.preventDefault();
+  var n = document.getElementById('bkN').value;
+  var p = document.getElementById('bkP').value;
+  var em = document.getElementById('bkE').value;
+  var m = document.getElementById('bkM').value;
+  var txt = `STNCL BOOKING: ${curBk.title}%0aPrice: KES ${curBk.price}%0aName: ${n}%0aPhone: ${p}%0aEmail: ${em}%0aMessage: ${m}`;
+  window.open('https://wa.me/' + st.wa + '?text=' + txt, '_blank');
+  window.open('mailto:' + st.em + '?subject=Booking: ' + curBk.title + '&body=' + m + '%0a%0aName: ' + n + '%0aPhone: ' + p, '_blank');
+  blog.unshift({id: Date.now(), title: curBk.title, name: n, phone: p, time: new Date().toLocaleString()});
   svL();
-  window.open('https://wa.me/'+st.wa+'?text='+encodeURIComponent(msg),'_blank');
-  window.open('mailto:'+st.em+'?subject='+encodeURIComponent('BOOKING: '+a.title+' - '+ps)+'&body='+encodeURIComponent(msg),'_blank');
   document.getElementById('bkFormV').classList.add('hidden');
   document.getElementById('bkSucV').classList.remove('hidden');
-  var badge=document.getElementById('bkBadge');badge.textContent=blog.length;badge.classList.remove('hidden')
+  document.getElementById('bkBadge').textContent = blog.length;
+  document.getElementById('bkBadge').classList.remove('hidden');
 }
-function renBlog(){
-  var c=document.getElementById('blogList'),n=document.getElementById('noBlog'),b=document.getElementById('bkBadge');
-  if(blog.length){b.textContent=blog.length;b.classList.remove('hidden');n.classList.add('hidden');
-    c.innerHTML=blog.map(function(l){return '<div class="le"><div class="flex items-center justify-between mb-1"><span class="fd text-lg">'+l.art+'</span><span class="fm text-[9px] text-[var(--ac)]">'+l.price+'</span></div><div class="fm text-[9px] text-[var(--mt)]">'+l.name+' · '+l.phone+' · '+new Date(l.date).toLocaleDateString()+'</div>'+(l.msg?'<div class="text-xs text-[var(--fgd)] mt-1">'+l.msg+'</div>':'')+'</div>'}).join('')
-  }else{b.classList.add('hidden');n.classList.remove('hidden');c.innerHTML=''}
+function renderBlog() {
+  var l = document.getElementById('blogList');
+  var n = document.getElementById('noBlog');
+  if(blog.length === 0) { l.innerHTML = ''; n.classList.remove('hidden'); return; }
+  n.classList.add('hidden');
+  l.innerHTML = blog.map(b => `<div class="le"><div class="flex justify-between"><span class="fh text-sm">${b.title}</span><span class="fm text-[9px] text-[var(--mt)]">${b.time}</span></div><div class="text-xs text-[var(--fgd)] mt-1">${b.name} · ${b.phone}</div></div>`).join('');
 }
-function clrBlog(){if(!blog.length)return;if(!confirm('Clear all booking logs?'))return;blog=[];svL();renBlog();toast('Cleared','Booking logs cleared.')}
+function clrBlog() { if(confirm('Clear all booking logs?')) { blog = []; svL(); renderBlog(); document.getElementById('bkBadge').classList.add('hidden'); }}
 
-/* ====== SETTINGS ====== */
-function ldSet(){
-  document.getElementById('sPin').value=st.pin;document.getElementById('sWa').value=st.wa;
-  document.getElementById('sEm').value=st.em;document.getElementById('sPh').value=st.ph;
-  document.getElementById('sNm').value=st.nm;document.getElementById('sYr').value=st.yr||'';
-  document.getElementById('curPin').textContent=st.pin;
-}
-function saveSet(){
-  var np=document.getElementById('sPin').value.trim();
-  if(np&&/^\d{4}$/.test(np))st.pin=np;
-  st.wa=document.getElementById('sWa').value.trim().replace(/\D/g,'')||'254114255987';
-  st.em=document.getElementById('sEm').value.trim()||'injuguna308@gmail.com';
-  st.ph=document.getElementById('sPh').value.trim()||'0143374333';
-  st.nm=document.getElementById('sNm').value.trim()||'STNCL';
-  st.yr=document.getElementById('sYr').value.trim()||'';
-  svS();updDisp();updStats();document.getElementById('curPin').textContent=st.pin;
-  toast('Saved','All settings updated.')
-}
-function updDisp(){
-  var n=st.nm||'STNCL';
-  document.getElementById('logoN').textContent=n;document.getElementById('ftN').textContent=n;
-  document.getElementById('dEm').textContent=st.em;document.getElementById('dPh').textContent=st.ph;
-  var w=st.wa||'254114255987';
-  document.getElementById('dWa').textContent='+'+w.slice(0,3)+' '+w.slice(3,6)+w.slice(6);
-  document.getElementById('waLk').href='https://wa.me/'+w;document.getElementById('emLk').href='mailto:'+st.em;
-}
-function resetArt(){
-  if(!confirm('Reset gallery to defaults?\nThis deletes ALL your artwork and images!'))return;
-  art=JSON.parse(JSON.stringify(defArt));svA();renAdmList();renGal();updStats();toast('Reset','Gallery reset to defaults.')
-}
-
-/* ====== CONTACT ====== */
-function doContact(ev){
-  ev.preventDefault();
-  var nm=document.getElementById('cN').value.trim(),ph=document.getElementById('cP').value.trim(),sj=document.getElementById('cS').value.trim(),mg=document.getElementById('cM').value.trim();
-  var msg='CONTACT FROM WEBSITE\n====================\n\nName: '+nm+'\nPhone: '+ph+(sj?'\nSubject: '+sj:'')+'\nMessage: '+mg+'\n\nSent: '+new Date().toLocaleString();
-  window.open('https://wa.me/'+st.wa+'?text='+encodeURIComponent(msg),'_blank');
-  toast('Sent','WhatsApp opened with your message');
-  document.getElementById('cN').value='';document.getElementById('cP').value='';document.getElementById('cS').value='';document.getElementById('cM').value=''
-}
-
-/* ====== HERO REEL ====== */
-var rSlides=document.querySelectorAll('.rf'),rIdx=0,rTimer=null;
-function startReel(){rTimer=setInterval(function(){rSlides[rIdx].classList.remove('ac');rIdx=(rIdx+1)%rSlides.length;rSlides[rIdx].classList.add('ac');document.getElementById('chN').textContent=String(rIdx+1).padStart(2,'0');updProg()},5000)}
-function updProg(){var p=document.getElementById('rProg'),w=0;var iv=setInterval(function(){w+=2;p.style.width=w+'%';if(w>=100)clearInterval(iv)},100)}
-startReel();updProg();
-
-/* ====== SCROLL ANIMATIONS ====== */
-var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('iv')})},{threshold:.1});
-document.querySelectorAll('.rv,.rst').forEach(function(el){obs.observe(el)});
-
-/* ====== DRAG & DROP ====== */
-var dz=document.getElementById('dz');
-var dragOv=document.getElementById('dragOv');
-var dragCounter=0;
-
-window.addEventListener('dragenter',function(e){e.preventDefault();dragCounter++;dragOv.classList.add('show')});
-window.addEventListener('dragleave',function(e){e.preventDefault();dragCounter--;if(dragCounter===0)dragOv.classList.remove('show')});
-window.addEventListener('dragover',function(e){e.preventDefault()});
-window.addEventListener('drop',function(e){
+function doContact(e) {
   e.preventDefault();
-  dragCounter=0;
-  dragOv.classList.remove('show');
-  // Only handle drop if it's over the admin panel editor
-  if(document.getElementById('artEd').contains(e.target)){
-    var file=e.dataTransfer.files[0];
-    if(file)hFile({target:{files:[file]}});
+  var n = document.getElementById('cN').value;
+  var p = document.getElementById('cP').value;
+  var s = document.getElementById('cS').value;
+  var m = document.getElementById('cM').value;
+  window.open('https://wa.me/' + st.wa + '?text=STNCL CONTACT: ' + s + '%0a%0a' + m + '%0a%0aName: ' + n + '%0aPhone: ' + p, '_blank');
+}
+
+function closePrev(e) { if(e.target.tagName !== 'IMG') document.getElementById('prevOv').classList.remove('show'); }
+
+// --- SCROLL ANIMATIONS ---
+function initObservers() {
+  var obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('iv', 'visible', 'active');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.rv, .rst, .pf-reveal, .cv-reveal').forEach(el => obs.observe(el));
+}
+
+// --- HERO SLIDER & SCROLL PROGRESS ---
+(function(){
+  var rfs = document.querySelectorAll('.rf');
+  var cur = 0;
+  setInterval(function() {
+    rfs[cur].classList.remove('ac');
+    cur = (cur + 1) % rfs.length;
+    rfs[cur].classList.add('ac');
+    document.getElementById('chN').textContent = '0' + (cur + 1);
+    var p = ((cur + 1) / rfs.length) * 100;
+    document.getElementById('rProg').style.width = p + '%';
+  }, 4000);
+
+  window.addEventListener('scroll', function() {
+    var h = document.documentElement;
+    var p = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+    document.getElementById('scroll-progress').style.width = p + '%';
+  });
+})();
+
+// --- DRAG & DROP ---
+document.addEventListener('dragover', function(e) { e.preventDefault(); document.getElementById('dragOv').classList.add('show'); });
+document.addEventListener('dragleave', function(e) { if(!e.relatedTarget) document.getElementById('dragOv').classList.remove('show'); });
+document.addEventListener('drop', function(e) {
+  e.preventDefault();
+  document.getElementById('dragOv').classList.remove('show');
+  if(!document.getElementById('artEd').classList.contains('hidden')) {
+    var file = e.dataTransfer.files[0];
+    if(file && file.type.startsWith('image/')) {
+      if(file.size > 400000) { toast('Too Big', 'Use URL box for images over 400KB'); return; }
+      var reader = new FileReader();
+      reader.onload = function(ev) { upImg = ev.target.result; document.getElementById('dzC').classList.add('hidden'); document.getElementById('dzP').src = upImg; document.getElementById('dzP').classList.remove('hidden'); };
+      reader.readAsDataURL(file);
+    }
   }
 });
 
-dz.addEventListener('drop',function(e){
-  // Stop window drop from firing as well
-  e.stopPropagation();
-});
-
-/* ====== INIT ====== */
-ld(); // ld() will now call the rendering functions once data is loaded from Firebase.
+ld();
 </script>
 </body>
 </html>
