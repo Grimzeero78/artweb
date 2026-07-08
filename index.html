@@ -115,23 +115,18 @@
   </div>
 </div>
 
-<!-- PIN MODAL -->
+<!-- PASSWORD MODAL -->
 <div class="mo" id="pinOv" onclick="closePin()"></div>
-<div class="mp" id="pinMod" style="max-width:340px"><div class="p-8 text-center">
+<div class="mp" id="pinMod" style="max-width:360px"><div class="p-8 text-center">
 <div class="w-14 h-14 border border-[var(--ac)] flex items-center justify-center mx-auto mb-5"><i class="fas fa-lock text-[var(--ac)] text-xl"></i></div>
 <div class="fd text-3xl tracking-wider mb-1">ADMIN ACCESS</div>
-<div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] mb-6">ENTER YOUR 4-DIGIT PIN</div>
-<div class="flex justify-center gap-3 mb-5" id="pinDots"><div class="pdd"></div><div class="pdd"></div><div class="pdd"></div><div class="pdd"></div></div>
-<div class="text-red-400 text-xs fm tracking-wider mb-4 hidden" id="pinErr">Wrong PIN. Try again.</div>
-<div class="grid grid-cols-3 gap-2 max-w-[210px] mx-auto">
-<button class="pnb" onclick="pi(1)">1</button><button class="pnb" onclick="pi(2)">2</button><button class="pnb" onclick="pi(3)">3</button>
-<button class="pnb" onclick="pi(4)">4</button><button class="pnb" onclick="pi(5)">5</button><button class="pnb" onclick="pi(6)">6</button>
-<button class="pnb" onclick="pi(7)">7</button><button class="pnb" onclick="pi(8)">8</button><button class="pnb" onclick="pi(9)">9</button>
-<button class="pnb" onclick="pcl()" style="font-size:1rem"><i class="fas fa-delete-left"></i></button><button class="pnb" onclick="pi(0)">0</button><button class="pnb" onclick="psb()" style="font-size:.9rem"><i class="fas fa-check"></i></button>
-</div>
+<div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] mb-5">ENTER YOUR ADMIN PASSWORD</div>
+<div class="text-red-400 text-xs fm tracking-wider mb-4 hidden" id="pinErr">Wrong password. Try again.</div>
+<input type="password" id="pinInput" class="fi text-center" placeholder="Password" autocomplete="current-password">
+<button onclick="psb()" class="w-full mt-4 fh text-sm tracking-[.15em] uppercase bg-[var(--ac)] text-black py-3 hover:bg-[var(--acb)] transition-colors"><i class="fas fa-arrow-right mr-2"></i>Unlock Admin</button>
 <div class="fm text-[10px] text-[var(--mt)] tracking-wider mt-5 hidden" id="pinLoad"><i class="fas fa-spinner fa-spin mr-2"></i>Connecting...</div>
 <button onclick="closePin()" class="mt-5 fm text-[10px] text-[var(--mt)] tracking-wider hover:text-[var(--fg)] transition-colors">Cancel</button>
-<div class="mt-4 fm text-[9px] text-[var(--svd)] tracking-wider">Default PIN: 1234</div>
+<div class="mt-4 fm text-[9px] text-[var(--svd)] tracking-wider">Default password: stncl2024</div>
 </div></div>
 
 <!-- BOOKING MODAL -->
@@ -196,8 +191,8 @@
 
 <!-- SETTINGS TAB -->
 <div class="atc p-5 hidden" id="t-set"><div class="space-y-4">
-<div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Admin PIN (4 digits)</label><input type="password" class="ax" id="sPin" placeholder="1234" maxlength="4"><p class="text-[var(--mt)] text-[9px] fm mt-1">Current: <span id="curPin">1234</span></p></div>
-<div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">WhatsApp Number</label><input type="text" class="ax" id="sWa" placeholder="254114255987"></div>
+<div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Admin Password</label><input type="password" class="ax" id="sPin" placeholder="stncl2024"><p class="text-[var(--mt)] text-[9px] fm mt-1">Current: <span id="curPin">stncl2024</span></p></div>
+<div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">WhatsApp Number</label><input type="text" class="ax" id="sWa" placeholder="254143374333"></div>
 <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Email</label><input type="email" class="ax" id="sEm" placeholder="injuguna308@gmail.com"></div>
 <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Phone on Site</label><input type="text" class="ax" id="sPh" placeholder="0143374333"></div>
 <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Studio Name</label><input type="text" class="ax" id="sNm" placeholder="STNCL"></div>
@@ -235,14 +230,32 @@
         </div>
         <input type="file" id="fIn" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="hFile(event)">
         <div class="relative flex items-center mt-3">
-          <input type="text" class="ax pr-20" id="eUrl" placeholder="Or paste image URL (e.g., from Imgur)">
+          <input type="text" class="ax pr-20" id="eUrl" placeholder="Paste direct image URL here">
           <button onclick="loadUrl()" class="absolute right-1 top-1 bottom-1 text-xs fm tracking-wider bg-[var(--bch)] px-2 hover:bg-[var(--bdl)] transition-colors">PREVIEW</button>
+        </div>
+        <div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mt-2">Use a direct URL for GitHub-hosted pages</div>
+        <div class="mt-4 border border-[var(--bd)] bg-[var(--bg)] p-3">
+          <div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mb-2">Quick URL slots (1–7)</div>
+          <div class="fm text-[9px] text-[var(--svd)] tracking-wider mb-2">Paste up to seven public image links here. Each filled slot can create a new artwork card.</div>
+          <div class="grid gap-2">
+            <input type="text" class="ax" id="urlSlot1" placeholder="Image URL 1">
+            <input type="text" class="ax" id="urlSlot2" placeholder="Image URL 2">
+            <input type="text" class="ax" id="urlSlot3" placeholder="Image URL 3">
+            <input type="text" class="ax" id="urlSlot4" placeholder="Image URL 4">
+            <input type="text" class="ax" id="urlSlot5" placeholder="Image URL 5">
+            <input type="text" class="ax" id="urlSlot6" placeholder="Image URL 6">
+            <input type="text" class="ax" id="urlSlot7" placeholder="Image URL 7">
+          </div>
+          <div class="flex gap-2 mt-3">
+            <button type="button" onclick="addFromUrlSlots()" class="fh text-[11px] tracking-[.15em] uppercase bg-[var(--ac)] text-black px-4 py-2.5 hover:bg-[var(--acb)] transition-colors">Add from URL slots</button>
+            <button type="button" onclick="clearUrlSlots()" class="fh text-[11px] tracking-[.15em] uppercase border border-[var(--bdl)] px-4 py-2.5 hover:border-[var(--mt)] transition-colors">Clear</button>
+          </div>
         </div>
         <div id="imgErr" class="text-red-400 text-[10px] fm mt-2 hidden"><i class="fas fa-exclamation-triangle mr-1"></i>Please upload an image from your PC</div>
       </div>
       <div class="grid grid-cols-2 gap-3">
         <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Title *</label><input type="text" class="ax" id="eTi" placeholder="TITLE"></div>
-        <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Price (KES) *</label><input type="number" class="ax" id="ePr" placeholder="15000" min="0"></div>
+        <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Price (KSH) *</label><input type="number" class="ax" id="ePr" placeholder="15000" min="0"></div>
       </div>
       <div class="grid grid-cols-2 gap-3">
         <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Category</label><select class="ax" id="eCa"><option value="portrait">Portrait</option><option value="urban">Urban</option><option value="abstract">Abstract</option><option value="typography">Typography</option><option value="nature">Nature</option></select></div>
@@ -281,8 +294,8 @@
 <div class="relative z-10 h-full max-w-[1600px] mx-auto px-6 lg:px-10 flex flex-col justify-end pb-24 pt-32">
 <div class="rv iv max-w-5xl">
 <div class="sm mb-6"><span>Stencil Art Studio</span></div>
-<h1 class="fd text-[14vw] md:text-[10vw] lg:text-[8.5vw] leading-[.85] mb-8"><span class="hl"><span>CUT WITH</span></span><span class="hl"><span class="ts">PRECISION.</span></span><span class="hl"><span>SPRAYED WITH <span class="text-[var(--ac)]">SOUL.</span></span></span></h1>
-<p class="max-w-xl text-[var(--fgd)] text-base md:text-lg leading-relaxed">Hand-cut multi-layer stencil art — each piece built from precisely cut layers, sprayed with raw energy. Original works available for collectors.</p>
+<h1 class="fd text-[14vw] md:text-[10vw] lg:text-[8.5vw] leading-[.85] mb-8"><span class="hl"><span>MEASURED BY</span></span><span class="hl"><span class="ts">SKILL.</span></span><span class="hl"><span>MADE BY <span class="text-[var(--ac)]">HEART.</span></span></span></h1>
+<p class="max-w-xl text-[var(--fgd)] text-base md:text-lg leading-relaxed">Hand-cut multi-layer stencil art — each piece built from precisely cut layers, made with care and soul. Original works available for collectors.</p>
 </div>
 <div class="mt-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
 <a href="#gallery" class="inline-flex items-center gap-3 fh text-sm tracking-[.15em] uppercase bg-[var(--ac)] text-black px-7 py-3.5 hover:bg-[var(--acb)] transition-colors pbtn w-fit"><span>Explore Available Works</span><i class="fas fa-arrow-down"></i></a>
@@ -343,7 +356,7 @@
 <button type="submit" class="mt-7 fh text-sm tracking-[.15em] uppercase bg-[var(--ac)] text-black px-8 py-3.5 hover:bg-[var(--acb)] transition-colors"><i class="fab fa-whatsapp mr-2"></i>Send via WhatsApp</button>
 </form></div></div>
 <div class="lg:col-span-4 lg:col-start-9 flex flex-col gap-5">
-<a id="waLk" href="https://wa.me/254114255987" target="_blank" class="ic p-5 flex items-center gap-4 hover:border-green-600 transition-colors group"><div class="w-10 h-10 bg-green-600 flex items-center justify-center flex-shrink-0"><i class="fab fa-whatsapp text-white text-lg"></i></div><div><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase">WhatsApp (fastest)</div><div class="fh text-sm" id="dWa">+254 114 255987</div></div><i class="fas fa-arrow-right text-[var(--mt)] group-hover:text-green-500 ml-auto"></i></a>
+<a id="waLk" href="https://wa.me/0143374333" target="_blank" class="ic p-5 flex items-center gap-4 hover:border-green-600 transition-colors group"><div class="w-10 h-10 bg-green-600 flex items-center justify-center flex-shrink-0"><i class="fab fa-whatsapp text-white text-lg"></i></div><div><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase">WhatsApp (fastest)</div><div class="fh text-sm" id="dWa">0143374333</div></div><i class="fas fa-arrow-right text-[var(--mt)] group-hover:text-green-500 ml-auto"></i></a>
 <a id="emLk" href="mailto:injuguna308@gmail.com" class="ic p-5 flex items-center gap-4 hover:border-[var(--ac)] transition-colors group"><div class="w-10 h-10 bg-[var(--ac)] flex items-center justify-center flex-shrink-0"><i class="fas fa-envelope text-black text-sm"></i></div><div><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase">Email</div><div class="fh text-sm" id="dEm">injuguna308@gmail.com</div></div><i class="fas fa-arrow-right text-[var(--mt)] group-hover:text-[var(--ac)] ml-auto"></i></a>
 <div class="ic p-5 flex items-center gap-4"><div class="w-10 h-10 border border-[var(--bdl)] flex items-center justify-center flex-shrink-0"><i class="fas fa-phone text-[var(--ac)]"></i></div><div><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase">Phone</div><div class="fh text-sm" id="dPh">0143374333</div></div></div>
 <div class="ic p-5"><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase mb-3">Social</div><div class="flex gap-3"><a href="#" class="w-10 h-10 border border-[var(--bdl)] flex items-center justify-center hover:border-[var(--ac)] hover:text-[var(--ac)] transition-all"><i class="fab fa-instagram"></i></a><a href="#" class="w-10 h-10 border border-[var(--bdl)] flex items-center justify-center hover:border-[var(--ac)] hover:text-[var(--ac)] transition-all"><i class="fab fa-tiktok"></i></a><a href="#" class="w-10 h-10 border border-[var(--bdl)] flex items-center justify-center hover:border-[var(--ac)] hover:text-[var(--ac)] transition-all"><i class="fab fa-twitter"></i></a></div></div>
@@ -352,7 +365,7 @@
 <!-- FOOTER -->
 <footer class="border-t border-[var(--bd)] bg-[var(--bgd)] py-10"><div class="max-w-[1600px] mx-auto px-6 lg:px-10 flex flex-col md:flex-row items-center justify-between gap-4">
 <div class="flex items-center gap-3"><div class="w-7 h-7 bg-[var(--ac)] flex items-center justify-center"><i class="fas fa-spray-can text-black text-[10px]"></i></div><span class="fd text-xl tracking-wider" id="ftN">STNCL</span></div>
-<div class="fm text-[10px] text-[var(--mt)] tracking-[.2em]">ALL WORKS ONE-OF-ONE ORIGINALS &copy; 2024</div>
+<div class="fm text-[10px] text-[var(--mt)] tracking-[.2em]">ALL WORKS ONE-OF-ONE ORIGINALS &copy; 2026</div>
 <div class="fm text-[10px] text-[var(--mt)] tracking-[.15em]">Tap <i class="fas fa-lock text-[var(--ac)] mx-1"></i> for admin</div>
 </div></footer>
 
@@ -373,15 +386,28 @@
     messagingSenderId: "456716979318",
     appId: "1:456716979318:web:f669b470adad5f9b69a357"
   };
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
+  var db = null;
+  if (window.firebase) {
+    try {
+      firebase.initializeApp(firebaseConfig);
+      db = firebase.database();
+    } catch (err) {
+      console.warn('Firebase init skipped:', err);
+    }
+  }
 </script>
 <!-- END FIREBASE INTEGRATION -->
 
 <script>
 var SA='stncl_a',SS='stncl_s',SL='stncl_l';
 
-/* Default art - NO images, user must upload */
+/* ====== DEFAULT GALLERY CONTENT ======
+   Edit these objects when you want to change the default seven art cards.
+   - title: visible name on the card
+   - price: number shown as KSH
+   - img: paste a direct image URL here to show a picture instantly
+   - av: true = available, false = sold
+======================================== */
 var defArt=[
   {id:1,title:"URBAN REBEL",cat:"portrait",price:15000,sz:"60 x 80 cm",md:"Spray paint on canvas",ly:"4 layers",img:"",desc:"Multi-layered stencil portrait exploring urban defiance.",av:true,yr:"2024"},
   {id:2,title:"CONCRETE JUNGLE",cat:"urban",price:12000,sz:"50 x 70 cm",md:"Acrylic & spray on wood",ly:"6 layers",img:"",desc:"Layered cityscape through hand-cut stencils.",av:true,yr:"2024"},
@@ -394,445 +420,678 @@ var defArt=[
 ];
 
 var art=[],st={},blog=[],curBk=null,curFil='all',upImg=null,pinVal='',isDataLoaded=false,adminSort='newest';
+var STORAGE_KEY='stncl_data_v1';
+
+/* ====== PRICE HELPERS ======
+   Keep prices in one place so every card, modal, and booking message uses KSH.
+======================================== */
+function formatPrice(value){
+  var price = Number(value);
+  if(!Number.isFinite(price) || price < 0) price = 0;
+  return 'KSH ' + price.toLocaleString('en-US');
+}
+
+function getAdminPassword(){return String(st.password || st.pin || 'stncl2024');}
+function loadLocalData(){
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch (e) {
+    console.warn('Could not load local data:', e);
+    return null;
+  }
+}
+function saveLocalData(){
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({settings:st, art:art, log:blog}));
+  } catch (e) {
+    console.warn('Could not save local data:', e);
+  }
+}
+function applyData(data){
+  var defaultSettings = {password:'stncl2024',wa:'0143374333',em:'injuguna308@gmail.com',ph:'0143374333',nm:'STNCL',yr:''};
+  if (data) {
+    st = data.settings || defaultSettings;
+    art = data.art ? Object.values(data.art) : JSON.parse(JSON.stringify(defArt));
+    blog = data.log ? Object.values(data.log) : [];
+  } else {
+    st = defaultSettings;
+    art = JSON.parse(JSON.stringify(defArt));
+    blog = [];
+  }
+  if (!st.password && st.pin) st.password = st.pin;
+  if (!st.pin && st.password) st.pin = st.password;
+  var waRaw = String(st.wa || '').trim();
+  var phRaw = String(st.ph || '').trim();
+  st.wa = waRaw && waRaw !== '254114255987' && waRaw !== '+254114255987' ? waRaw.replace(/\D/g,'') : '0143374333';
+  st.ph = phRaw && phRaw !== '254114255987' && phRaw !== '+254114255987' ? phRaw.trim() : '0143374333';
+}
 
 /* Placeholder SVG for artworks without images */
 var noImgSvg="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000"><rect width="800" height="1000" fill="#111"/><line x1="0" y1="0" x2="800" y2="1000" stroke="#222" stroke-width="1"/><line x1="800" y1="0" x2="0" y2="1000" stroke="#222" stroke-width="1"/><text x="400" y="480" text-anchor="middle" fill="#333" font-family="sans-serif" font-size="16">NO IMAGE</text><text x="400" y="520" text-anchor="middle" fill="#444" font-family="sans-serif" font-size="12">Upload in admin</text></svg>');
 var noImgSm="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="48" height="60"><rect width="48" height="60" fill="#111"/><text x="24" y="34" text-anchor="middle" fill="#444" font-family="sans-serif" font-size="8">NO IMG</text></svg>');
+
 function ld() {
-  // 1. Load Settings (Local only, no need to sync these)
-  try {
-    var s = localStorage.getItem(SS);
-    st = s ? JSON.parse(s) : {pin:'1234', wa:'254114255987', em:'injuguna308@gmail.com', ph:'0143374333', nm:'STNCL', yr:''};
-    if(!s) svS();
-    var l = localStorage.getItem(SL);
-    blog = l ? JSON.parse(l) : [];
-  } catch(e) {
-    st = {pin:'1234', wa:'254114255987', em:'injuguna308@gmail.com', ph:'0143374333', nm:'STNCL', yr:''};
-    blog = [];
+  const localData = loadLocalData();
+  applyData(localData);
+  saveLocalData();
+
+  updDisp();
+  renGal();
+  updStats();
+  renAdmList();
+  renBlog();
+
+  isDataLoaded = true;
+  if (document.getElementById('pinMod').classList.contains('op')) {
+    document.getElementById('pinLoad').classList.add('hidden');
   }
 
-  // 2. Load Art from Firebase (This fixes the infinite loading loop)
-  db.ref('art').once('value').then(function(snapshot) {
-    var data = snapshot.val();
+  if (!db) {
+    return;
+  }
+
+  db.ref().once('value').then(snapshot => {
+    const data = snapshot.val();
     if (data) {
-      // Firebase sometimes returns objects instead of arrays, fix that:
-      art = Array.isArray(data) ? data : Object.values(data);
-    } else {
-      // Database is empty! Push your default art to Firebase
-      art = JSON.parse(JSON.stringify(defArt));
-      svA(); 
+      applyData({settings:data.settings||st, art:data.art, log:data.log});
+      saveLocalData();
+      updDisp(); renGal(); updStats(); renAdmList(); renBlog();
     }
-    
-    isDataLoaded = true;
-    initUI(); // Start the website only AFTER data is downloaded
-    
-  }).catch(function(error) {
-    console.error("Firebase failed, using local backup:", error);
-    var a = localStorage.getItem(SA);
-    art = a ? JSON.parse(a) : JSON.parse(JSON.stringify(defArt));
-    isDataLoaded = true;
-    initUI();
+
+    db.ref().on('value', (subsequentSnapshot) => {
+      const updatedData = subsequentSnapshot.val();
+      if (updatedData) {
+        applyData({settings:updatedData.settings||st, art:updatedData.art, log:updatedData.log});
+        saveLocalData();
+        updDisp(); renGal(); updStats(); renAdmList(); renBlog();
+      }
+    });
+  }).catch(error => {
+    console.error('Firebase initial read failed: ' + error.code, error);
   });
 }
+function svA(){ if (db) { db.ref('art').set(art).catch(e => toast('Save Failed', 'Could not save artwork: ' + e.message)); } else { saveLocalData(); } }
+function svS(){ if (db) { db.ref('settings').set(st).catch(e => toast('Save Failed', 'Could not save settings: ' + e.message)); } else { saveLocalData(); } }
+function svL(){ if (db) { db.ref('log').set(blog).catch(e => toast('Save Failed', 'Could not save booking log: ' + e.message)); } else { saveLocalData(); } }
+function toast(t,m){var el=document.getElementById('toast');document.getElementById('toastT').textContent=t;document.getElementById('toastM').textContent=m;el.classList.add('v');setTimeout(function(){el.classList.remove('v')},4000)}
 
-function initUI() {
-  updStats();
-  renderAdmin();
-  renderGallery('all');
-  loadSet();
-  initObservers();
-}
-
-// --- SAVE FUNCTIONS ---
-function svA() { 
-  db.ref('art').set(art).catch(e => console.error(e)); 
-  try { localStorage.setItem(SA, JSON.stringify(art)); } catch(e) {}
-}
-function svS() { localStorage.setItem(SS, JSON.stringify(st)); }
-function svL() { localStorage.setItem(SL, JSON.stringify(blog)); }
-function toast(t,m) { var el=document.getElementById('toast'); document.getElementById('toastT').textContent=t; document.getElementById('toastM').textContent=m; el.classList.add('v'); setTimeout(function(){el.classList.remove('v')},4000); }
-
-// --- FILE & URL HANDLING ---
-function hFile(ev) {
-  var file = ev.target.files[0];
-  if(!file) return;
-  
-  // CRITICAL: Block files over 400KB to prevent crashing Firebase
-  if(file.size > 400000) { 
-    toast('File Too Big', 'Max 400KB for direct upload. Use the URL box below for larger images.'); 
-    return; 
+/* ====== DYNAMIC STATS ====== */
+function getStats(){
+  var sold=art.filter(function(a){return !a.av}).length;
+  var years=st.yr?parseInt(st.yr):0;
+  if(!years && art.length>0){
+    var minYear=9999;
+    art.forEach(function(a){if(a.yr){var y=parseInt(a.yr);if(y<minYear)minYear=y}});
+    if(minYear<9999)years=new Date().getFullYear()-minYear;
+    if(years<1)years=1;
   }
-  
+  var maxLayers=0;
+  art.forEach(function(a){if(a.ly){var m=parseInt(a.ly);if(m>maxLayers)maxLayers=m}});
+  if(!maxLayers)maxLayers=7;
+  var collections=Math.max(1,Math.floor(sold/4));
+  return{sold:sold,years:years,maxLayers:maxLayers,collections:collections}
+}
+function updStats(){
+  var s=getStats();
+  document.getElementById('statSold').textContent=s.sold;
+  document.getElementById('statYears').textContent=s.years;
+  document.getElementById('statLayers').textContent=s.maxLayers;
+  document.getElementById('statCollections').textContent=s.collections;
+  document.getElementById('aboutSold').textContent=s.sold;
+  document.getElementById('aboutYears').textContent=s.years+'+';
+  document.getElementById('aboutLayers').textContent=s.maxLayers;
+  document.getElementById('artCount').textContent=art.length;
+  document.getElementById('soldCount').textContent=s.sold;
+}
+
+/* ====== PIN ====== */
+function openPin(){
+  pinVal='';
+document.getElementById('pinInput').value='';
+document.getElementById('pinErr').classList.add('hidden');
+if (!isDataLoaded) {
+  document.getElementById('pinLoad').classList.remove('hidden');
+} else {
+  document.getElementById('pinLoad').classList.add('hidden');
+}
+document.getElementById('pinMod').classList.add('op');
+document.getElementById('pinOv').classList.add('op');
+}
+function closePin(){document.getElementById('pinMod').classList.remove('op');document.getElementById('pinOv').classList.remove('op')}
+function psb(){
+  if(!isDataLoaded)return;
+  var entered=document.getElementById('pinInput').value.trim();
+  if(entered===getAdminPassword()){closePin();togAdm()}else{document.getElementById('pinErr').classList.remove('hidden');document.getElementById('pinInput').value='';setTimeout(function(){document.getElementById('pinErr').classList.add('hidden')},2000)}}
+
+/* ====== FILE UPLOAD ====== */
+function hFile(ev){
+  var file=ev.target.files[0];
+  if(!file)return;
+  if(!file.type.match(/^image\/(jpeg|png|webp)$/)){toast('Invalid File','Only JPG, PNG, or WEBP images are allowed.');return}
+  if(file.size > 2 * 1024 * 1024){toast('File Too Large','Image must be under 2MB. Please compress it first.');return}
+
+  // --- Convert image to Base64 text to store in the database ---
   var reader = new FileReader();
-  reader.onload = function(e) { 
-    upImg = e.target.result; 
-    document.getElementById('dzC').classList.add('hidden');
+  reader.onload = function(e) {
+    upImg = e.target.result; // This is the Base64 text string
     document.getElementById('dzP').src = upImg;
     document.getElementById('dzP').classList.remove('hidden');
+    document.getElementById('dzC').classList.add('hidden');
     document.getElementById('imgErr').classList.add('hidden');
+    toast('Image Ready', 'Image has been loaded and is ready to save.');
+  };
+  reader.onerror = function() {
+    toast('Error', 'Failed to read file.');
   };
   reader.readAsDataURL(file);
 }
 
-function loadUrl() {
-  var url = document.getElementById('eUrl').value.trim();
-  if(!url) return;
-  upImg = url;
-  document.getElementById('dzC').classList.add('hidden');
-  document.getElementById('dzP').src = upImg;
-  document.getElementById('dzP').classList.remove('hidden');
-  document.getElementById('imgErr').classList.add('hidden');
-}
-
-// --- ADMIN UI ---
-function openEd(id) {
-  var ed = document.getElementById('artEd');
-  ed.classList.remove('hidden');
-  upImg = null;
-  document.getElementById('dzC').classList.remove('hidden');
-  document.getElementById('dzP').classList.add('hidden');
-  document.getElementById('eUrl').value = '';
-  document.getElementById('imgErr').classList.add('hidden');
-
-  if(id) {
-    document.getElementById('edTitle').textContent = 'EDIT ARTWORK';
-    document.getElementById('saveBtnText').textContent = 'Update Artwork';
-    var a = art.find(x => x.id == id);
-    if(a) {
-      document.getElementById('eId').value = a.id;
-      document.getElementById('eTi').value = a.title;
-      document.getElementById('ePr').value = a.price;
-      document.getElementById('eCa').value = a.cat;
-      document.getElementById('eSz').value = a.sz||'';
-      document.getElementById('eMd').value = a.md||'';
-      document.getElementById('eLy').value = a.ly||'';
-      document.getElementById('eYr').value = a.yr||'';
-      document.getElementById('eDe').value = a.desc||'';
-      document.getElementById('eAv').checked = a.av;
-      if(a.img) {
-        upImg = a.img;
-        document.getElementById('dzC').classList.add('hidden');
-        document.getElementById('dzP').src = a.img;
-        document.getElementById('dzP').classList.remove('hidden');
-        if(!a.img.startsWith('data:')) document.getElementById('eUrl').value = a.img;
-      }
-    }
-  } else {
-    document.getElementById('edTitle').textContent = 'NEW ARTWORK';
-    document.getElementById('saveBtnText').textContent = 'Save Artwork';
-    document.getElementById('eId').value = '';
-    document.getElementById('eTi').value = '';
-    document.getElementById('ePr').value = '';
-    document.getElementById('eCa').value = 'portrait';
-    document.getElementById('eSz').value = '';
-    document.getElementById('eMd').value = '';
-    document.getElementById('eLy').value = '';
-    document.getElementById('eYr').value = '2024';
-    document.getElementById('eDe').value = '';
-    document.getElementById('eAv').checked = true;
+/* ====== ADMIN PANEL ====== */
+function togAdm(){
+  var p=document.getElementById('admPan'),o=document.getElementById('admOv');
+  if(p.classList.contains('op')){
+    p.classList.remove('op');o.classList.remove('op');document.body.style.overflow='';closeEd()
+  }else{
+    ldSet(); // ld() already calls the render functions, just load settings into the form
+    p.classList.add('op');o.classList.add('op');document.body.style.overflow='hidden'
   }
-  ed.scrollIntoView({behavior:'smooth'});
 }
-
-function closeEd() { document.getElementById('artEd').classList.add('hidden'); }
-
-function saveArt() {
-  if(!upImg) { document.getElementById('imgErr').classList.remove('hidden'); return; }
-  
-  var id = document.getElementById('eId').value;
-  var obj = {
-    id: id ? parseInt(id) : Date.now(),
-    title: document.getElementById('eTi').value || 'UNTITLED',
-    cat: document.getElementById('eCa').value,
-    price: parseInt(document.getElementById('ePr').value) || 0,
-    sz: document.getElementById('eSz').value,
-    md: document.getElementById('eMd').value,
-    ly: document.getElementById('eLy').value,
-    yr: document.getElementById('eYr').value,
-    desc: document.getElementById('eDe').value,
-    img: upImg,
-    av: document.getElementById('eAv').checked
-  };
-
-  if(id) {
-    var idx = art.findIndex(a => a.id == id);
-    if(idx > -1) art[idx] = obj;
-  } else {
-    art.unshift(obj);
-  }
-
-  svA();
-  toast('Saved', obj.title + ' synced to cloud.');
+function swTab(t){
+  document.querySelectorAll('.atb').forEach(function(b){
+    b.style.color=b.dataset.t===t?'var(--ac)':'var(--mt)';
+    b.style.borderBottom=b.dataset.t===t?'1px solid var(--ac)':'none'
+  });
+  document.getElementById('t-art').classList.toggle('hidden',t!=='art');
+  document.getElementById('t-blog').classList.toggle('hidden',t!=='blog');
+  document.getElementById('t-set').classList.toggle('hidden',t!=='set');
   closeEd();
-  renderAdmin();
-  renderGallery(curFil);
+  if(t==='blog')renBlog();
+  if(t==='art'){renAdmList();updStats()}
 }
 
-function delArt(id) {
-  if(!confirm('Delete this artwork permanently?')) return;
-  art = art.filter(a => a.id !== id);
-  svA();
-  renderAdmin();
-  renderGallery(curFil);
-  toast('Deleted', 'Artwork removed.');
-}
-
-function togAv(id) {
-  var a = art.find(x => x.id == id);
-  if(a) { a.av = !a.av; svA(); renderAdmin(); renderGallery(curFil); }
-}
-
-function renderAdmin() {
-  var list = document.getElementById('admList');
-  var sorted = [...art];
-  if(adminSort === 'oldest') sorted.sort((a,b) => a.id - b.id);
-  else if(adminSort === 'price_desc') sorted.sort((a,b) => b.price - a.price);
-  else sorted.sort((a,b) => b.id - a.id); // newest
-
-  var html = '';
-  sorted.forEach(a => {
-    var hasImg = a.img && a.img.length > 10;
-    html += `<div class="ai-row ${hasImg ? '' : 'no-img'}">
-      ${hasImg ? `<img src="${a.img}" class="ai-thumb" alt="">` : `<div class="ai-thumb-none">NO IMG</div>`}
-      <div class="ai-info">
-        <div class="ai-title">${a.title}</div>
-        <div class="ai-meta">
-          <span>KES ${a.price.toLocaleString()}</span>
-          <span>·</span>
-          <span class="ai-status ${a.av ? 'avail' : 'sold'}">${a.av ? 'Available' : 'Sold'}</span>
-        </div>
-      </div>
-      <div class="ai-btns">
-        <button class="ai-btn ${a.av ? 'eye-on' : 'eye-off'}" onclick="togAv(${a.id})" title="Toggle availability"><i class="fas fa-eye${a.av ? '' : '-slash'}"></i></button>
-        <button class="ai-btn" onclick="openEd(${a.id})" title="Edit"><i class="fas fa-pen"></i></button>
-        <button class="ai-btn del" onclick="delArt(${a.id})" title="Delete"><i class="fas fa-trash"></i></button>
-      </div>
-    </div>`;
-  });
-  list.innerHTML = html;
-  document.getElementById('artCount').textContent = art.length;
-  document.getElementById('soldCount').textContent = art.filter(a => !a.av).length;
-}
-
-// --- GALLERY UI ---
-function renderGallery(filter) {
-  curFil = filter || 'all';
-  var grid = document.getElementById('artG');
-  var filtered = curFil === 'all' ? art : art.filter(a => a.cat === curFil);
-  
-  document.querySelectorAll('#catF .cp').forEach(b => {
-    b.classList.toggle('acl', b.dataset.c === curFil);
-  });
-
-  if(filtered.length === 0) {
-    grid.innerHTML = '';
-    document.getElementById('empG').classList.remove('hidden');
+/* ====== ADMIN ART LIST ======
+   This is the list shown inside the admin panel for editing artwork.
+   Change the price display here if you want to adjust the admin row layout.
+======================================== */
+function renAdmList(){
+  var c=document.getElementById('admList');
+  if(!art.length){
+    c.innerHTML='<div class="text-center py-10"><i class="fas fa-image text-3xl text-[var(--svd)] mb-3"></i><div class="fm text-[10px] text-[var(--mt)] tracking-wider">No artwork yet</div><div class="fm text-[9px] text-[var(--svd)] mt-1">Click "Add New Artwork" to start</div></div>';
     return;
   }
-  document.getElementById('empG').classList.add('hidden');
+  // Sort the art array before rendering
+  var sortedArt = [...art];
+  if(adminSort==='newest') sortedArt.sort((a,b) => b.id - a.id);
+  else if(adminSort==='oldest') sortedArt.sort((a,b) => a.id - b.id);
+  else if(adminSort==='price_desc') sortedArt.sort((a,b) => b.price - a.price);
+  else if(adminSort==='price_asc') sortedArt.sort((a,b) => a.price - b.price);
 
-  var html = '';
-  filtered.forEach(a => {
-    var imgSrc = a.img || noImgSvg;
-    html += `<div class="acard ic overflow-hidden cursor-pointer" onclick="openBk(${a.id})">
-      <div class="relative h-80 overflow-hidden">
-        <img src="${imgSrc}" class="aimg w-full h-full object-cover inr" alt="${a.title}" loading="lazy">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent"></div>
-        <div class="absolute bottom-0 left-0 right-0 p-5">
-          <div class="fm text-[9px] text-[var(--ac)] tracking-[.2em] mb-1">${a.cat.toUpperCase()} · ${a.yr}</div>
-          <div class="fd text-2xl tracking-wider">${a.title}</div>
-          <div class="flex justify-between items-end mt-3">
-            <div class="fd text-3xl text-[var(--ac)]">KES ${a.price.toLocaleString()}</div>
-            <div class="text-xs ${a.av ? 'text-green-400' : 'text-red-400'} fh tracking-wider">${a.av ? 'AVAILABLE' : 'SOLD'}</div>
-          </div>
-        </div>
-      </div>
-    </div>`;
-  });
-  grid.innerHTML = html;
+  var html='';
+  for(var i=0;i<sortedArt.length;i++){
+    var a=sortedArt[i];
+    var hasImg=a.img&&a.img.length>10;
+    var thumbSrc=hasImg?a.img:noImgSm;
+    var ps=formatPrice(a.price);
+
+    html+='<div class="ai-row' + (!hasImg ? ' no-img' : '') + '" data-id="'+a.id+'">';
+
+    // Thumbnail
+    if(hasImg){
+      html+='<img src="'+thumbSrc+'" class="ai-thumb" alt="'+a.title+'">';
+    }else{
+      html+='<div class="ai-thumb-none"><i class="fas fa-image"></i></div>';
+    }
+
+    // Info
+    html+='<div class="ai-info">';
+    html+='<div class="ai-title">'+a.title+'</div>';
+    html+='<div class="ai-meta">';
+    html+='<span>'+a.cat+'</span>';
+    html+='<span>·</span>';
+    html+='<span>'+a.yr+'</span>';
+    html+='<span>·</span>';
+    html+='<span>'+ps+'</span>';
+    html+='</div>';
+    html+='<div class="ai-meta" style="margin-top:4px">';
+    if(a.av){
+      html+='<span class="ai-status avail"><i class="fas fa-eye" style="margin-right:3px"></i>Available</span>';
+    }else{
+      html+='<span class="ai-status sold"><i class="fas fa-eye-slash" style="margin-right:3px"></i>Sold</span>';
+    }
+    if(!hasImg){
+      html+='<span style="color:#eab308;font-size:8px;margin-left:6px"><i class="fas fa-exclamation-circle"></i> No image</span>';
+    }
+    html+='</div>';
+    html+='</div>';
+
+    // Buttons: Edit | Eye | Delete
+    html+='<div class="ai-btns">';
+
+    // Edit button
+    html+='<button class="ai-btn" onclick="editArt('+a.id+')" title="Edit artwork"><i class="fas fa-pen"></i></button>';
+
+    // Eye button - toggles available/sold
+    if(a.av){
+      html+='<button class="ai-btn eye-on" onclick="toggleAvail('+a.id+')" title="Currently visible — click to mark as sold"><i class="fas fa-eye"></i></button>';
+    }else{
+      html+='<button class="ai-btn eye-off" onclick="toggleAvail('+a.id+')" title="Currently sold — click to make available again"><i class="fas fa-eye-slash"></i></button>';
+    }
+
+    // Delete button
+    html+='<button class="ai-btn del" onclick="delArt('+a.id+')" title="Delete artwork completely"><i class="fas fa-trash-can"></i></button>';
+
+    html+='</div>';
+    html+='</div>';
+  }
+  c.innerHTML=html;
 }
 
-// Event listeners for filters and sorts
-document.addEventListener('click', function(e) {
-  if(e.target.closest('#catF .cp')) {
-    renderGallery(e.target.closest('.cp').dataset.c);
+/* ====== EYE - TOGGLE AVAILABLE/SOLD ====== */
+function toggleAvail(id){
+  var a=art.find(function(x){return x.id===id});
+  if(!a)return;
+  a.av=!a.av;
+  svA();
+  renAdmList();
+  renGal();
+  updStats();
+  if(a.av){
+    toast('Now Available','"'+a.title+'" is visible on the gallery');
+  }else{
+    toast('Marked as Sold','"'+a.title+'" — sold count updated');
   }
-  if(e.target.closest('.srt-btn')) {
-    document.querySelectorAll('.srt-btn').forEach(b => b.classList.remove('acl'));
-    e.target.closest('.srt-btn').classList.add('acl');
-    adminSort = e.target.closest('.srt-btn').dataset.sort;
-    renderAdmin();
+}
+
+/* ====== EDIT ART ====== */
+function editArt(id){
+  var a=art.find(function(x){return x.id===id});
+  if(!a)return;
+
+  // Show editor
+  document.getElementById('artEd').classList.remove('hidden');
+  document.getElementById('artEd').scrollIntoView({behavior:'smooth',block:'nearest'});
+  document.getElementById('edTitle').textContent='Edit: '+a.title;
+  document.getElementById('saveBtnText').textContent='Update Artwork';
+
+  // Fill form
+  document.getElementById('eId').value=a.id;
+  document.getElementById('eTi').value=a.title;
+  document.getElementById('ePr').value=a.price;
+  document.getElementById('eCa').value=a.cat;
+  document.getElementById('eSz').value=a.sz||'';
+  document.getElementById('eMd').value=a.md||'';
+  document.getElementById('eLy').value=a.ly||'';
+  document.getElementById('eYr').value=a.yr||'';
+  document.getElementById('eDe').value=a.desc||'';
+  document.getElementById('eAv').checked=a.av;
+
+  // Load existing image
+  upImg=a.img||null;
+  if(upImg){
+    document.getElementById('dzP').src=upImg;
+    document.getElementById('dzP').classList.remove('hidden');
+    document.getElementById('dzC').classList.add('hidden');
+  }else{
+    document.getElementById('dzP').classList.add('hidden');
+    document.getElementById('dzC').classList.remove('hidden');
   }
+  document.getElementById('imgErr').classList.add('hidden');
+}
+
+/* ====== DELETE ART ====== */
+function delArt(id){
+  var a=art.find(function(x){return x.id===id});
+  if(!a)return;
+
+  // Custom confirm via a simple approach
+  var name=a.title;
+  if(!confirm('Delete "'+name+'"?\nThis removes the image and all details completely.'))return;
+
+  art=art.filter(function(x){return x.id!==id});
+  svA();
+  renAdmList();
+  renGal();
+  updStats();
+
+  // Close editor if this was being edited
+  if(parseInt(document.getElementById('eId').value)===id){
+    closeEd();
+  }
+
+  toast('Deleted','"'+name+'" removed from gallery');
+}
+
+/* ====== OPEN/CLOSE EDITOR ====== */
+function openEd(){
+  document.getElementById('artEd').classList.remove('hidden');
+  document.getElementById('edTitle').textContent='New Artwork';
+  document.getElementById('saveBtnText').textContent='Save Artwork';
+  clearEdForm();
+  setTimeout(function(){document.getElementById('artEd').scrollIntoView({behavior:'smooth',block:'nearest'})},50);
+}
+function closeEd(){
+  document.getElementById('artEd').classList.add('hidden');
+  clearEdForm();
+}
+function clearEdForm(){
+  document.getElementById('eId').value='';
+  document.getElementById('eTi').value='';
+  document.getElementById('ePr').value='';
+  document.getElementById('eCa').value='portrait';
+  document.getElementById('eSz').value='';
+  document.getElementById('eMd').value='';
+  document.getElementById('eLy').value='';
+  document.getElementById('eYr').value=new Date().getFullYear();
+  document.getElementById('eDe').value='';
+  document.getElementById('eAv').checked=true;
+  upImg=null;
+  document.getElementById('dzP').classList.add('hidden');
+  document.getElementById('dzC').classList.remove('hidden');
+  // Hide the upload progress bar section if it was visible
+  document.getElementById('dzUp').classList.add('hidden');
+  // Re-enable save button in case an upload failed
+  document.querySelector('#artEd button[onclick="saveArt()"]').disabled = false;
+  document.getElementById('fIn').value='';
+  document.getElementById('eUrl').value='';
+  document.getElementById('imgErr').classList.add('hidden');
+}
+function loadUrl(){var u=document.getElementById('eUrl').value.trim();if(!u)return;upImg=u;document.getElementById('dzP').src=u;document.getElementById('dzP').classList.remove('hidden');document.getElementById('dzC').classList.add('hidden');document.getElementById('imgErr').classList.add('hidden')}
+function getImageSource(){
+  if(upImg)return upImg;
+  var directUrl=document.getElementById('eUrl').value.trim();
+  if(directUrl)return directUrl;
+  for(var i=1;i<=7;i++){
+    var el=document.getElementById('urlSlot'+i);
+    if(el&&el.value.trim())return el.value.trim();
+  }
+  return '';
+}
+function clearUrlSlots(){for(var i=1;i<=7;i++){var el=document.getElementById('urlSlot'+i);if(el)el.value=''}}
+function addFromUrlSlots(){
+  var added=0;
+  for(var i=1;i<=7;i++){
+    var el=document.getElementById('urlSlot'+i);
+    if(!el||!el.value.trim())continue;
+    var url=el.value.trim();
+    var artData={
+      id:art.length?Math.max.apply(null,art.map(function(a){return a.id}))+1:1,
+      title:'Artwork '+(added+1),
+      price:15000,
+      cat:'portrait',
+      sz:'',
+      md:'',
+      ly:'',
+      yr:String(new Date().getFullYear()),
+      desc:'Added from quick URL slot',
+      av:true,
+      img:url
+    };
+    art.unshift(artData);
+    added++;
+  }
+  if(added){
+    svA();renAdmList();renGal();updStats();toast('Added','Added '+added+' artwork item'+(added>1?'s':'')+' from the URL slots.');
+    clearUrlSlots();
+  }else{
+    toast('No URLs','Paste at least one image URL into the slots first.');
+  }
+}
+
+/* ====== SAVE ART ====== */
+function saveArt(){
+  var title=document.getElementById('eTi').value.trim();
+  var price=parseInt(document.getElementById('ePr').value);
+  var imgValue=getImageSource();
+
+  if(!title){toast('Error','Title is required');document.getElementById('eTi').focus();return}
+  if(isNaN(price)){toast('Error','Enter a valid price');document.getElementById('ePr').focus();return}
+  if(!imgValue){document.getElementById('imgErr').classList.remove('hidden');toast('Error','Paste a direct image URL or upload an image');return}
+
+  var editId=document.getElementById('eId').value;
+  var artData={
+    title:title,
+    price:price,
+    cat:document.getElementById('eCa').value,
+    sz:document.getElementById('eSz').value.trim(),
+    md:document.getElementById('eMd').value.trim(),
+    ly:document.getElementById('eLy').value.trim(),
+    yr:document.getElementById('eYr').value.trim()||String(new Date().getFullYear()),
+    desc:document.getElementById('eDe').value.trim(),
+    av:document.getElementById('eAv').checked,
+    img:imgValue
+  };
+
+  if(editId){
+    var idx=art.findIndex(function(a){return a.id===parseInt(editId)});
+    if(idx>-1){artData.id=parseInt(editId);art[idx]=artData}
+    toast('Updated','"'+title+'" updated successfully');
+  }else{
+    artData.id=art.length?Math.max.apply(null,art.map(function(a){return a.id}))+1:1;
+    art.unshift(artData);
+    toast('Added','"'+title+'" added to gallery');
+  }
+
+  svA();renAdmList();renGal();updStats();closeEd();
+}
+
+/* ====== IMAGE PREVIEW ====== */
+function openPrev(id){
+  var a=art.find(function(x){return x.id===id});
+  if(!a||!a.img){toast('No Image','This artwork has no image uploaded yet');return}
+  document.getElementById('prevImg').src=a.img;
+  document.getElementById('prevTitle').textContent=a.title;
+  var ps=formatPrice(a.price);
+  document.getElementById('prevMeta').textContent=(a.md||'')+' · '+(a.sz||'')+' · '+ps+(a.av?' · Available':' · Sold');
+  document.getElementById('prevOv').classList.add('show');
+}
+function closePrev(ev){
+  if(ev&&ev.target&&ev.target.tagName==='IMG')return;
+  document.getElementById('prevOv').classList.remove('show');
+}
+
+/* ====== GALLERY RENDER ======
+   This controls the visible art cards on the homepage.
+   The price shown below each card comes from formatPrice().
+======================================== */
+function renGal(){
+  var g=document.getElementById('artG'),e=document.getElementById('empG');
+  var f=curFil==='all'?art:art.filter(function(a){return a.cat===curFil});
+  if(!f.length){g.innerHTML='';e.classList.remove('hidden');return}
+  e.classList.add('hidden');
+
+  var html='';
+  for(var i=0;i<f.length;i++){
+    var a=f[i];
+    var hasImg=a.img&&a.img.length>10;
+    var imgSrc=hasImg?a.img:noImgSvg;
+    var ps=formatPrice(a.price);
+
+    html+='<article class="acard ic group" style="opacity:0;transform:translateY(30px)">';
+    html+='<div class="relative overflow-hidden aspect-[3/4]">';
+    html+='<img src="'+imgSrc+'" class="aimg w-full h-full object-cover inr" alt="'+a.title+'" loading="lazy">';
+    html+='<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>';
+    if(a.av){
+      html+='<div class="absolute top-4 right-4 px-3 py-1 bg-[var(--ac)] text-black fm text-[10px] tracking-[.2em]">AVAILABLE</div>';
+    }else{
+      html+='<div class="absolute top-4 right-4 px-3 py-1 bg-red-700/90 text-white fm text-[10px] tracking-[.2em]">SOLD</div>';
+    }
+    if(!hasImg){
+      html+='<div class="absolute bottom-4 left-4 px-2 py-1 bg-black/70 text-yellow-500 fm text-[9px] tracking-wider"><i class="fas fa-exclamation-circle mr-1"></i>NO IMAGE</div>';
+    }
+    html+='</div>';
+    html+='<div class="p-5">';
+    html+='<div class="flex items-start justify-between mb-2"><h3 class="fd text-2xl leading-none">'+a.title+'</h3><span class="fm text-[9px] text-[var(--mt)] tracking-[.12em] mt-1.5 uppercase">'+a.cat+'</span></div>';
+    html+='<p class="text-[var(--fgd)] text-xs leading-relaxed mb-4 lc2">'+(a.desc||'')+'</p>';
+    html+='<div class="flex items-center justify-between pt-3 border-t border-[var(--bdl)]">';
+    html+='<div class="fd text-3xl text-[var(--ac)]">'+ps+'</div>';
+    if(a.av){
+      html+='<button class="bbk fh text-[11px] tracking-[.12em] uppercase px-4 py-2.5 border border-[var(--ac)] text-[var(--ac)] hover:bg-[var(--ac)] hover:text-black transition-all" data-id="'+a.id+'">Book This Piece</button>';
+    }else{
+      html+='<span class="fh text-[11px] tracking-[.12em] uppercase px-4 py-2.5 border border-[var(--mt)] text-[var(--mt)]">Sold</span>';
+    }
+    html+='</div></div></article>';
+  }
+  g.innerHTML=html;
+
+  // Attach booking buttons
+  g.querySelectorAll('.bbk').forEach(function(b){
+    b.addEventListener('click',function(ev){
+      ev.stopPropagation();
+      openBk(parseInt(b.dataset.id));
+    })
+  });
+
+  // Animate cards in
+  var cards=g.querySelectorAll('.acard');
+  for(var j=0;j<cards.length;j++){
+    (function(card,delay){
+      setTimeout(function(){
+        card.style.transition='opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1)';
+        card.style.opacity='1';
+        card.style.transform='translateY(0)';
+      },delay);
+    })(cards[j], j*80);
+  }
+}
+
+document.getElementById('catF').addEventListener('click',function(e){
+  var p=e.target.closest('.cp');
+  if(!p)return;
+  document.querySelectorAll('.cp').forEach(function(x){x.classList.remove('acl')});
+  p.classList.add('acl');
+  curFil=p.dataset.c;
+  renGal()
 });
 
-// --- STATS ---
-function getStats() {
-  var sold = art.filter(a => !a.av).length;
-  var years = st.yr ? parseInt(st.yr) : 0;
-  if(!years && art.length > 0) {
-    var minYear = 9999;
-    art.forEach(a => { if(a.yr) { var y = parseInt(a.yr); if(y < minYear) minYear = y; } });
-    if(minYear < 9999) years = new Date().getFullYear() - minYear;
-    if(years < 1) years = 1;
-  }
-  var maxLayers = 0;
-  art.forEach(a => { if(a.ly) { var m = parseInt(a.ly); if(m > maxLayers) maxLayers = m; } });
-  if(!maxLayers) maxLayers = 7;
-  return { sold:sold, years:years, maxLayers:maxLayers, collections: Math.max(1, Math.floor(sold/4)) };
-}
-function updStats() {
-  var s = getStats();
-  document.getElementById('statSold').textContent = s.sold;
-  document.getElementById('statYears').textContent = s.years;
-  document.getElementById('statLayers').textContent = s.maxLayers;
-  document.getElementById('statCollections').textContent = s.collections;
-  document.getElementById('aboutSold').textContent = s.sold;
-  document.getElementById('aboutYears').textContent = s.years + '+';
-  document.getElementById('aboutLayers').textContent = s.maxLayers;
-}
-
-// --- MODALS & PIN ---
-function openPin() { pinVal=''; updDots(); document.getElementById('pinErr').classList.add('hidden'); document.getElementById('pinMod').classList.add('op'); document.getElementById('pinOv').classList.add('op'); }
-function closePin() { document.getElementById('pinMod').classList.remove('op'); document.getElementById('pinOv').classList.remove('op'); }
-function pi(n) { if(pinVal.length>=4)return; pinVal+=n; updDots(); }
-function pcl() { pinVal=pinVal.slice(0,-1); updDots(); }
-function psb() { if(pinVal.length!==4)return; if(pinVal===st.pin){ closePin(); togAdm(); } else { document.getElementById('pinErr').classList.remove('hidden'); pinVal=''; setTimeout(updDots,50); setTimeout(function(){document.getElementById('pinErr').classList.add('hidden')},2000); }}
-function updDots() { var d=document.getElementById('pinDots').children; for(var i=0;i<4;i++){ if(i<pinVal.length) d[i].classList.add('fl'); else d[i].classList.remove('fl'); }}
-function togAdm() { document.getElementById('admPan').classList.toggle('op'); document.getElementById('admOv').classList.toggle('op'); }
-function swTab(t) { document.querySelectorAll('.atc').forEach(el=>el.classList.add('hidden')); document.getElementById('t-'+t).classList.remove('hidden'); document.querySelectorAll('.atb').forEach(b=>{ b.style.color='var(--mt)'; b.style.borderBottom='none'; }); document.querySelector(`.atb[data-t="${t}"]`).style.color='var(--ac)'; document.querySelector(`.atb[data-t="${t}"]`).style.borderBottom='1px solid var(--ac)'; if(t==='blog') renderBlog(); }
-
-function loadSet() {
-  document.getElementById('sPin').value = st.pin;
-  document.getElementById('curPin').textContent = st.pin;
-  document.getElementById('sWa').value = st.wa;
-  document.getElementById('sEm').value = st.em;
-  document.getElementById('sPh').value = st.ph;
-  document.getElementById('sNm').value = st.nm;
-  document.getElementById('sYr').value = st.yr;
-  document.getElementById('logoN').textContent = st.nm;
-  document.getElementById('ftN').textContent = st.nm;
-  document.getElementById('dWa').textContent = st.ph;
-  document.getElementById('dEm').textContent = st.em;
-  document.getElementById('dPh').textContent = st.ph;
-  document.getElementById('waLk').href = 'https://wa.me/' + st.wa;
-  document.getElementById('emLk').href = 'mailto:' + st.em;
-}
-function saveSet() {
-  st.pin = document.getElementById('sPin').value || '1234';
-  st.wa = document.getElementById('sWa').value;
-  st.em = document.getElementById('sEm').value;
-  st.ph = document.getElementById('sPh').value;
-  st.nm = document.getElementById('sNm').value || 'STNCL';
-  st.yr = document.getElementById('sYr').value;
-  svS();
-  loadSet();
-  toast('Saved', 'Settings updated.');
-}
-function resetArt() { if(confirm('Delete all art and reset to defaults?')) { art = JSON.parse(JSON.stringify(defArt)); svA(); renderAdmin(); renderGallery('all'); toast('Reset', 'Gallery restored to defaults.'); }}
-
-// --- BOOKING ---
-function openBk(id) {
-  var a = art.find(x => x.id === id);
-  if(!a) return;
-  curBk = a;
-  document.getElementById('bkImg').src = a.img || noImgSvg;
-  document.getElementById('bkTitle').textContent = a.title;
-  document.getElementById('bkMeta').textContent = (a.cat||'').toUpperCase() + ' · ' + (a.yr||'');
-  document.getElementById('bkPrice').textContent = 'KES ' + a.price.toLocaleString();
-  document.getElementById('bkSize').textContent = a.sz || 'N/A';
+/* ====== BOOKING ====== */
+function openBk(id){
+  var a=art.find(function(x){return x.id===id});
+  if(!a||!a.av)return;
+  curBk=a;
+  var hasImg=a.img&&a.img.length>10;
+  document.getElementById('bkImg').src=hasImg?a.img:noImgSvg;
+  document.getElementById('bkTitle').textContent=a.title;
+  document.getElementById('bkMeta').textContent=(a.md||'')+' · '+(a.ly||'')+' · '+a.yr;
+  var ps=formatPrice(a.price);
+  document.getElementById('bkPrice').textContent=ps;
+  document.getElementById('bkSize').textContent=a.sz||'';
+  document.getElementById('bkN').value='';document.getElementById('bkP').value='';document.getElementById('bkE').value='';document.getElementById('bkM').value='';
   document.getElementById('bkFormV').classList.remove('hidden');
   document.getElementById('bkSucV').classList.add('hidden');
-  document.getElementById('bkMod').classList.add('op');
-  document.getElementById('bkOv').classList.add('op');
+  document.getElementById('bkMod').classList.add('op');document.getElementById('bkOv').classList.add('op');document.body.style.overflow='hidden'
 }
-function closeBk() { document.getElementById('bkMod').classList.remove('op'); document.getElementById('bkOv').classList.remove('op'); }
-function doBk(e) {
-  e.preventDefault();
-  var n = document.getElementById('bkN').value;
-  var p = document.getElementById('bkP').value;
-  var em = document.getElementById('bkE').value;
-  var m = document.getElementById('bkM').value;
-  var txt = `STNCL BOOKING: ${curBk.title}%0aPrice: KES ${curBk.price}%0aName: ${n}%0aPhone: ${p}%0aEmail: ${em}%0aMessage: ${m}`;
-  window.open('https://wa.me/' + st.wa + '?text=' + txt, '_blank');
-  window.open('mailto:' + st.em + '?subject=Booking: ' + curBk.title + '&body=' + m + '%0a%0aName: ' + n + '%0aPhone: ' + p, '_blank');
-  blog.unshift({id: Date.now(), title: curBk.title, name: n, phone: p, time: new Date().toLocaleString()});
+function closeBk(){document.getElementById('bkMod').classList.remove('op');document.getElementById('bkOv').classList.remove('op');document.body.style.overflow='';curBk=null}
+function doBk(ev){
+  ev.preventDefault();if(!curBk)return;
+  var a=curBk,nm=document.getElementById('bkN').value.trim(),ph=document.getElementById('bkP').value.trim(),em=document.getElementById('bkE').value.trim(),mg=document.getElementById('bkM').value.trim();
+  var ps=formatPrice(a.price);
+  var msg='NEW BOOKING REQUEST\n========================\n\nARTWORK: '+a.title+'\nPRICE: '+ps+'\nSIZE: '+(a.sz||'')+'\nMEDIUM: '+(a.md||'')+'\nLAYERS: '+(a.ly||'')+'\n\nBUYER INFO\nName: '+nm+'\nPhone: '+ph+(em?'\nEmail: '+em:'')+(mg?'\nMessage: '+mg:'')+'\n\nSent: '+new Date().toLocaleString();
+  blog.unshift({id:Date.now(),art:a.title,price:ps,name:nm,phone:ph,email:em,msg:mg,date:new Date().toISOString()});
   svL();
+  window.open('https://wa.me/'+st.wa+'?text='+encodeURIComponent(msg),'_blank');
+  window.open('mailto:'+st.em+'?subject='+encodeURIComponent('BOOKING: '+a.title+' - '+ps)+'&body='+encodeURIComponent(msg),'_blank');
   document.getElementById('bkFormV').classList.add('hidden');
   document.getElementById('bkSucV').classList.remove('hidden');
-  document.getElementById('bkBadge').textContent = blog.length;
-  document.getElementById('bkBadge').classList.remove('hidden');
+  var badge=document.getElementById('bkBadge');badge.textContent=blog.length;badge.classList.remove('hidden')
 }
-function renderBlog() {
-  var l = document.getElementById('blogList');
-  var n = document.getElementById('noBlog');
-  if(blog.length === 0) { l.innerHTML = ''; n.classList.remove('hidden'); return; }
-  n.classList.add('hidden');
-  l.innerHTML = blog.map(b => `<div class="le"><div class="flex justify-between"><span class="fh text-sm">${b.title}</span><span class="fm text-[9px] text-[var(--mt)]">${b.time}</span></div><div class="text-xs text-[var(--fgd)] mt-1">${b.name} · ${b.phone}</div></div>`).join('');
+function renBlog(){
+  var c=document.getElementById('blogList'),n=document.getElementById('noBlog'),b=document.getElementById('bkBadge');
+  if(blog.length){b.textContent=blog.length;b.classList.remove('hidden');n.classList.add('hidden');
+    c.innerHTML=blog.map(function(l){return '<div class="le"><div class="flex items-center justify-between mb-1"><span class="fd text-lg">'+l.art+'</span><span class="fm text-[9px] text-[var(--ac)]">'+l.price+'</span></div><div class="fm text-[9px] text-[var(--mt)]">'+l.name+' · '+l.phone+' · '+new Date(l.date).toLocaleDateString()+'</div>'+(l.msg?'<div class="text-xs text-[var(--fgd)] mt-1">'+l.msg+'</div>':'')+'</div>'}).join('')
+  }else{b.classList.add('hidden');n.classList.remove('hidden');c.innerHTML=''}
 }
-function clrBlog() { if(confirm('Clear all booking logs?')) { blog = []; svL(); renderBlog(); document.getElementById('bkBadge').classList.add('hidden'); }}
+function clrBlog(){if(!blog.length)return;if(!confirm('Clear all booking logs?'))return;blog=[];svL();renBlog();toast('Cleared','Booking logs cleared.')}
 
-function doContact(e) {
+/* ====== SETTINGS ====== */
+function ldSet(){
+  document.getElementById('sPin').value=getAdminPassword();document.getElementById('sWa').value=st.wa;
+  document.getElementById('sEm').value=st.em;document.getElementById('sPh').value=st.ph;
+  document.getElementById('sNm').value=st.nm;document.getElementById('sYr').value=st.yr||'';
+  document.getElementById('curPin').textContent=getAdminPassword();
+}
+function saveSet(){
+  var np=document.getElementById('sPin').value.trim();
+  if(np){st.password=np;st.pin=np;}
+  st.wa=document.getElementById('sWa').value.trim().replace(/\D/g,'')||'0143374333';
+  st.em=document.getElementById('sEm').value.trim()||'injuguna308@gmail.com';
+  st.ph=document.getElementById('sPh').value.trim()||'0143374333';
+  st.nm=document.getElementById('sNm').value.trim()||'STNCL';
+  st.yr=document.getElementById('sYr').value.trim()||'';
+  svS();updDisp();updStats();document.getElementById('curPin').textContent=getAdminPassword();
+  toast('Saved','All settings updated.')
+}
+function updDisp(){
+  var n=st.nm||'STNCL';
+  document.getElementById('logoN').textContent=n;document.getElementById('ftN').textContent=n;
+  document.getElementById('dEm').textContent=st.em;document.getElementById('dPh').textContent=st.ph;
+  var w=st.wa||'0143374333';
+  document.getElementById('dWa').textContent=w;
+  document.getElementById('waLk').href='https://wa.me/'+w;document.getElementById('emLk').href='mailto:'+st.em;
+}
+function resetArt(){
+  if(!confirm('Reset gallery to defaults?\nThis deletes ALL your artwork and images!'))return;
+  art=JSON.parse(JSON.stringify(defArt));svA();renAdmList();renGal();updStats();toast('Reset','Gallery reset to defaults.')
+}
+
+/* ====== CONTACT ====== */
+function doContact(ev){
+  ev.preventDefault();
+  var nm=document.getElementById('cN').value.trim(),ph=document.getElementById('cP').value.trim(),sj=document.getElementById('cS').value.trim(),mg=document.getElementById('cM').value.trim();
+  var msg='CONTACT FROM WEBSITE\n====================\n\nName: '+nm+'\nPhone: '+ph+(sj?'\nSubject: '+sj:'')+'\nMessage: '+mg+'\n\nSent: '+new Date().toLocaleString();
+  window.open('https://wa.me/'+st.wa+'?text='+encodeURIComponent(msg),'_blank');
+  toast('Sent','WhatsApp opened with your message');
+  document.getElementById('cN').value='';document.getElementById('cP').value='';document.getElementById('cS').value='';document.getElementById('cM').value=''
+}
+
+/* ====== HERO REEL ====== */
+var rSlides=document.querySelectorAll('.rf'),rIdx=0,rTimer=null;
+function startReel(){rTimer=setInterval(function(){rSlides[rIdx].classList.remove('ac');rIdx=(rIdx+1)%rSlides.length;rSlides[rIdx].classList.add('ac');document.getElementById('chN').textContent=String(rIdx+1).padStart(2,'0');updProg()},5000)}
+function updProg(){var p=document.getElementById('rProg'),w=0;var iv=setInterval(function(){w+=2;p.style.width=w+'%';if(w>=100)clearInterval(iv)},100)}
+startReel();updProg();
+
+/* ====== SCROLL ANIMATIONS ====== */
+var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('iv')})},{threshold:.1});
+document.querySelectorAll('.rv,.rst').forEach(function(el){obs.observe(el)});
+
+/* ====== DRAG & DROP ====== */
+var dz=document.getElementById('dz');
+var dragOv=document.getElementById('dragOv');
+var dragCounter=0;
+
+window.addEventListener('dragenter',function(e){e.preventDefault();dragCounter++;dragOv.classList.add('show')});
+window.addEventListener('dragleave',function(e){e.preventDefault();dragCounter--;if(dragCounter===0)dragOv.classList.remove('show')});
+window.addEventListener('dragover',function(e){e.preventDefault()});
+window.addEventListener('drop',function(e){
   e.preventDefault();
-  var n = document.getElementById('cN').value;
-  var p = document.getElementById('cP').value;
-  var s = document.getElementById('cS').value;
-  var m = document.getElementById('cM').value;
-  window.open('https://wa.me/' + st.wa + '?text=STNCL CONTACT: ' + s + '%0a%0a' + m + '%0a%0aName: ' + n + '%0aPhone: ' + p, '_blank');
-}
-
-function closePrev(e) { if(e.target.tagName !== 'IMG') document.getElementById('prevOv').classList.remove('show'); }
-
-// --- SCROLL ANIMATIONS ---
-function initObservers() {
-  var obs = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('iv', 'visible', 'active');
-      }
-    });
-  }, { threshold: 0.1 });
-
-  document.querySelectorAll('.rv, .rst, .pf-reveal, .cv-reveal').forEach(el => obs.observe(el));
-}
-
-// --- HERO SLIDER & SCROLL PROGRESS ---
-(function(){
-  var rfs = document.querySelectorAll('.rf');
-  var cur = 0;
-  setInterval(function() {
-    rfs[cur].classList.remove('ac');
-    cur = (cur + 1) % rfs.length;
-    rfs[cur].classList.add('ac');
-    document.getElementById('chN').textContent = '0' + (cur + 1);
-    var p = ((cur + 1) / rfs.length) * 100;
-    document.getElementById('rProg').style.width = p + '%';
-  }, 4000);
-
-  window.addEventListener('scroll', function() {
-    var h = document.documentElement;
-    var p = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
-    document.getElementById('scroll-progress').style.width = p + '%';
-  });
-})();
-
-// --- DRAG & DROP ---
-document.addEventListener('dragover', function(e) { e.preventDefault(); document.getElementById('dragOv').classList.add('show'); });
-document.addEventListener('dragleave', function(e) { if(!e.relatedTarget) document.getElementById('dragOv').classList.remove('show'); });
-document.addEventListener('drop', function(e) {
-  e.preventDefault();
-  document.getElementById('dragOv').classList.remove('show');
-  if(!document.getElementById('artEd').classList.contains('hidden')) {
-    var file = e.dataTransfer.files[0];
-    if(file && file.type.startsWith('image/')) {
-      if(file.size > 400000) { toast('Too Big', 'Use URL box for images over 400KB'); return; }
-      var reader = new FileReader();
-      reader.onload = function(ev) { upImg = ev.target.result; document.getElementById('dzC').classList.add('hidden'); document.getElementById('dzP').src = upImg; document.getElementById('dzP').classList.remove('hidden'); };
-      reader.readAsDataURL(file);
-    }
+  dragCounter=0;
+  dragOv.classList.remove('show');
+  // Only handle drop if it's over the admin panel editor
+  if(document.getElementById('artEd').contains(e.target)){
+    var file=e.dataTransfer.files[0];
+    if(file)hFile({target:{files:[file]}});
   }
 });
 
-ld();
+dz.addEventListener('drop',function(e){
+  // Stop window drop from firing as well
+  e.stopPropagation();
+});
+
+/* ====== ADMIN SORTING ====== */
+document.getElementById('sortBtns').addEventListener('click', function(e){
+  var btn = e.target.closest('.srt-btn');
+  if(!btn) return;
+  var sortType = btn.dataset.sort;
+  if(sortType === 'price_desc' && adminSort === 'price_desc') adminSort = 'price_asc';
+  else adminSort = sortType;
+  
+  document.querySelectorAll('.srt-btn').forEach(b => b.classList.remove('acl'));
+  btn.classList.add('acl');
+  renAdmList();
+});
+ld(); 
 </script>
 </body>
 </html>
