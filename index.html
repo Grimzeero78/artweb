@@ -1,798 +1,1130 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>STNCL — Stencil Art Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;500;600;700&family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="icon" href="favicon.ico" type="image/x-icon">
-<style>
-:root{--bg:#0a0a0a;--bgd:#050505;--bc:#141414;--bch:#1a1a1a;--fg:#f5f5f5;--fgd:#c0c0c0;--mt:#6a6a6a;--ac:#FF4D00;--acb:#FF7A33;--acd:#B33A00;--sv:#C8C8C8;--svd:#5a5a5a;--bd:#1f1f1f;--bdl:#2a2a2a}
-*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{background:var(--bg);color:var(--fg);font-family:'Archivo',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-.fd{font-family:'Bebas Neue',sans-serif;letter-spacing:.005em}.fh{font-family:'Oswald',sans-serif}.fm{font-family:'JetBrains Mono',monospace}
-.grain{position:fixed;inset:-10%;pointer-events:none;z-index:200;opacity:.07;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='250' height='250'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");mix-blend-mode:overlay}
-.rv{opacity:0;transform:translateY(48px);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)}.rv.iv{opacity:1;transform:translateY(0)}
-.rst>*{opacity:0;transform:translateY(30px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}.rst.iv>*{opacity:1;transform:translateY(0)}.rst.iv>*:nth-child(1){transition-delay:0s}.rst.iv>*:nth-child(2){transition-delay:.08s}.rst.iv>*:nth-child(3){transition-delay:.16s}.rst.iv>*:nth-child(4){transition-delay:.24s}
-.rf{position:absolute;inset:0;opacity:0;transition:opacity 2.5s ease-in-out}.rf.ac{opacity:1}.rf img{width:100%;height:100%;object-fit:cover;filter:grayscale(100%) contrast(1.5) brightness(.35);transform:scale(1.06)}.rf.ac img{animation:kb 10s ease-out forwards}
-@keyframes kb{0%{transform:scale(1.06)}100%{transform:scale(1.18) translate(-2%,-2%)}}
-.hov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,.93) 0%,rgba(10,10,10,.4) 30%,rgba(10,10,10,.5) 60%,rgba(10,10,10,.98) 100%),linear-gradient(90deg,rgba(10,10,10,.8) 0%,rgba(10,10,10,.15) 50%,rgba(10,10,10,.5) 100%),radial-gradient(ellipse at 30% 55%,rgba(255,77,0,.15) 0%,transparent 55%)}
-.sl{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0px,transparent 3px,rgba(0,0,0,.12) 3px,rgba(0,0,0,.12) 4px);pointer-events:none;z-index:2}
-@keyframes mq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}.mqt{display:flex;animation:mq 35s linear infinite;width:max-content}
-.ts{-webkit-text-stroke:1.5px var(--svd);color:transparent}
-.hl{overflow:hidden;display:block}.hl span{display:inline-block;transform:translateY(110%);transition:transform 1s cubic-bezier(.22,1,.36,1)}.iv .hl span{transform:translateY(0)}.hl:nth-child(2) span{transition-delay:.1s}.hl:nth-child(3) span{transition-delay:.2s}
-.sm{display:inline-flex;align-items:center;gap:.75rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.2em;color:var(--ac);text-transform:uppercase}.sm::before{content:'';width:32px;height:1px;background:var(--ac)}
-.nl{position:relative;font-family:'Oswald',sans-serif;font-size:.85rem;letter-spacing:.18em;text-transform:uppercase;color:var(--fgd);transition:color .3s}.nl:hover{color:var(--fg)}.nl::before{content:'';position:absolute;left:-14px;top:50%;transform:translateY(-50%) scaleY(0);width:4px;height:4px;background:var(--ac);transition:transform .3s}.nl:hover::before{transform:translateY(-50%) scaleY(1)}
-.inr{filter:grayscale(100%) contrast(1.4) brightness(.7);transition:filter .8s,transform .8s}
-.ic{background:var(--bc);border:1px solid var(--bd);transition:border-color .4s,background .4s}.ic:hover{border-color:var(--acd);background:var(--bch)}
-.nc{position:relative}.nc::before,.nc::after{content:'';position:absolute;width:14px;height:14px;border:1px solid var(--ac);pointer-events:none}.nc::before{top:-1px;left:-1px;border-right:none;border-bottom:none}.nc::after{bottom:-1px;right:-1px;border-left:none;border-top:none}
-.fi{background:transparent;border:none;border-bottom:1px solid var(--bdl);color:var(--fg);padding:.85rem 0;font-family:'Oswald',sans-serif;font-size:1.1rem;width:100%;transition:border-color .3s;letter-spacing:.04em}.fi:focus{outline:none;border-color:var(--ac)}.fi::placeholder{color:var(--mt);text-transform:uppercase;letter-spacing:.15em;font-size:.8rem}
-.cp{cursor:pointer;padding:.5rem 1.1rem;border:1px solid var(--bdl);background:transparent;color:var(--fgd);font-family:'Oswald',sans-serif;font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;transition:all .3s;white-space:nowrap}.cp:hover{border-color:var(--svd);color:var(--fg)}.cp.acl{background:var(--ac);border-color:var(--ac);color:#000;font-weight:600}
-.acard{transition:transform .5s cubic-bezier(.22,1,.36,1),border-color .4s,background .4s}.acard:hover{transform:translateY(-6px)}.acard .aimg{transition:transform .8s cubic-bezier(.22,1,.36,1),filter .8s}.acard:hover .aimg{transform:scale(1.06);filter:grayscale(70%) contrast(1.4) brightness(.75)}
-.bf{background:linear-gradient(135deg,rgba(255,77,0,.04) 0%,transparent 50%,rgba(255,77,0,.02) 100%);border:1px solid var(--bd);position:relative}.bf::before{content:'';position:absolute;top:0;left:0;width:50px;height:50px;border-top:2px solid var(--ac);border-left:2px solid var(--ac)}.bf::after{content:'';position:absolute;bottom:0;right:0;width:50px;height:50px;border-bottom:2px solid var(--ac);border-right:2px solid var(--ac)}
-.pbar{height:1px;background:rgba(255,255,255,.1);overflow:hidden}.pbf{height:100%;background:var(--ac);width:0%;transition:width .1s linear}
-.ndd{font-variant-numeric:tabular-nums}
-@keyframes pc{0%,100%{box-shadow:0 0 0 0 rgba(255,77,0,.6),0 0 40px rgba(255,77,0,.25)}50%{box-shadow:0 0 0 16px rgba(255,77,0,0),0 0 40px rgba(255,77,0,.25)}}.pbtn{animation:pc 2.4s ease-out infinite}
-@keyframes rbl{0%,100%{opacity:1}50%{opacity:.3}}.rdd{animation:rbl 1.5s ease-in-out infinite}
-.toast{position:fixed;top:90px;right:24px;background:var(--bc);border:1px solid var(--ac);border-left:3px solid var(--ac);padding:1rem 1.5rem;z-index:300;transform:translateX(120%);transition:transform .5s cubic-bezier(.22,1,.36,1);max-width:380px}.toast.v{transform:translateX(0)}
-.mo{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);z-index:250;opacity:0;pointer-events:none;transition:opacity .4s}.mo.op{opacity:1;pointer-events:all}
-.mp{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.92);z-index:260;background:var(--bc);border:1px solid var(--bd);max-width:560px;width:92%;max-height:90vh;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .4s,transform .4s cubic-bezier(.22,1,.36,1)}.mp.op{opacity:1;pointer-events:all;transform:translate(-50%,-50%) scale(1)}
-.ap{position:fixed;top:0;right:0;bottom:0;width:460px;max-width:95vw;background:var(--bgd);border-left:1px solid var(--bd);z-index:280;transform:translateX(110%);transition:transform .5s cubic-bezier(.22,1,.36,1);overflow-y:auto}.ap.op{transform:translateX(0)}
-.ao{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:275;opacity:0;pointer-events:none;transition:opacity .4s}.ao.op{opacity:1;pointer-events:all}
-.ax{background:var(--bc);border:1px solid var(--bdl);color:var(--fg);padding:.6rem .8rem;font-family:'Oswald',sans-serif;font-size:.95rem;width:100%;transition:border-color .3s;letter-spacing:.04em}.ax:focus{outline:none;border-color:var(--ac)}.ax::placeholder{color:var(--mt);font-size:.8rem}
-.pst{position:relative;padding-left:2rem}.pst::before{content:attr(data-s);position:absolute;left:0;top:0;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:1px solid var(--ac);font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--ac)}
-.dz{border:2px dashed var(--bdl);padding:2rem;text-align:center;cursor:pointer;transition:border-color .3s,background .3s;min-height:140px;display:flex;align-items:center;justify-content:center;flex-direction:column}.dz:hover,.dz.dov{border-color:var(--ac);background:rgba(255,77,0,.05)}.dz img{max-height:130px;max-width:100%;object-fit:contain;border:1px solid var(--bdl)}
-.lc2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.le{border-left:2px solid var(--ac);padding:.5rem 0 .5rem .75rem;margin-bottom:.75rem}
-.pdd{width:14px;height:14px;border:2px solid var(--ac);border-radius:50%;transition:all .3s}.pdd.fl{background:var(--ac)}
-.pnb{width:60px;height:60px;border:1px solid var(--bdl);background:transparent;color:var(--fg);font-family:'Bebas Neue',sans-serif;font-size:1.8rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}.pnb:hover{border-color:var(--ac);background:rgba(255,77,0,.1)}.pnb:active{background:var(--ac);color:#000}
-@keyframes sucIn{0%{transform:scale(.8);opacity:0}100%{transform:scale(1);opacity:1}}.suc-anim{animation:sucIn .5s cubic-bezier(.22,1,.36,1) forwards}
-@keyframes cirD{0%{stroke-dashoffset:226}100%{stroke-dashoffset:0}}@keyframes chkD{0%{stroke-dashoffset:50}100%{stroke-dashoffset:0}}
-.suc-cir{stroke-dasharray:226;stroke-dashoffset:226;animation:cirD .6s ease forwards}.suc-chk{stroke-dasharray:50;stroke-dashoffset:50;animation:chkD .4s .4s ease forwards}
-::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bgd)}::-webkit-scrollbar-thumb{background:var(--acd)}
-.bgt{background-color:var(--bg);background-image:radial-gradient(circle at 20% 30%,rgba(255,77,0,.05) 0%,transparent 40%),radial-gradient(circle at 80% 70%,rgba(80,80,80,.05) 0%,transparent 40%),url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='r'><feTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23r)' opacity='0.35'/></svg>");background-blend-mode:normal,normal,overlay}
-@media(max-width:768px){.ap{width:100%}.pnb{width:52px;height:52px;font-size:1.5rem}}
-
-</style>
-<style>
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STNCL — Stencil Art Studio</title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;500;600;700&family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bgd: #050505;
+      --bc: #141414;
+      --bch: #1a1a1a;
+      --fg: #f5f5f5;
+      --fgd: #c0c0c0;
+      --mt: #6a6a6a;
+      --ac: #FF4D00;
+      --acb: #FF7A33;
+      --acd: #B33A00;
+      --sv: #C8C8C8;
+      --svd: #5a5a5a;
+      --bd: #1f1f1f;
+      --bdl: #2a2a2a
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+    html {
+      scroll-behavior: smooth
+    }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Archivo', sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased
+    }
+    .fd {
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: .005em
+    }
+    .fh {
+      font-family: 'Oswald', sans-serif
+    }
+    .fm {
+      font-family: 'JetBrains Mono', monospace
+    }
+    .grain {
+      position: fixed;
+      inset: -10%;
+      pointer-events: none;
+      z-index: 200;
+      opacity: .07;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='250' height='250'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+      mix-blend-mode: overlay
+    }
+    .rv {
+      opacity: 0;
+      transform: translateY(48px);
+      transition: opacity .9s cubic-bezier(.22, 1, .36, 1), transform .9s cubic-bezier(.22, 1, .36, 1)
+    }
+    .rv.iv {
+      opacity: 1;
+      transform: translateY(0)
+    }
+    .rst>* {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .7s cubic-bezier(.22, 1, .36, 1), transform .7s cubic-bezier(.22, 1, .36, 1)
+    }
+    .rst.iv>* {
+      opacity: 1;
+      transform: translateY(0)
+    }
+    .rst.iv>*:nth-child(1) {
+      transition-delay: 0s
+    }
+    .rst.iv>*:nth-child(2) {
+      transition-delay: .08s
+    }
+    .rst.iv>*:nth-child(3) {
+      transition-delay: .16s
+    }
+    .rst.iv>*:nth-child(4) {
+      transition-delay: .24s
+    }
+    .rf {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 2.5s ease-in-out
+    }
+    .rf.ac {
+      opacity: 1
+    }
+    .rf img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(100%) contrast(1.5) brightness(.35);
+      transform: scale(1.06)
+    }
+    .rf.ac img {
+      animation: kb 10s ease-out forwards
+    }
+    @keyframes kb {
+      0% {
+        transform: scale(1.06)
+      }
+      100% {
+        transform: scale(1.18) translate(-2%, -2%)
+      }
+    }
+    .hov {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(10, 10, 10, .93) 0%, rgba(10, 10, 10, .4) 30%, rgba(10, 10, 10, .5) 60%, rgba(10, 10, 10, .98) 100%), linear-gradient(90deg, rgba(10, 10, 10, .8) 0%, rgba(10, 10, 10, .15) 50%, rgba(10, 10, 10, .5) 100%), radial-gradient(ellipse at 30% 55%, rgba(255, 77, 0, .15) 0%, transparent 55%)
+    }
+    .sl {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(0deg, transparent 0px, transparent 3px, rgba(0, 0, 0, .12) 3px, rgba(0, 0, 0, .12) 4px);
+      pointer-events: none;
+      z-index: 2
+    }
+    @keyframes mq {
+      0% {
+        transform: translateX(0)
+      }
+      100% {
+        transform: translateX(-50%)
+      }
+    }
+    .mqt {
+      display: flex;
+      animation: mq 35s linear infinite;
+      width: max-content
+    }
+    .ts {
+      -webkit-text-stroke: 1.5px var(--svd);
+      color: transparent
+    }
+    .hl {
+      overflow: hidden;
+      display: block
+    }
+    .hl span {
+      display: inline-block;
+      transform: translateY(110%);
+      transition: transform 1s cubic-bezier(.22, 1, .36, 1)
+    }
+    .iv .hl span {
+      transform: translateY(0)
+    }
+    .hl:nth-child(2) span {
+      transition-delay: .1s
+    }
+    .hl:nth-child(3) span {
+      transition-delay: .2s
+    }
+    .sm {
+      display: inline-flex;
+      align-items: center;
+      gap: .75rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .75rem;
+      letter-spacing: .2em;
+      color: var(--ac);
+      text-transform: uppercase
+    }
+    .sm::before {
+      content: '';
+      width: 32px;
+      height: 1px;
+      background: var(--ac)
+    }
+    .nl {
+      position: relative;
+      font-family: 'Oswald', sans-serif;
+      font-size: .85rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--fgd);
+      transition: color .3s
+    }
+    .nl:hover {
+      color: var(--fg)
+    }
+    .nl::before {
+      content: '';
+      position: absolute;
+      left: -14px;
+      top: 50%;
+      transform: translateY(-50%) scaleY(0);
+      width: 4px;
+      height: 4px;
+      background: var(--ac);
+      transition: transform .3s
+    }
+    .nl:hover::before {
+      transform: translateY(-50%) scaleY(1)
+    }
+    .inr {
+      filter: grayscale(100%) contrast(1.4) brightness(.7);
+      transition: filter .8s, transform .8s
+    }
+    .ic {
+      background: var(--bc);
+      border: 1px solid var(--bd);
+      transition: border-color .4s, background .4s
+    }
+    .ic:hover {
+      border-color: var(--acd);
+      background: var(--bch)
+    }
+    .nc {
+      position: relative
+    }
+    .nc::before,
+    .nc::after {
+      content: '';
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border: 1px solid var(--ac);
+      pointer-events: none
+    }
+    .nc::before {
+      top: -1px;
+      left: -1px;
+      border-right: none;
+      border-bottom: none
+    }
+    .nc::after {
+      bottom: -1px;
+      right: -1px;
+      border-left: none;
+      border-top: none
+    }
+    .fi {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--bdl);
+      color: var(--fg);
+      padding: .85rem 0;
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.1rem;
+      width: 100%;
+      transition: border-color .3s;
+      letter-spacing: .04em
+    }
+    .fi:focus {
+      outline: none;
+      border-color: var(--ac)
+    }
+    .fi::placeholder {
+      color: var(--mt);
+      text-transform: uppercase;
+      letter-spacing: .15em;
+      font-size: .8rem
+    }
+    .cp {
+      cursor: pointer;
+      padding: .5rem 1.1rem;
+      border: 1px solid var(--bdl);
+      background: transparent;
+      color: var(--fgd);
+      font-family: 'Oswald', sans-serif;
+      font-size: .85rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      transition: all .3s;
+      white-space: nowrap
+    }
+    .cp:hover {
+      border-color: var(--svd);
+      color: var(--fg)
+    }
+    .cp.acl {
+      background: var(--ac);
+      border-color: var(--ac);
+      color: #000;
+      font-weight: 600
+    }
+    .acard {
+      transition: transform .5s cubic-bezier(.22, 1, .36, 1), border-color .4s, background .4s
+    }
+    .acard:hover {
+      transform: translateY(-6px)
+    }
+    .acard .aimg {
+      transition: transform .8s cubic-bezier(.22, 1, .36, 1), filter .8s
+    }
+    .acard:hover .aimg {
+      transform: scale(1.06);
+      filter: grayscale(70%) contrast(1.4) brightness(.75)
+    }
+    .bf {
+      background: linear-gradient(135deg, rgba(255, 77, 0, .04) 0%, transparent 50%, rgba(255, 77, 0, .02) 100%);
+      border: 1px solid var(--bd);
+      position: relative
+    }
+    .bf::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50px;
+      height: 50px;
+      border-top: 2px solid var(--ac);
+      border-left: 2px solid var(--ac)
+    }
+    .bf::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 50px;
+      height: 50px;
+      border-bottom: 2px solid var(--ac);
+      border-right: 2px solid var(--ac)
+    }
+    .pbar {
+      height: 1px;
+      background: rgba(255, 255, 255, .1);
+      overflow: hidden
+    }
+    .pbf {
+      height: 100%;
+      background: var(--ac);
+      width: 0%;
+      transition: width .1s linear
+    }
+    .ndd {
+      font-variant-numeric: tabular-nums
+    }
+    @keyframes pc {
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(255, 77, 0, .6), 0 0 40px rgba(255, 77, 0, .25)
+      }
+      50% {
+        box-shadow: 0 0 0 16px rgba(255, 77, 0, 0), 0 0 40px rgba(255, 77, 0, .25)
+      }
+    }
+    .pbtn {
+      animation: pc 2.4s ease-out infinite
+    }
+    @keyframes rbl {
+      0%,
+      100% {
+        opacity: 1
+      }
+      50% {
+        opacity: .3
+      }
+    }
+    .rdd {
+      animation: rbl 1.5s ease-in-out infinite
+    }
+    .toast {
+      position: fixed;
+      top: 90px;
+      right: 24px;
+      background: var(--bc);
+      border: 1px solid var(--ac);
+      border-left: 3px solid var(--ac);
+      padding: 1rem 1.5rem;
+      z-index: 300;
+      transform: translateX(120%);
+      transition: transform .5s cubic-bezier(.22, 1, .36, 1);
+      max-width: 380px
+    }
+    .toast.v {
+      transform: translateX(0)
+    }
+    .mo {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .85);
+      backdrop-filter: blur(8px);
+      z-index: 250;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .4s
+    }
+    .mo.op {
+      opacity: 1;
+      pointer-events: all
+    }
+    .mp {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(.92);
+      z-index: 260;
+      background: var(--bc);
+      border: 1px solid var(--bd);
+      max-width: 560px;
+      width: 92%;
+      max-height: 90vh;
+      overflow-y: auto;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .4s, transform .4s cubic-bezier(.22, 1, .36, 1)
+    }
+    .mp.op {
+      opacity: 1;
+      pointer-events: all;
+      transform: translate(-50%, -50%) scale(1)
+    }
+    .lc2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden
+    }
+    .pdd {
+      width: 14px;
+      height: 14px;
+      border: 2px solid var(--ac);
+      border-radius: 50%;
+      transition: all .3s
+    }
+    .pdd.fl {
+      background: var(--ac)
+    }
+    @keyframes sucIn {
+      0% {
+        transform: scale(.8);
+        opacity: 0
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1
+      }
+    }
+    .suc-anim {
+      animation: sucIn .5s cubic-bezier(.22, 1, .36, 1) forwards
+    }
+    @keyframes cirD {
+      0% {
+        stroke-dashoffset: 226
+      }
+      100% {
+        stroke-dashoffset: 0
+      }
+    }
+    @keyframes chkD {
+      0% {
+        stroke-dashoffset: 50
+      }
+      100% {
+        stroke-dashoffset: 0
+      }
+    }
+    .suc-cir {
+      stroke-dasharray: 226;
+      stroke-dashoffset: 226;
+      animation: cirD .6s ease forwards
+    }
+    .suc-chk {
+      stroke-dasharray: 50;
+      stroke-dashoffset: 50;
+      animation: chkD .4s .4s ease forwards
+    }
+    ::-webkit-scrollbar {
+      width: 6px
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bgd)
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--acd)
+    }
+    .bgt {
+      background-color: var(--bg);
+      background-image: radial-gradient(circle at 20% 30%, rgba(255, 77, 0, .05) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(80, 80, 80, .05) 0%, transparent 40%), url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='r'><feTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23r)' opacity='0.35'/></svg>");
+      background-blend-mode: normal, normal, overlay
+    }
+    @media(max-width:768px) {
+      .ap {
+        width: 100%
+      }
+    }
+    .booking-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+    .booking-btns .btn-wa {
+      background: #25D366;
+      color: #000;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .booking-btns .btn-wa:hover {
+      opacity: 0.85;
+    }
+    .booking-btns .btn-em {
+      background: var(--ac);
+      color: #000;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .booking-btns .btn-em:hover {
+      opacity: 0.85;
+    }
+    .booking-btns .btn-close-bk {
+      background: transparent;
+      border: 1px solid var(--bdl);
+      color: var(--fgd);
+      padding: 0.7rem 1.5rem;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .booking-btns .btn-close-bk:hover {
+      border-color: var(--mt);
+      color: var(--fg);
+    }
+    #contact .contact-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+    #contact .contact-btns .btn-wa {
+      background: #25D366;
+      color: #000;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    #contact .contact-btns .btn-wa:hover {
+      opacity: 0.85;
+    }
+    #contact .contact-btns .btn-em {
+      background: var(--ac);
+      color: #000;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    #contact .contact-btns .btn-em:hover {
+      opacity: 0.85;
+    }
+  </style>
 </head>
 <body class="bgt">
-<div class="grain"></div>
-<div class="toast" id="toast"><div class="flex items-start gap-3"><i class="fas fa-check-circle text-[var(--ac)] mt-0.5"></i><div><div class="fh text-sm tracking-wider uppercase" id="toastT"></div><div class="text-xs mt-1" id="toastM"></div></div></div></div>
+  <div class="grain"></div>
+  <div class="toast" id="toast"><div class="flex items-start gap-3"><i class="fas fa-check-circle text-[var(--ac)] mt-0.5"></i><div><div class="fh text-sm tracking-wider uppercase" id="toastT"></div><div class="text-xs mt-1" id="toastM"></div></div></div></div>
 
+  <!-- BOOKING MODAL -->
+  <div class="mo" id="bkOv" onclick="closeBk()"></div>
+  <div class="mp" id="bkMod">
+    <div class="p-0">
+      <div id="bkFormV">
+        <div class="relative h-48 overflow-hidden">
+          <img id="bkImg" src="" class="w-full h-full object-cover inr" alt="">
+          <div class="absolute inset-0 bg-gradient-to-t from-[var(--bc)] via-transparent to-transparent"></div>
+          <button onclick="closeBk()" class="absolute top-4 right-4 w-9 h-9 border border-white/20 flex items-center justify-center hover:border-[var(--ac)] bg-black/40 transition-all"><i class="fas fa-xmark text-sm"></i></button>
+          <div class="absolute bottom-4 left-6 right-6">
+            <div class="fm text-[10px] text-[var(--ac)] tracking-[.2em] mb-1" id="bkMeta"></div>
+            <div class="fd text-3xl" id="bkTitle"></div>
+          </div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-5 pb-4 border-b border-[var(--bdl)]">
+            <div><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase">Price</div><div class="fd text-4xl text-[var(--ac)]" id="bkPrice"></div></div>
+            <div class="text-right"><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase">Size</div><div class="fh text-sm" id="bkSize"></div></div>
+          </div>
+          <div class="bg-[var(--bg)] border border-[var(--bd)] p-3 mb-5"><p class="text-[var(--fgd)] text-xs leading-relaxed"><i class="fas fa-bolt text-[var(--ac)] mr-1"></i> Sends artist a <b class="text-[var(--fg)]">WhatsApp + Email</b> at the same time.</p></div>
+          <form onsubmit="prepareBk(event)">
+            <div class="space-y-4">
+              <div class="grid grid-cols-2 gap-4">
+                <div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Full Name *</label><input type="text" class="fi" id="bkN" required placeholder="Your name"></div>
+                <div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Phone *</label><input type="tel" class="fi" id="bkP" required placeholder="+254 ..."></div>
+              </div>
+              <div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Email</label><input type="email" class="fi" id="bkE" placeholder="your@email.com"></div>
+              <div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Message</label><textarea class="fi resize-none" id="bkM" rows="2" placeholder="Any questions..."></textarea></div>
+            </div>
+            <div class="booking-btns">
+              <button type="submit" class="btn-wa"><i class="fab fa-whatsapp"></i> Send via WhatsApp</button>
+              <button type="button" class="btn-em" onclick="sendBkEmail()"><i class="fas fa-envelope"></i> Send via Email</button>
+              <button type="button" onclick="closeBk()" class="btn-close-bk">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div id="bkSucV" class="hidden p-10 text-center">
+        <div class="suc-anim"><svg class="w-20 h-20 mx-auto mb-6" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="none" stroke="var(--ac)" stroke-width="3" class="suc-cir"/><polyline points="24,42 36,54 56,30" fill="none" stroke="var(--ac)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="suc-chk"/></svg></div>
+        <div class="fd text-4xl tracking-wider mb-2">REQUEST READY</div>
+        <div class="fm text-[11px] text-[var(--ac)] tracking-[.2em] uppercase mb-6">Choose how to send</div>
+        <div class="bg-[var(--bg)] border border-[var(--bd)] p-5 text-left mb-6">
+          <div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mb-3">Your booking details:</div>
+          <div class="space-y-2 text-sm text-[var(--fgd)]" id="bkSummary"></div>
+        </div>
+        <div class="booking-btns justify-center">
+          <button class="btn-wa" onclick="sendBkWaFinal()"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+          <button class="btn-em" onclick="sendBkEmailFinal()"><i class="fas fa-envelope"></i> Email</button>
+          <button onclick="closeBk()" class="btn-close-bk">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<!-- BOOKING MODAL -->
-<div class="mo" id="bkOv" onclick="closeBk()"></div>
-<div class="mp" id="bkMod"><div class="p-0">
-<div id="bkFormV">
-<div class="relative h-48 overflow-hidden"><img id="bkImg" src="" class="w-full h-full object-cover inr" alt=""><div class="absolute inset-0 bg-gradient-to-t from-[var(--bc)] via-transparent to-transparent"></div><button onclick="closeBk()" class="absolute top-4 right-4 w-9 h-9 border border-white/20 flex items-center justify-center hover:border-[var(--ac)] bg-black/40 transition-all"><i class="fas fa-xmark text-sm"></i></button><div class="absolute bottom-4 left-6 right-6"><div class="fm text-[10px] text-[var(--ac)] tracking-[.2em] mb-1" id="bkMeta"></div><div class="fd text-3xl" id="bkTitle"></div></div></div>
-<div class="p-6">
-<div class="flex items-center justify-between mb-5 pb-4 border-b border-[var(--bdl)]"><div><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase">Price</div><div class="fd text-4xl text-[var(--ac)]" id="bkPrice"></div></div><div class="text-right"><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase">Size</div><div class="fh text-sm" id="bkSize"></div></div></div>
-<div class="bg-[var(--bg)] border border-[var(--bd)] p-3 mb-5"><p class="text-[var(--fgd)] text-xs leading-relaxed"><i class="fas fa-bolt text-[var(--ac)] mr-1"></i> Sends artist a <b class="text-[var(--fg)]">WhatsApp + Email</b> at the same time.</p></div>
-<form onsubmit="doBk(event)"><div class="space-y-4"><div class="grid grid-cols-2 gap-4"><div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Full Name *</label><input type="text" class="fi" id="bkN" required placeholder="Your name"></div><div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Phone *</label><input type="tel" class="fi" id="bkP" required placeholder="+254 ..."></div></div><div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Email</label><input type="email" class="fi" id="bkE" placeholder="your@email.com"></div><div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Message</label><textarea class="fi resize-none" id="bkM" rows="2" placeholder="Any questions..."></textarea></div></div>
-<button type="submit" class="w-full mt-6 fh text-sm tracking-[.15em] uppercase bg-[var(--ac)] text-black py-3.5 hover:bg-[var(--acb)] transition-colors"><i class="fab fa-whatsapp mr-2"></i><i class="fas fa-envelope mr-2"></i>Send Booking Request</button>
-<button type="button" onclick="closeBk()" class="w-full fh text-xs tracking-[.15em] uppercase border border-[var(--bdl)] py-2.5 mt-2 hover:border-[var(--mt)] transition-colors">Cancel</button></form>
-</div></div>
-<div id="bkSucV" class="hidden p-10 text-center">
-<div class="suc-anim"><svg class="w-20 h-20 mx-auto mb-6" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="none" stroke="var(--ac)" stroke-width="3" class="suc-cir"/><polyline points="24,42 36,54 56,30" fill="none" stroke="var(--ac)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="suc-chk"/></svg></div>
-<div class="fd text-4xl tracking-wider mb-2">BOOKING SENT</div>
-<div class="fm text-[11px] text-[var(--ac)] tracking-[.2em] uppercase mb-6">WhatsApp & Email opened</div>
-<div class="bg-[var(--bg)] border border-[var(--bd)] p-5 text-left mb-6">
-<div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mb-3">What happens next:</div>
-<div class="space-y-3 text-sm text-[var(--fgd)]">
-<div class="flex items-start gap-3"><i class="fab fa-whatsapp text-green-500 mt-0.5"></i><span>WhatsApp opened — <b class="text-[var(--fg)]">just press send</b></span></div>
-<div class="flex items-start gap-3"><i class="fas fa-envelope text-[var(--ac)] mt-0.5"></i><span>Email opened — <b class="text-[var(--fg)]">just press send</b></span></div>
-<div class="flex items-start gap-3"><i class="fas fa-clock text-[var(--svd)] mt-0.5"></i><span>Artist will respond to confirm availability</span></div>
-</div></div>
-<button onclick="closeBk()" class="fh text-sm tracking-[.15em] uppercase bg-[var(--ac)] text-black px-8 py-3 hover:bg-[var(--acb)] transition-colors">Done</button>
-</div></div></div>
+  <!-- HEADER -->
+  <header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-black/50 border-b border-white/5">
+    <div class="max-w-[1600px] mx-auto px-6 lg:px-10 py-4 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-3"><div class="w-9 h-9 bg-[var(--ac)] flex items-center justify-center"><i class="fas fa-spray-can text-black text-sm"></i></div><div><div class="fd text-2xl leading-none tracking-wider" id="logoN">STNCL</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.3em] mt-0.5">STENCIL ART STUDIO</div></div></a>
+      <nav class="hidden lg:flex items-center gap-10"><a href="#gallery" class="nl">Gallery</a><a href="#process" class="nl">Process</a><a href="#about" class="nl">About</a><a href="#contact" class="nl">Contact</a></nav>
+      <div class="flex items-center gap-3">
+        <div class="hidden md:flex items-center gap-2 fm text-[10px] text-[var(--mt)]"><span class="rdd w-2 h-2 bg-[var(--ac)] rounded-full inline-block"></span><span class="tracking-[.15em]">ACCEPTING COMMISSIONS</span></div>
+        <a href="#gallery" class="hidden sm:inline-block fh text-xs tracking-[.2em] uppercase text-black bg-[var(--sv)] px-5 py-2.5 hover:bg-white transition-colors">View Art</a>
+      </div>
+    </div>
+  </header>
 
+  <!-- HERO -->
+  <section class="relative h-screen min-h-[700px] w-full overflow-hidden">
+    <div class="absolute inset-0"><div class="rf ac"><img src="https://picsum.photos/seed/stnclH1/1920/1080.jpg" alt=""></div><div class="rf"><img src="https://picsum.photos/seed/stnclH2/1920/1080.jpg" alt=""></div><div class="rf"><img src="https://picsum.photos/seed/stnclH3/1920/1080.jpg" alt=""></div></div>
+    <div class="hov"></div><div class="sl"></div>
+    <div class="relative z-10 h-full max-w-[1600px] mx-auto px-6 lg:px-10 flex flex-col justify-end pb-24 pt-32">
+      <div class="rv iv max-w-5xl">
+        <div class="sm mb-6"><span>Stencil Art Studio</span></div>
+        <h1 class="fd text-[14vw] md:text-[10vw] lg:text-[8.5vw] leading-[.85] mb-8"><span class="hl"><span>MEASURED BY</span></span><span class="hl"><span class="ts">SKILL.</span></span><span class="hl"><span>MADE BY <span class="text-[var(--ac)]">HEART.</span></span></span></h1>
+        <p class="max-w-xl text-[var(--fgd)] text-base md:text-lg leading-relaxed">Hand-cut multi-layer stencil art — each piece built from precisely cut layers, made with care and soul. Original works available for collectors.</p>
+      </div>
+      <div class="mt-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+        <a href="#gallery" class="inline-flex items-center gap-3 fh text-sm tracking-[.15em] uppercase bg-[var(--ac)] text-black px-7 py-3.5 hover:bg-[var(--acb)] transition-colors pbtn w-fit"><span>Explore Available Works</span><i class="fas fa-arrow-down"></i></a>
+        <div class="flex items-center gap-6 max-w-sm w-full lg:w-auto"><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em]"><span id="chN">01</span> / 03</div><div class="flex-1 pbar"><div class="pbf" id="rProg"></div></div><div class="fm text-[10px] text-[var(--ac)] tracking-[.2em]">REEL</div></div>
+      </div>
+    </div>
+    <div class="absolute bottom-0 left-0 right-0 border-t border-white/5 bg-black/60 backdrop-blur-sm py-3 overflow-hidden z-10"><div class="mqt fd text-sm tracking-[.25em] text-[var(--svd)]"><span class="px-8">HAND-CUT STENCILS</span><span class="text-[var(--ac)]">/</span><span class="px-8">MULTI-LAYER PROCESS</span><span class="text-[var(--ac)]">/</span><span class="px-8">ORIGINAL WORKS ONLY</span><span class="text-[var(--ac)]">/</span><span class="px-8">NO PRINTS NO REPRODUCTIONS</span><span class="text-[var(--ac)]">/</span><span class="px-8">EACH PIECE IS ONE OF ONE</span><span class="text-[var(--ac)]">/</span><span class="px-8">HAND-CUT STENCILS</span><span class="text-[var(--ac)]">/</span><span class="px-8">MULTI-LAYER PROCESS</span><span class="text-[var(--ac)]">/</span><span class="px-8">ORIGINAL WORKS ONLY</span><span class="text-[var(--ac)]">/</span><span class="px-8">NO PRINTS NO REPRODUCTIONS</span><span class="text-[var(--ac)]">/</span><span class="px-8">EACH PIECE IS ONE OF ONE</span><span class="text-[var(--ac)]">/</span></div></div>
+  </section>
 
-<!-- HEADER -->
-<header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-black/50 border-b border-white/5">
-<div class="max-w-[1600px] mx-auto px-6 lg:px-10 py-4 flex items-center justify-between">
-<a href="#" class="flex items-center gap-3"><div class="w-9 h-9 bg-[var(--ac)] flex items-center justify-center"><i class="fas fa-spray-can text-black text-sm"></i></div><div><div class="fd text-2xl leading-none tracking-wider" id="logoN">STNCL</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.3em] mt-0.5">STENCIL ART STUDIO</div></div></a>
-<nav class="hidden lg:flex items-center gap-10"><a href="#gallery" class="nl">Gallery</a><a href="#process" class="nl">Process</a><a href="#about" class="nl">About</a><a href="#contact" class="nl">Contact</a></nav>
-<div class="flex items-center gap-3">
-<div class="hidden md:flex items-center gap-2 fm text-[10px] text-[var(--mt)]"><span class="rdd w-2 h-2 bg-[var(--ac)] rounded-full inline-block"></span><span class="tracking-[.15em]">ACCEPTING COMMISSIONS</span></div>
-<a href="#gallery" class="hidden sm:inline-block fh text-xs tracking-[.2em] uppercase text-black bg-[var(--sv)] px-5 py-2.5 hover:bg-white transition-colors">View Art</a>
-</div></div></header>
+  <!-- STATS -->
+  <section class="border-y border-[var(--bd)] bg-[var(--bgd)]"><div class="max-w-[1600px] mx-auto px-6 lg:px-10 py-14"><div class="rst iv grid grid-cols-2 lg:grid-cols-4 gap-y-8 gap-x-6">
+        <div class="border-l border-[var(--bdl)] pl-6"><div class="fd text-5xl md:text-6xl ndd" id="statYears">0</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mt-1">Years cutting stencils</div></div>
+        <div class="border-l border-[var(--bdl)] pl-6"><div class="fd text-5xl md:text-6xl text-[var(--ac)] ndd" id="statSold">0</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mt-1">Originals sold</div></div>
+        <div class="border-l border-[var(--bdl)] pl-6"><div class="fd text-5xl md:text-6xl ndd" id="statCollections">0</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mt-1">Private collections</div></div>
+        <div class="border-l border-[var(--bdl)] pl-6"><div class="fd text-5xl md:text-6xl ndd" id="statLayers">0</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mt-1">Max layers per piece</div></div>
+      </div></div></section>
 
-<!-- HERO -->
-<section class="relative h-screen min-h-[700px] w-full overflow-hidden">
-<div class="absolute inset-0"><div class="rf ac"><img src="https://picsum.photos/seed/stnclH1/1920/1080.jpg" alt=""></div><div class="rf"><img src="https://picsum.photos/seed/stnclH2/1920/1080.jpg" alt=""></div><div class="rf"><img src="https://picsum.photos/seed/stnclH3/1920/1080.jpg" alt=""></div></div>
-<div class="hov"></div><div class="sl"></div>
-<div class="relative z-10 h-full max-w-[1600px] mx-auto px-6 lg:px-10 flex flex-col justify-end pb-24 pt-32">
-<div class="rv iv max-w-5xl">
-<div class="sm mb-6"><span>Stencil Art Studio</span></div>
-<h1 class="fd text-[14vw] md:text-[10vw] lg:text-[8.5vw] leading-[.85] mb-8"><span class="hl"><span>MEASURED BY</span></span><span class="hl"><span class="ts">SKILL.</span></span><span class="hl"><span>MADE BY <span class="text-[var(--ac)]">HEART.</span></span></span></h1>
-<p class="max-w-xl text-[var(--fgd)] text-base md:text-lg leading-relaxed">Hand-cut multi-layer stencil art — each piece built from precisely cut layers, made with care and soul. Original works available for collectors.</p>
-</div>
-<div class="mt-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-<a href="#gallery" class="inline-flex items-center gap-3 fh text-sm tracking-[.15em] uppercase bg-[var(--ac)] text-black px-7 py-3.5 hover:bg-[var(--acb)] transition-colors pbtn w-fit"><span>Explore Available Works</span><i class="fas fa-arrow-down"></i></a>
-<div class="flex items-center gap-6 max-w-sm w-full lg:w-auto"><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em]"><span id="chN">01</span> / 03</div><div class="flex-1 pbar"><div class="pbf" id="rProg"></div></div><div class="fm text-[10px] text-[var(--ac)] tracking-[.2em]">REEL</div></div>
-</div></div>
-<div class="absolute bottom-0 left-0 right-0 border-t border-white/5 bg-black/60 backdrop-blur-sm py-3 overflow-hidden z-10"><div class="mqt fd text-sm tracking-[.25em] text-[var(--svd)]"><span class="px-8">HAND-CUT STENCILS</span><span class="text-[var(--ac)]">/</span><span class="px-8">MULTI-LAYER PROCESS</span><span class="text-[var(--ac)]">/</span><span class="px-8">ORIGINAL WORKS ONLY</span><span class="text-[var(--ac)]">/</span><span class="px-8">NO PRINTS NO REPRODUCTIONS</span><span class="text-[var(--ac)]">/</span><span class="px-8">EACH PIECE IS ONE OF ONE</span><span class="text-[var(--ac)]">/</span><span class="px-8">HAND-CUT STENCILS</span><span class="text-[var(--ac)]">/</span><span class="px-8">MULTI-LAYER PROCESS</span><span class="text-[var(--ac)]">/</span><span class="px-8">ORIGINAL WORKS ONLY</span><span class="text-[var(--ac)]">/</span><span class="px-8">NO PRINTS NO REPRODUCTIONS</span><span class="text-[var(--ac)]">/</span><span class="px-8">EACH PIECE IS ONE OF ONE</span><span class="text-[var(--ac)]">/</span></div></div>
-</section>
+  <!-- GALLERY -->
+  <section class="relative py-24 lg:py-32" id="gallery"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
+      <div class="rv grid lg:grid-cols-12 gap-8 mb-14"><div class="lg:col-span-6"><div class="sm mb-6"><span>01 — Available Works</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">Original stencil<br>art for <span class="text-[var(--ac)]">collectors.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed mb-5">Every piece is one-of-one. Select a piece to book — artist gets notified via WhatsApp and email instantly.</p><div class="flex flex-wrap gap-2" id="catF"><span class="cp acl" data-c="all">All</span><span class="cp" data-c="portrait">Portrait</span><span class="cp" data-c="urban">Urban</span><span class="cp" data-c="abstract">Abstract</span><span class="cp" data-c="typography">Typography</span><span class="cp" data-c="nature">Nature</span></div></div></div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="artG"></div>
+      <div class="text-center mt-12 hidden" id="empG"><div class="fd text-4xl text-[var(--mt)] mb-3">No pieces here</div></div>
+    </div></section>
 
-<!-- STATS -->
-<section class="border-y border-[var(--bd)] bg-[var(--bgd)]"><div class="max-w-[1600px] mx-auto px-6 lg:px-10 py-14"><div class="rst iv grid grid-cols-2 lg:grid-cols-4 gap-y-8 gap-x-6">
-<div class="border-l border-[var(--bdl)] pl-6"><div class="fd text-5xl md:text-6xl ndd" id="statYears">0</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mt-1">Years cutting stencils</div></div>
-<div class="border-l border-[var(--bdl)] pl-6"><div class="fd text-5xl md:text-6xl text-[var(--ac)] ndd" id="statSold">0</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mt-1">Originals sold</div></div>
-<div class="border-l border-[var(--bdl)] pl-6"><div class="fd text-5xl md:text-6xl ndd" id="statCollections">0</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mt-1">Private collections</div></div>
-<div class="border-l border-[var(--bdl)] pl-6"><div class="fd text-5xl md:text-6xl ndd" id="statLayers">0</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mt-1">Max layers per piece</div></div>
-</div></div></section>
+  <!-- PROCESS -->
+  <section class="relative py-24 lg:py-32 border-t border-[var(--bd)] bg-[var(--bgd)]" id="process"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
+      <div class="rv grid lg:grid-cols-12 gap-8 mb-16"><div class="lg:col-span-6"><div class="sm mb-6"><span>02 — The Process</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">From digital<br>to <span class="ts">physical.</span><br><span class="text-[var(--ac)]">Layer by layer.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed">No shortcuts — blades, acetate, spray cans, and patience.</p></div></div>
+      <div class="rst grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="ic p-6"><div class="pst" data-s="01"><h3 class="fd text-3xl mb-3">DESIGN</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Digital composition broken into individual color layers.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">LAYER SEPARATION</div></div></div></div>
+        <div class="ic p-6"><div class="pst" data-s="02"><h3 class="fd text-3xl mb-3">CUT</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Each layer hand-cut from acetate with precision blades.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">HAND-CUT</div></div></div></div>
+        <div class="ic p-6"><div class="pst" data-s="03"><h3 class="fd text-3xl mb-3">SPRAY</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Stencils layered one at a time with controlled overspray.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">LAYER-BY-LAYER</div></div></div></div>
+        <div class="ic p-6"><div class="pst" data-s="04"><h3 class="fd text-3xl mb-3">FINISH</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Freehand details, UV varnish, signed and catalogued.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">SEALED & SIGNED</div></div></div></div>
+      </div></div></section>
 
-<!-- GALLERY -->
-<section class="relative py-24 lg:py-32" id="gallery"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
-<div class="rv grid lg:grid-cols-12 gap-8 mb-14"><div class="lg:col-span-6"><div class="sm mb-6"><span>01 — Available Works</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">Original stencil<br>art for <span class="text-[var(--ac)]">collectors.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed mb-5">Every piece is one-of-one. Select a piece to book — artist gets notified via WhatsApp and email instantly.</p><div class="flex flex-wrap gap-2" id="catF"><span class="cp acl" data-c="all">All</span><span class="cp" data-c="portrait">Portrait</span><span class="cp" data-c="urban">Urban</span><span class="cp" data-c="abstract">Abstract</span><span class="cp" data-c="typography">Typography</span><span class="cp" data-c="nature">Nature</span></div></div></div>
-<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="artG"></div>
-<div class="text-center mt-12 hidden" id="empG"><div class="fd text-4xl text-[var(--mt)] mb-3">No pieces here</div></div>
-</div></section>
-<!-- PROCESS -->
-<section class="relative py-24 lg:py-32 border-t border-[var(--bd)] bg-[var(--bgd)]" id="process"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
-<div class="rv grid lg:grid-cols-12 gap-8 mb-16"><div class="lg:col-span-6"><div class="sm mb-6"><span>02 — The Process</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">From digital<br>to <span class="ts">physical.</span><br><span class="text-[var(--ac)]">Layer by layer.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed">No shortcuts — blades, acetate, spray cans, and patience.</p></div></div>
-<div class="rst grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-<div class="ic p-6"><div class="pst" data-s="01"><h3 class="fd text-3xl mb-3">DESIGN</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Digital composition broken into individual color layers.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">LAYER SEPARATION</div></div></div></div>
-<div class="ic p-6"><div class="pst" data-s="02"><h3 class="fd text-3xl mb-3">CUT</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Each layer hand-cut from acetate with precision blades.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">HAND-CUT</div></div></div></div>
-<div class="ic p-6"><div class="pst" data-s="03"><h3 class="fd text-3xl mb-3">SPRAY</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Stencils layered one at a time with controlled overspray.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">LAYER-BY-LAYER</div></div></div></div>
-<div class="ic p-6"><div class="pst" data-s="04"><h3 class="fd text-3xl mb-3">FINISH</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Freehand details, UV varnish, signed and catalogued.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">SEALED & SIGNED</div></div></div></div>
-</div></div></section>
+  <!-- ABOUT -->
+  <section class="relative py-24 lg:py-32 border-t border-[var(--bd)]" id="about"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
+      <div class="rv grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <div class="lg:col-span-5"><div class="relative"><div class="nc"><img src="https://picsum.photos/seed/spraycans99/600/750.jpg" class="w-full aspect-[4/5] object-cover inr" alt="Studio"></div><div class="absolute -bottom-4 -right-4 bg-[var(--ac)] text-black p-5 fd text-center"><div class="text-4xl leading-none" id="aboutYears">6+</div><div class="text-[10px] fm tracking-[.2em] mt-1">YEARS</div></div></div></div>
+        <div class="lg:col-span-6 lg:col-start-7">
+          <div class="sm mb-6"><span>03 — The Artist</span></div>
+          <h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9] mb-6">Obsessed with<br><span class="text-[var(--ac)]">layers.</span></h2>
+          <p class="text-[var(--fgd)] text-base leading-relaxed mb-5">I started cutting stencils years ago.</p>
+          <p class="text-[var(--fgd)] text-base leading-relaxed mb-8">Every piece is original. No prints, no reproductions. When you collect my work, you get something that cannot be replicated.</p>
+          <div class="grid grid-cols-3 gap-4 pt-6 border-t border-[var(--bdl)]">
+            <div><div class="fd text-3xl text-[var(--ac)]" id="aboutSold">0</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase mt-1">Works Sold</div></div>
+            <div><div class="fd text-3xl" id="aboutLayers">7</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase mt-1">Max Layers</div></div>
+            <div><div class="fd text-3xl">3</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase mt-1">Exhibitions</div></div>
+          </div>
+        </div>
+      </div></div></section>
 
-<!-- ABOUT -->
-<section class="relative py-24 lg:py-32 border-t border-[var(--bd)]" id="about"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
-<div class="rv grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-<div class="lg:col-span-5"><div class="relative"><div class="nc"><img src="https://picsum.photos/seed/spraycans99/600/750.jpg" class="w-full aspect-[4/5] object-cover inr" alt="Studio"></div><div class="absolute -bottom-4 -right-4 bg-[var(--ac)] text-black p-5 fd text-center"><div class="text-4xl leading-none" id="aboutYears">6+</div><div class="text-[10px] fm tracking-[.2em] mt-1">YEARS</div></div></div></div>
-<div class="lg:col-span-6 lg:col-start-7">
-<div class="sm mb-6"><span>03 — The Artist</span></div>
-<h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9] mb-6">Obsessed with<br><span class="text-[var(--ac)]">layers.</span></h2>
-<p class="text-[var(--fgd)] text-base leading-relaxed mb-5">I started cutting stencils years ago.</p>
-<p class="text-[var(--fgd)] text-base leading-relaxed mb-8">Every piece is original. No prints, no reproductions. When you collect my work, you get something that cannot be replicated.</p>
-<div class="grid grid-cols-3 gap-4 pt-6 border-t border-[var(--bdl)]">
-<div><div class="fd text-3xl text-[var(--ac)]" id="aboutSold">0</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase mt-1">Works Sold</div></div>
-<div><div class="fd text-3xl" id="aboutLayers">7</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase mt-1">Max Layers</div></div>
-<div><div class="fd text-3xl">3</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase mt-1">Exhibitions</div></div>
-</div></div></div></div></section>
+  <!-- CONTACT -->
+  <section class="relative py-24 lg:py-32 border-t border-[var(--bd)] bg-[var(--bgd)]" id="contact"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
+      <div class="rv grid lg:grid-cols-12 gap-8 mb-14"><div class="lg:col-span-6"><div class="sm mb-6"><span>04 — Get In Touch</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">Commission a<br>piece. <span class="ts">Ask anything.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed">Open for commissions. WhatsApp for fastest response.</p></div></div>
+      <div class="rv grid lg:grid-cols-12 gap-8">
+        <div class="lg:col-span-7"><div class="bf p-8 lg:p-10">
+            <form onsubmit="prepareContact(event)">
+              <div class="grid sm:grid-cols-2 gap-x-6 gap-y-5"><div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Name *</label><input type="text" class="fi" id="cN" required placeholder="Your name"></div><div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Phone *</label><input type="tel" class="fi" id="cP" required placeholder="+254 ..."></div></div>
+              <div class="mt-5"><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Subject</label><input type="text" class="fi" id="cS" placeholder="Commission inquiry..."></div>
+              <div class="mt-5"><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Message *</label><textarea class="fi resize-none" id="cM" rows="4" required placeholder="Tell me about your idea..."></textarea></div>
+              <div class="contact-btns">
+                <button type="submit" class="btn-wa"><i class="fab fa-whatsapp"></i> Send via WhatsApp</button>
+                <button type="button" class="btn-em" onclick="sendContactEmail()"><i class="fas fa-envelope"></i> Send via Email</button>
+              </div>
+            </form>
+          </div></div>
+        <div class="lg:col-span-4 lg:col-start-9 flex flex-col gap-5">
+          <a id="waLk" href="https://wa.me/254143374333" target="_blank" class="ic p-5 flex items-center gap-4 hover:border-green-600 transition-colors group"><div class="w-10 h-10 bg-green-600 flex items-center justify-center flex-shrink-0"><i class="fab fa-whatsapp text-white text-lg"></i></div><div><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase">WhatsApp (fastest)</div><div class="fh text-sm" id="dWa">+254 143 374333</div></div><i class="fas fa-arrow-right text-[var(--mt)] group-hover:text-green-500 ml-auto"></i></a>
+          <a id="emLk" href="mailto:injuguna308@gmail.com" class="ic p-5 flex items-center gap-4 hover:border-[var(--ac)] transition-colors group"><div class="w-10 h-10 bg-[var(--ac)] flex items-center justify-center flex-shrink-0"><i class="fas fa-envelope text-black text-sm"></i></div><div><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase">Email</div><div class="fh text-sm" id="dEm">injuguna308@gmail.com</div></div><i class="fas fa-arrow-right text-[var(--mt)] group-hover:text-[var(--ac)] ml-auto"></i></a>
+          <div class="ic p-5 flex items-center gap-4"><div class="w-10 h-10 border border-[var(--bdl)] flex items-center justify-center flex-shrink-0"><i class="fas fa-phone text-[var(--ac)]"></i></div><div><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase">Phone</div><div class="fh text-sm" id="dPh">+254 143 374333</div></div></div>
+          <div class="ic p-5"><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase mb-3">Social</div><div class="flex gap-3"><a href="#" class="w-10 h-10 border border-[var(--bdl)] flex items-center justify-center hover:border-[var(--ac)] hover:text-[var(--ac)] transition-all"><i class="fab fa-instagram"></i></a><a href="#" class="w-10 h-10 border border-[var(--bdl)] flex items-center justify-center hover:border-[var(--ac)] hover:text-[var(--ac)] transition-all"><i class="fab fa-tiktok"></i></a><a href="#" class="w-10 h-10 border border-[var(--bdl)] flex items-center justify-center hover:border-[var(--ac)] hover:text-[var(--ac)] transition-all"><i class="fab fa-twitter"></i></a></div></div>
+        </div>
+      </div></div></section>
 
-<!-- CONTACT -->
-<section class="relative py-24 lg:py-32 border-t border-[var(--bd)] bg-[var(--bgd)]" id="contact"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
-<div class="rv grid lg:grid-cols-12 gap-8 mb-14"><div class="lg:col-span-6"><div class="sm mb-6"><span>04 — Get In Touch</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">Commission a<br>piece. <span class="ts">Ask anything.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed">Open for commissions. WhatsApp for fastest response.</p></div></div>
-<div class="rv grid lg:grid-cols-12 gap-8">
-<div class="lg:col-span-7"><div class="bf p-8 lg:p-10">
-<form onsubmit="doContact(event)">
-<div class="grid sm:grid-cols-2 gap-x-6 gap-y-5"><div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Name *</label><input type="text" class="fi" id="cN" required placeholder="Your name"></div><div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Phone *</label><input type="tel" class="fi" id="cP" required placeholder="+254 ..."></div></div>
-<div class="mt-5"><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Subject</label><input type="text" class="fi" id="cS" placeholder="Commission inquiry..."></div>
-<div class="mt-5"><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Message *</label><textarea class="fi resize-none" id="cM" rows="4" required placeholder="Tell me about your idea..."></textarea></div>
-<button type="submit" class="mt-7 fh text-sm tracking-[.15em] uppercase bg-[var(--ac)] text-black px-8 py-3.5 hover:bg-[var(--acb)] transition-colors"><i class="fab fa-whatsapp mr-2"></i>Send via WhatsApp</button>
-</form></div></div>
-<div class="lg:col-span-4 lg:col-start-9 flex flex-col gap-5">
-<a id="waLk" href="https://wa.me/254143374333" target="_blank" class="ic p-5 flex items-center gap-4 hover:border-green-600 transition-colors group"><div class="w-10 h-10 bg-green-600 flex items-center justify-center flex-shrink-0"><i class="fab fa-whatsapp text-white text-lg"></i></div><div><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase">WhatsApp (fastest)</div><div class="fh text-sm" id="dWa">254 143 374333</div></div><i class="fas fa-arrow-right text-[var(--mt)] group-hover:text-green-500 ml-auto"></i></a>
-<a id="emLk" href="mailto:injuguna308@gmail.com" class="ic p-5 flex items-center gap-4 hover:border-[var(--ac)] transition-colors group"><div class="w-10 h-10 bg-[var(--ac)] flex items-center justify-center flex-shrink-0"><i class="fas fa-envelope text-black text-sm"></i></div><div><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase">Email</div><div class="fh text-sm" id="dEm">injuguna308@gmail.com</div></div><i class="fas fa-arrow-right text-[var(--mt)] group-hover:text-[var(--ac)] ml-auto"></i></a>
-<div class="ic p-5 flex items-center gap-4"><div class="w-10 h-10 border border-[var(--bdl)] flex items-center justify-center flex-shrink-0"><i class="fas fa-phone text-[var(--ac)]"></i></div><div><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase">Phone</div><div class="fh text-sm" id="dPh">254 143 374333</div></div></div>
-<div class="ic p-5"><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase mb-3">Social</div><div class="flex gap-3"><a href="#" class="w-10 h-10 border border-[var(--bdl)] flex items-center justify-center hover:border-[var(--ac)] hover:text-[var(--ac)] transition-all"><i class="fab fa-instagram"></i></a><a href="#" class="w-10 h-10 border border-[var(--bdl)] flex items-center justify-center hover:border-[var(--ac)] hover:text-[var(--ac)] transition-all"><i class="fab fa-tiktok"></i></a><a href="#" class="w-10 h-10 border border-[var(--bdl)] flex items-center justify-center hover:border-[var(--ac)] hover:text-[var(--ac)] transition-all"><i class="fab fa-twitter"></i></a></div></div>
-</div></div></div></section>
+  <!-- FOOTER -->
+  <footer class="border-t border-[var(--bd)] bg-[var(--bgd)] py-10"><div class="max-w-[1600px] mx-auto px-6 lg:px-10 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3"><div class="w-7 h-7 bg-[var(--ac)] flex items-center justify-center"><i class="fas fa-spray-can text-black text-[10px]"></i></div><span class="fd text-xl tracking-wider" id="ftN">STNCL</span></div>
+      <div class="fm text-[10px] text-[var(--mt)] tracking-[.2em]">ALL WORKS ONE-OF-ONE ORIGINALS &copy; 2026</div>
+    </div></footer>
 
-<!-- FOOTER -->
-<footer class="border-t border-[var(--bd)] bg-[var(--bgd)] py-10"><div class="max-w-[1600px] mx-auto px-6 lg:px-10 flex flex-col md:flex-row items-center justify-between gap-4">
-<div class="flex items-center gap-3"><div class="w-7 h-7 bg-[var(--ac)] flex items-center justify-center"><i class="fas fa-spray-can text-black text-[10px]"></i></div><span class="fd text-xl tracking-wider" id="ftN">STNCL</span></div>
-<div class="fm text-[10px] text-[var(--mt)] tracking-[.2em]">ALL WORKS ONE-OF-ONE ORIGINALS &copy; 2026</div>
-</div></footer>
+  <script>
+    // ============================================================
+    // 🔥 EDIT YOUR ARTWORK HERE — Just change this array
+    // ============================================================
+    var defArt = [{
+      id: 1,
+      title: "voss",
+      cat: "chui",
+      price: 15000,
+      sz: "60 x 80 cm",
+      md: "Spray paint on canvas",
+      ly: "2 layers",
+      img: "", // Add your image URL here
+      desc: "Multi-layered stencil portrait exploring urban defiance.",
+      av: true,
+      yr: "2026"
+    }, {
+      id: 2,
+      title: "CONCRETE JUNGLE",
+      cat: "urban",
+      price: 12000,
+      sz: "50 x 70 cm",
+      md: "Acrylic & spray on wood",
+      ly: "6 layers",
+      img: "",
+      desc: "Layered cityscape through hand-cut stencils.",
+      av: true,
+      yr: "2024"
+    }, {
+      id: 3,
+      title: "SILENCE BREAKER",
+      cat: "abstract",
+      price: 18000,
+      sz: "80 x 100 cm",
+      md: "Spray paint on canvas",
+      ly: "5 layers",
+      img: "",
+      desc: "Bold abstract with overlapping stencils.",
+      av: true,
+      yr: "2024"
+    }, {
+      id: 4,
+      title: "WORD ON THE STREET",
+      cat: "typography",
+      price: 10000,
+      sz: "40 x 60 cm",
+      md: "Spray on reclaimed metal",
+      ly: "3 layers",
+      img: "",
+      desc: "Typographic stencil on found metal.",
+      av: false,
+      yr: "2023"
+    }, {
+      id: 5,
+      title: "NOCTURNAL",
+      cat: "portrait",
+      price: 22000,
+      sz: "90 x 120 cm",
+      md: "Spray & acrylic on canvas",
+      ly: "7 layers",
+      img: "",
+      desc: "Large-scale 7-layer portrait.",
+      av: true,
+      yr: "2024"
+    }, {
+      id: 6,
+      title: "escalade v8",
+      cat: "abstract",
+      price: 14000,
+      sz: "60 x 60 cm",
+      md: "Mixed media on canvas",
+      ly: "5 layers",
+      img: "",
+      desc: "Geometric deconstruction.",
+      av: true,
+      yr: "2026"
+    }, {
+      id: 7,
+      title: "BOTANICAL CUT",
+      cat: "nature",
+      price: 11000,
+      sz: "45 x 60 cm",
+      md: "Spray paint on canvas",
+      ly: "4 layers",
+      img: "",
+      desc: "Organic forms meet sharp stencil edges.",
+      av: true,
+      yr: "2024"
+    }];
 
-<script src="artworks.js"></script>
-<script>
-var SA='stncl_a',SS='stncl_s',SL='stncl_l';
+    // ============================================================
+    // NO NEED TO EDIT BELOW — Everything just works
+    // ============================================================
+    var noImgSvg = "data:image/svg+xml," + encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000"><rect width="800" height="1000" fill="#111"/><line x1="0" y1="0" x2="800" y2="1000" stroke="#222" stroke-width="1"/><line x1="800" y1="0" x2="0" y2="1000" stroke="#222" stroke-width="1"/><text x="400" y="480" text-anchor="middle" fill="#333" font-family="sans-serif" font-size="16">NO IMAGE</text><text x="400" y="520" text-anchor="middle" fill="#444" font-family="sans-serif" font-size="12">Upload in admin</text></svg>'
+      );
 
-/* ====== DEFAULT GALLERY CONTENT ======
-   Edit these objects when you want to change the default seven art cards.
-   - title: visible name on the card
-   - price: number shown as KSH
-   - img: paste a direct image URL here to show a picture instantly
-   - av: true = available, false = sold
-======================================== */
-/* ====== EDITABLE GALLERY CONTENT ======
-   Edit these seven objects directly in the code.
-   Fields:
-   - title: artwork name
-   - img: direct image URL
-   - price: numeric price
-   - period: availability period or date range
-   - av: true = available, false = sold
-   - sz: size
-   - md: medium
-   - ly: layers
-   - desc: description
-   - yr: year
-======================================== */
-var defArt = normalizeArtList([
-  {id:1,title:"PINKY",cat:"portrait",price:1500,period:"",sz:"60 x 80 cm",md:"Spray paint on canvas",ly:"2 layers",img:"",desc:"Multi-layered stencil portrait exploring urban defiance.",av:true,yr:"2026"},
-  {id:2,title:"CONCRETE JUNGLE",cat:"urban",price:12000,period:"",sz:"50 x 70 cm",md:"Acrylic & spray on wood",ly:"6 layers",img:"",desc:"Layered cityscape through hand-cut stencils.",av:true,yr:"2024"},
-  {id:3,title:"SILENCE BREAKER",cat:"abstract",price:18000,period:"",sz:"80 x 100 cm",md:"Spray paint on canvas",ly:"5 layers",img:"",desc:"Bold abstract with overlapping stencils.",av:true,yr:"2024"},
-  {id:4,title:"WORD ON THE STREET",cat:"typography",price:10000,period:"",sz:"40 x 60 cm",md:"Spray on reclaimed metal",ly:"3 layers",img:"",desc:"Typographic stencil on found metal.",av:false,yr:"2023"},
-  {id:5,title:"NOCTURNAL",cat:"portrait",price:22000,period:"",sz:"90 x 120 cm",md:"Spray & acrylic on canvas",ly:"7 layers",img:"",desc:"Large-scale 7-layer portrait.",av:true,yr:"2024"},
-  {id:6,title:"escalade v8",cat:"abstract",price:14000,period:"",sz:"60 x 60 cm",md:"Mixed media on canvas",ly:"4 layers",img:"https://i.imgur.com/IPO1zur.jpeg",desc:"Geometric deconstruction.",av:true,yr:"2026"},
-  {id:7,title:"BOTANICAL CUT",cat:"nature",price:11000,period:"",sz:"45 x 60 cm",md:"Spray paint on canvas",ly:"4 layers",img:"",desc:"Organic forms meet sharp stencil edges.",av:true,yr:"2024"}
-]);
+    var art = [],
+      st = {},
+      curBk = null,
+      curFil = 'all';
+    var STORAGE_KEY = 'stncl_data_v1';
 
-var art=[],st={},curBk=null,curFil='all',upImg=null,isDataLoaded=false;
-var STORAGE_KEY='stncl_data_v1';
-
-/* ====== PRICE HELPERS ======
-   Keep prices in one place so every card, modal, and booking message uses KSH.
-======================================== */
-function formatPrice(value){
-  var price = Number(value);
-  if(!Number.isFinite(price) || price < 0) price = 0;
-  return 'KSH ' + price.toLocaleString('en-US');
-}
-function isArtworkAvailable(value){
-  if(typeof value === 'boolean') return value;
-  if(typeof value === 'string'){
-    var v = value.trim().toLowerCase();
-    if(v === 'true' || v === 'available' || v === 'yes' || v === '1') return true;
-    if(v === 'false' || v === 'sold' || v === 'no' || v === '0') return false;
-  }
-  return Boolean(value);
-}
-function normalizeArtList(list){
-  if(!Array.isArray(list)) return [];
-  return list.map(function(item,index){
-    var normalized = Object.assign({}, item);
-    normalized.id = normalized.id || index + 1;
-    normalized.av = isArtworkAvailable(normalized.av);
-    return normalized;
-  });
-}
-
-function loadLocalData(){
-  try {
-    var raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    return JSON.parse(raw);
-  } catch (e) {
-    console.warn('Could not load local data:', e);
-    return null;
-  }
-}
-function saveLocalData(){
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({settings:st, art:art}));
-  } catch (e) {
-    console.warn('Could not save local data:', e);
-  }
-}
-function applyData(data){
-  var defaultSettings = {wa:'254143374333',em:'injuguna308@gmail.com',ph:'254143374333',nm:'STNCL',yr:''};
-  st = Object.assign({}, defaultSettings, data && data.settings ? data.settings : {});
-  art = normalizeArtList(JSON.parse(JSON.stringify(defArt)));
-  var waRaw = String(st.wa || '').trim();
-  var phRaw = String(st.ph || '').trim();
-  st.wa = waRaw && waRaw !== '254114255987' && waRaw !== '+254114255987' ? waRaw.replace(/\D/g,'') : '254143374333';
-  st.ph = phRaw && phRaw !== '254114255987' && phRaw !== '+254114255987' ? phRaw.trim() : '254143374333';
-}
-
-/* Placeholder SVG for artworks without images */
-var noImgSvg="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000"><rect width="800" height="1000" fill="#111"/><line x1="0" y1="0" x2="800" y2="1000" stroke="#222" stroke-width="1"/><line x1="800" y1="0" x2="0" y2="1000" stroke="#222" stroke-width="1"/><text x="400" y="480" text-anchor="middle" fill="#333" font-family="sans-serif" font-size="16">NO IMAGE</text><text x="400" y="520" text-anchor="middle" fill="#444" font-family="sans-serif" font-size="12">Upload in admin</text></svg>');
-
-
-function ld() {
-  const localData = loadLocalData();
-  applyData(localData);
-  saveLocalData();
-  art = normalizeArtList(JSON.parse(JSON.stringify(defArt)));
-
-  updDisp();
-  renGal();
-  populateArtworkSlotsForm();
-  updStats();
-
-  isDataLoaded = true;
-}
-function svA(){ saveLocalData(); }
-function toast(t,m){var el=document.getElementById('toast');document.getElementById('toastT').textContent=t;document.getElementById('toastM').textContent=m;el.classList.add('v');setTimeout(function(){el.classList.remove('v')},4000)}
-
-/* ====== DYNAMIC STATS ====== */
-function getStats(){
-  var sold=art.filter(function(a){return !a.av}).length;
-  var years=st.yr?parseInt(st.yr):0;
-  if(!years && art.length>0){
-    var minYear=9999;
-    art.forEach(function(a){if(a.yr){var y=parseInt(a.yr);if(y<minYear)minYear=y}});
-    if(minYear<9999)years=new Date().getFullYear()-minYear;
-    if(years<1)years=1;
-  }
-  var maxLayers=0;
-  art.forEach(function(a){if(a.ly){var m=parseInt(a.ly);if(m>maxLayers)maxLayers=m}});
-  if(!maxLayers)maxLayers=7;
-  var collections=Math.max(1,Math.floor(sold/4));
-  return{sold:sold,years:years,maxLayers:maxLayers,collections:collections}
-}
-function updStats(){
-  var s=getStats();
-  document.getElementById('statSold').textContent=s.sold;
-  document.getElementById('statYears').textContent=s.years;
-  document.getElementById('statLayers').textContent=s.maxLayers;
-  document.getElementById('statCollections').textContent=s.collections;
-  document.getElementById('aboutSold').textContent=s.sold;
-  document.getElementById('aboutYears').textContent=s.years+'+';
-  document.getElementById('aboutLayers').textContent=s.maxLayers;
-}
-
-/* ====== SEVEN SLOT ARTWORK EDITOR ======
-   This section gives you seven clear boxes for editing:
-   - picture name
-   - image URL
-   - price
-   - available/sold
-======================================== */
-function populateArtworkSlotsForm(){
-  for(var i=0;i<7;i++){
-    var item = art[i] || {title:'', img:'', price:0, av:true};
-    document.getElementById('slot'+(i+1)+'Name').value = item.title || '';
-    document.getElementById('slot'+(i+1)+'Url').value = item.img || '';
-    document.getElementById('slot'+(i+1)+'Price').value = item.price || 0;
-    document.getElementById('slot'+(i+1)+'Status').value = item.av ? 'available' : 'sold';
-    document.getElementById('slot'+(i+1)+'Period').value = item.period || '';
-  }
-}
-function saveArtworkSlotsFromForm(){
-  var updatedFirstSeven = [];
-  for(var i=0;i<7;i++){
-    var title = document.getElementById('slot'+(i+1)+'Name').value.trim();
-    var img = document.getElementById('slot'+(i+1)+'Url').value.trim();
-    var price = parseInt(document.getElementById('slot'+(i+1)+'Price').value,10);
-    var period = document.getElementById('slot'+(i+1)+'Period').value.trim();
-    var status = document.getElementById('slot'+(i+1)+'Status').value;
-    var existing = art[i] || {};
-    var item = {
-      id: existing.id || (i+1),
-      title: title || ('Artwork ' + (i+1)),
-      cat: existing.cat || 'portrait',
-      price: isNaN(price) ? 0 : price,
-      sz: existing.sz || '',
-      md: existing.md || '',
-      ly: existing.ly || '',
-      period: period,
-      img: img,
-      desc: existing.desc || '',
-      av: status === 'available',
-      yr: existing.yr || String(new Date().getFullYear())
-    };
-    updatedFirstSeven.push(item);
-  }
-
-  var rest = art.slice(7);
-  art = updatedFirstSeven.concat(rest);
-  svA();
-  renGal();
-  updStats();
-  toast('Saved','The seven artwork slots were updated.');
-}
-
-/* ====== ADMIN ART LIST ======
-   This is the list shown inside the admin panel for editing artwork.
-   Change the price display here if you want to adjust the admin row layout.
-======================================== */
-function renAdmList(){
-  var c=document.getElementById('admList');
-  if(!art.length){
-    c.innerHTML='<div class="text-center py-10"><i class="fas fa-image text-3xl text-[var(--svd)] mb-3"></i><div class="fm text-[10px] text-[var(--mt)] tracking-wider">No artwork yet</div><div class="fm text-[9px] text-[var(--svd)] mt-1">Click "Add New Artwork" to start</div></div>';
-    return;
-  }
-  // Sort the art array before rendering
-  var sortedArt = [...art];
-  if(adminSort==='newest') sortedArt.sort((a,b) => b.id - a.id);
-  else if(adminSort==='oldest') sortedArt.sort((a,b) => a.id - b.id);
-  else if(adminSort==='price_desc') sortedArt.sort((a,b) => b.price - a.price);
-  else if(adminSort==='price_asc') sortedArt.sort((a,b) => a.price - b.price);
-
-  var html='';
-  for(var i=0;i<sortedArt.length;i++){
-    var a=sortedArt[i];
-    var hasImg=a.img&&a.img.length>10;
-    var thumbSrc=hasImg?a.img:noImgSm;
-    var ps=formatPrice(a.price);
-
-    html+='<div class="ai-row' + (!hasImg ? ' no-img' : '') + '" data-id="'+a.id+'">';
-
-    // Thumbnail
-    if(hasImg){
-      html+='<img src="'+thumbSrc+'" class="ai-thumb" alt="'+a.title+'">';
-    }else{
-      html+='<div class="ai-thumb-none"><i class="fas fa-image"></i></div>';
+    function formatPrice(value) {
+      var price = Number(value);
+      if (!Number.isFinite(price) || price < 0) price = 0;
+      return 'KSH ' + price.toLocaleString('en-US');
     }
 
-    // Info
-    html+='<div class="ai-info">';
-    html+='<div class="ai-title">'+a.title+'</div>';
-    html+='<div class="ai-meta">';
-    html+='<span>'+a.cat+'</span>';
-    html+='<span>·</span>';
-    html+='<span>'+a.yr+'</span>';
-    html+='<span>·</span>';
-    html+='<span>'+ps+'</span>';
-    html+='</div>';
-    html+='<div class="ai-meta" style="margin-top:4px">';
-    if(a.av){
-      html+='<span class="ai-status avail"><i class="fas fa-eye" style="margin-right:3px"></i>Available</span>';
-    }else{
-      html+='<span class="ai-status sold"><i class="fas fa-eye-slash" style="margin-right:3px"></i>Sold</span>';
-    }
-    if(!hasImg){
-      html+='<span style="color:#eab308;font-size:8px;margin-left:6px"><i class="fas fa-exclamation-circle"></i> No image</span>';
-    }
-    html+='</div>';
-    html+='</div>';
-
-    // Buttons: Edit | Eye | Delete
-    html+='<div class="ai-btns">';
-
-    // Edit button
-    html+='<button class="ai-btn" onclick="editArt('+a.id+')" title="Edit artwork"><i class="fas fa-pen"></i></button>';
-
-    // Eye button - toggles available/sold
-    if(a.av){
-      html+='<button class="ai-btn eye-on" onclick="toggleAvail('+a.id+')" title="Currently visible — click to mark as sold"><i class="fas fa-eye"></i></button>';
-    }else{
-      html+='<button class="ai-btn eye-off" onclick="toggleAvail('+a.id+')" title="Currently sold — click to make available again"><i class="fas fa-eye-slash"></i></button>';
+    function isArtworkAvailable(value) {
+      if (typeof value === 'boolean') return value;
+      if (typeof value === 'string') {
+        var v = value.trim().toLowerCase();
+        if (v === 'true' || v === 'available' || v === 'yes' || v === '1') return true;
+        if (v === 'false' || v === 'sold' || v === 'no' || v === '0') return false;
+      }
+      return Boolean(value);
     }
 
-    // Delete button
-    html+='<button class="ai-btn del" onclick="delArt('+a.id+')" title="Delete artwork completely"><i class="fas fa-trash-can"></i></button>';
-
-    html+='</div>';
-    html+='</div>';
-  }
-  c.innerHTML=html;
-}
-
-/* ====== EYE - TOGGLE AVAILABLE/SOLD ====== */
-function toggleAvail(id){
-  var a=art.find(function(x){return x.id===id});
-  if(!a)return;
-  a.av=!a.av;
-  svA();
-  renAdmList();
-  renGal();
-  updStats();
-  if(a.av){
-    toast('Now Available','"'+a.title+'" is visible on the gallery');
-  }else{
-    toast('Marked as Sold','"'+a.title+'" — sold count updated');
-  }
-}
-
-/* ====== EDIT ART ====== */
-function editArt(id){
-  var a=art.find(function(x){return x.id===id});
-  if(!a)return;
-
-  // Show editor
-  document.getElementById('artEd').classList.remove('hidden');
-  document.getElementById('artEd').scrollIntoView({behavior:'smooth',block:'nearest'});
-  document.getElementById('edTitle').textContent='Edit: '+a.title;
-  document.getElementById('saveBtnText').textContent='Update Artwork';
-
-  // Fill form
-  document.getElementById('eId').value=a.id;
-  document.getElementById('eTi').value=a.title;
-  document.getElementById('ePr').value=a.price;
-  document.getElementById('eCa').value=a.cat;
-  document.getElementById('eSz').value=a.sz||'';
-  document.getElementById('eMd').value=a.md||'';
-  document.getElementById('eLy').value=a.ly||'';
-  document.getElementById('eYr').value=a.yr||'';
-  document.getElementById('eDe').value=a.desc||'';
-  document.getElementById('eAv').checked=a.av;
-
-  // Load existing image
-  upImg=a.img||null;
-  if(upImg){
-    document.getElementById('dzP').src=upImg;
-    document.getElementById('dzP').classList.remove('hidden');
-    document.getElementById('dzC').classList.add('hidden');
-  }else{
-    document.getElementById('dzP').classList.add('hidden');
-    document.getElementById('dzC').classList.remove('hidden');
-  }
-  document.getElementById('imgErr').classList.add('hidden');
-}
-
-/* ====== DELETE ART ====== */
-function delArt(id){
-  var a=art.find(function(x){return x.id===id});
-  if(!a)return;
-
-  // Custom confirm via a simple approach
-  var name=a.title;
-  if(!confirm('Delete "'+name+'"?\nThis removes the image and all details completely.'))return;
-
-  art=art.filter(function(x){return x.id!==id});
-  svA();
-  renAdmList();
-  renGal();
-  updStats();
-
-  // Close editor if this was being edited
-  if(parseInt(document.getElementById('eId').value)===id){
-    closeEd();
-  }
-
-  toast('Deleted','"'+name+'" removed from gallery');
-}
-
-/* ====== OPEN/CLOSE EDITOR ====== */
-function openEd(){
-  document.getElementById('artEd').classList.remove('hidden');
-  document.getElementById('edTitle').textContent='New Artwork';
-  document.getElementById('saveBtnText').textContent='Save Artwork';
-  clearEdForm();
-  setTimeout(function(){document.getElementById('artEd').scrollIntoView({behavior:'smooth',block:'nearest'})},50);
-}
-function closeEd(){
-  document.getElementById('artEd').classList.add('hidden');
-  clearEdForm();
-}
-function clearEdForm(){
-  document.getElementById('eId').value='';
-  document.getElementById('eTi').value='';
-  document.getElementById('ePr').value='';
-  document.getElementById('eCa').value='portrait';
-  document.getElementById('eSz').value='';
-  document.getElementById('eMd').value='';
-  document.getElementById('eLy').value='';
-  document.getElementById('eYr').value=new Date().getFullYear();
-  document.getElementById('eDe').value='';
-  document.getElementById('eAv').checked=true;
-  upImg=null;
-  document.getElementById('dzP').classList.add('hidden');
-  document.getElementById('dzC').classList.remove('hidden');
-  // Hide the upload progress bar section if it was visible
-  document.getElementById('dzUp').classList.add('hidden');
-  // Re-enable save button in case an upload failed
-  document.querySelector('#artEd button[onclick="saveArt()"]').disabled = false;
-  document.getElementById('fIn').value='';
-  document.getElementById('eUrl').value='';
-  document.getElementById('imgErr').classList.add('hidden');
-}
-function loadUrl(){var u=document.getElementById('eUrl').value.trim();if(!u)return;upImg=u;document.getElementById('dzP').src=u;document.getElementById('dzP').classList.remove('hidden');document.getElementById('dzC').classList.add('hidden');document.getElementById('imgErr').classList.add('hidden')}
-function getImageSource(){
-  if(upImg)return upImg;
-  var directUrl=document.getElementById('eUrl').value.trim();
-  if(directUrl)return directUrl;
-  for(var i=1;i<=7;i++){
-    var el=document.getElementById('urlSlot'+i);
-    if(el&&el.value.trim())return el.value.trim();
-  }
-  return '';
-}
-function clearUrlSlots(){for(var i=1;i<=7;i++){var el=document.getElementById('urlSlot'+i);if(el)el.value=''}}
-function addFromUrlSlots(){
-  var added=0;
-  for(var i=1;i<=7;i++){
-    var el=document.getElementById('urlSlot'+i);
-    if(!el||!el.value.trim())continue;
-    var url=el.value.trim();
-    var artData={
-      id:art.length?Math.max.apply(null,art.map(function(a){return a.id}))+1:1,
-      title:'Artwork '+(added+1),
-      price:15000,
-      cat:'portrait',
-      sz:'',
-      md:'',
-      ly:'',
-      yr:String(new Date().getFullYear()),
-      desc:'Added from quick URL slot',
-      av:true,
-      img:url
-    };
-    art.unshift(artData);
-    added++;
-  }
-  if(added){
-    svA();renAdmList();renGal();updStats();toast('Added','Added '+added+' artwork item'+(added>1?'s':'')+' from the URL slots.');
-    clearUrlSlots();
-  }else{
-    toast('No URLs','Paste at least one image URL into the slots first.');
-  }
-}
-
-/* ====== SAVE ART ====== */
-function saveArt(){
-  var title=document.getElementById('eTi').value.trim();
-  var price=parseInt(document.getElementById('ePr').value);
-  var imgValue=getImageSource();
-
-  if(!title){toast('Error','Title is required');document.getElementById('eTi').focus();return}
-  if(isNaN(price)){toast('Error','Enter a valid price');document.getElementById('ePr').focus();return}
-  if(!imgValue){document.getElementById('imgErr').classList.remove('hidden');toast('Error','Paste a direct image URL or upload an image');return}
-
-  var editId=document.getElementById('eId').value;
-  var artData={
-    title:title,
-    price:price,
-    cat:document.getElementById('eCa').value,
-    sz:document.getElementById('eSz').value.trim(),
-    md:document.getElementById('eMd').value.trim(),
-    ly:document.getElementById('eLy').value.trim(),
-    yr:document.getElementById('eYr').value.trim()||String(new Date().getFullYear()),
-    desc:document.getElementById('eDe').value.trim(),
-    av:document.getElementById('eAv').checked,
-    img:imgValue
-  };
-
-  if(editId){
-    var idx=art.findIndex(function(a){return a.id===parseInt(editId)});
-    if(idx>-1){artData.id=parseInt(editId);art[idx]=artData}
-    toast('Updated','"'+title+'" updated successfully');
-  }else{
-    artData.id=art.length?Math.max.apply(null,art.map(function(a){return a.id}))+1:1;
-    art.unshift(artData);
-    toast('Added','"'+title+'" added to gallery');
-  }
-
-  svA();renAdmList();renGal();updStats();closeEd();
-}
-
-/* ====== IMAGE PREVIEW ====== */
-function openPrev(id){
-  var a=art.find(function(x){return x.id===id});
-  if(!a||!a.img){toast('No Image','This artwork has no image uploaded yet');return}
-  document.getElementById('prevImg').src=a.img;
-  document.getElementById('prevTitle').textContent=a.title;
-  var ps=formatPrice(a.price);
-  document.getElementById('prevMeta').textContent=(a.md||'')+' · '+(a.sz||'')+' · '+ps+(a.av?' · Available':' · Sold');
-  document.getElementById('prevOv').classList.add('show');
-}
-function closePrev(ev){
-  if(ev&&ev.target&&ev.target.tagName==='IMG')return;
-  document.getElementById('prevOv').classList.remove('show');
-}
-
-/* ====== GALLERY RENDER ======
-   This controls the visible art cards on the homepage.
-   The price shown below each card comes from formatPrice().
-======================================== */
-function renGal(){
-  var g=document.getElementById('artG'),e=document.getElementById('empG');
-  var f=curFil==='all'?art:art.filter(function(a){return a.cat===curFil});
-  if(!f.length){g.innerHTML='';e.classList.remove('hidden');return}
-  e.classList.add('hidden');
-
-  var html='';
-  for(var i=0;i<f.length;i++){
-    var a=f[i];
-    var hasImg=a.img&&a.img.length>10;
-    var imgSrc=hasImg?a.img:noImgSvg;
-    var ps=formatPrice(a.price);
-    var isAvail=isArtworkAvailable(a.av);
-
-    html+='<article class="acard ic group" style="opacity:0;transform:translateY(30px)">';
-    html+='<div class="relative overflow-hidden aspect-[3/4]">';
-    html+='<img src="'+imgSrc+'" class="aimg w-full h-full object-cover inr" alt="'+a.title+'" loading="lazy">';
-    html+='<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>';
-    if(isAvail){
-      html+='<div class="absolute top-4 right-4 px-3 py-1 bg-[var(--ac)] text-black fm text-[10px] tracking-[.2em]">AVAILABLE</div>';
-    }else{
-      html+='<div class="absolute top-4 right-4 px-3 py-1 bg-red-700/90 text-white fm text-[10px] tracking-[.2em]">SOLD</div>';
+    function toast(t, m) {
+      var el = document.getElementById('toast');
+      document.getElementById('toastT').textContent = t;
+      document.getElementById('toastM').textContent = m;
+      el.classList.add('v');
+      setTimeout(function() { el.classList.remove('v') }, 4000)
     }
-    if(!hasImg){
-      html+='<div class="absolute bottom-4 left-4 px-2 py-1 bg-black/70 text-yellow-500 fm text-[9px] tracking-wider"><i class="fas fa-exclamation-circle mr-1"></i>NO IMAGE</div>';
+
+    function getStats() {
+      var sold = art.filter(function(a) { return !a.av }).length;
+      var years = 6;
+      var maxLayers = 7;
+      art.forEach(function(a) { if (a.ly) { var m = parseInt(a.ly); if (m > maxLayers) maxLayers = m } });
+      var collections = Math.max(1, Math.floor(sold / 4));
+      return { sold: sold, years: years, maxLayers: maxLayers, collections: collections }
     }
-    html+='</div>';
-    html+='<div class="p-5">';
-    html+='<div class="flex items-start justify-between mb-2"><h3 class="fd text-2xl leading-none">'+a.title+'</h3><span class="fm text-[9px] text-[var(--mt)] tracking-[.12em] mt-1.5 uppercase">'+a.cat+'</span></div>';
-    html+='<p class="text-[var(--fgd)] text-xs leading-relaxed mb-4 lc2">'+(a.desc||'')+'</p>';
-    html+='<div class="flex items-center justify-between pt-3 border-t border-[var(--bdl)]">';
-    html+='<div class="fd text-3xl text-[var(--ac)]">'+ps+'</div>';
-    if(isAvail){
-      html+='<button class="bbk fh text-[11px] tracking-[.12em] uppercase px-4 py-2.5 border border-[var(--ac)] text-[var(--ac)] hover:bg-[var(--ac)] hover:text-black transition-all" data-id="'+a.id+'">Book This Piece</button>';
-    }else{
-      html+='<span class="fh text-[11px] tracking-[.12em] uppercase px-4 py-2.5 border border-[var(--mt)] text-[var(--mt)]">Sold</span>';
+
+    function updStats() {
+      var s = getStats();
+      document.getElementById('statSold').textContent = s.sold;
+      document.getElementById('statYears').textContent = s.years;
+      document.getElementById('statLayers').textContent = s.maxLayers;
+      document.getElementById('statCollections').textContent = s.collections;
+      document.getElementById('aboutSold').textContent = s.sold;
+      document.getElementById('aboutYears').textContent = s.years + '+';
+      document.getElementById('aboutLayers').textContent = s.maxLayers;
     }
-    html+='</div></div></article>';
-  }
-  g.innerHTML=html;
 
-  // Attach booking buttons
-  g.querySelectorAll('.bbk').forEach(function(b){
-    b.addEventListener('click',function(ev){
-      ev.stopPropagation();
-      openBk(parseInt(b.dataset.id));
-    })
-  });
+    function renGal() {
+      var g = document.getElementById('artG'),
+        e = document.getElementById('empG');
+      var f = curFil === 'all' ? art : art.filter(function(a) { return a.cat === curFil });
+      if (!f.length) { g.innerHTML = '';
+        e.classList.remove('hidden'); return }
+      e.classList.add('hidden');
+      var html = '';
+      for (var i = 0; i < f.length; i++) {
+        var a = f[i];
+        var hasImg = a.img && a.img.length > 10;
+        var imgSrc = hasImg ? a.img : noImgSvg;
+        var ps = formatPrice(a.price);
+        var isAvail = isArtworkAvailable(a.av);
+        html += '<article class="acard ic group" style="opacity:0;transform:translateY(30px)">';
+        html += '<div class="relative overflow-hidden aspect-[3/4]">';
+        html += '<img src="' + imgSrc + '" class="aimg w-full h-full object-cover inr" alt="' + a.title + '" loading="lazy">';
+        html +=
+          '<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>';
+        if (isAvail) {
+          html +=
+            '<div class="absolute top-4 right-4 px-3 py-1 bg-[var(--ac)] text-black fm text-[10px] tracking-[.2em]">AVAILABLE</div>';
+        } else {
+          html +=
+            '<div class="absolute top-4 right-4 px-3 py-1 bg-red-700/90 text-white fm text-[10px] tracking-[.2em]">SOLD</div>';
+        }
+        if (!hasImg) {
+          html +=
+            '<div class="absolute bottom-4 left-4 px-2 py-1 bg-black/70 text-yellow-500 fm text-[9px] tracking-wider"><i class="fas fa-exclamation-circle mr-1"></i>NO IMAGE</div>';
+        }
+        html += '</div>';
+        html += '<div class="p-5">';
+        html +=
+          '<div class="flex items-start justify-between mb-2"><h3 class="fd text-2xl leading-none">' + a.title + '</h3><span class="fm text-[9px] text-[var(--mt)] tracking-[.12em] mt-1.5 uppercase">' + a
+          .cat + '</span></div>';
+        html += '<p class="text-[var(--fgd)] text-xs leading-relaxed mb-4 lc2">' + (a.desc || '') + '</p>';
+        html += '<div class="flex items-center justify-between pt-3 border-t border-[var(--bdl)]">';
+        html += '<div class="fd text-3xl text-[var(--ac)]">' + ps + '</div>';
+        if (isAvail) {
+          html +=
+            '<button class="bbk fh text-[11px] tracking-[.12em] uppercase px-4 py-2.5 border border-[var(--ac)] text-[var(--ac)] hover:bg-[var(--ac)] hover:text-black transition-all" data-id="' + a
+            .id + '">Book This Piece</button>';
+        } else {
+          html +=
+            '<span class="fh text-[11px] tracking-[.12em] uppercase px-4 py-2.5 border border-[var(--mt)] text-[var(--mt)]">Sold</span>';
+        }
+        html += '</div></div></article>';
+      }
+      g.innerHTML = html;
+      g.querySelectorAll('.bbk').forEach(function(b) {
+        b.addEventListener('click', function(ev) {
+          ev.stopPropagation();
+          openBk(parseInt(b.dataset.id));
+        })
+      });
+      var cards = g.querySelectorAll('.acard');
+      for (var j = 0; j < cards.length; j++) {
+        (function(card, delay) {
+          setTimeout(function() {
+            card.style.transition = 'opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1)';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+          }, delay);
+        })(cards[j], j * 80);
+      }
+    }
 
-  // Animate cards in
-  var cards=g.querySelectorAll('.acard');
-  for(var j=0;j<cards.length;j++){
-    (function(card,delay){
-      setTimeout(function(){
-        card.style.transition='opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1)';
-        card.style.opacity='1';
-        card.style.transform='translateY(0)';
-      },delay);
-    })(cards[j], j*80);
-  }
-}
+    document.getElementById('catF').addEventListener('click', function(e) {
+      var p = e.target.closest('.cp');
+      if (!p) return;
+      document.querySelectorAll('.cp').forEach(function(x) { x.classList.remove('acl') });
+      p.classList.add('acl');
+      curFil = p.dataset.c;
+      renGal()
+    });
 
-document.getElementById('catF').addEventListener('click',function(e){
-  var p=e.target.closest('.cp');
-  if(!p)return;
-  document.querySelectorAll('.cp').forEach(function(x){x.classList.remove('acl')});
-  p.classList.add('acl');
-  curFil=p.dataset.c;
-  renGal()
-});
+    var bkData = null;
 
-/* ====== BOOKING ====== */
-function openBk(id){
-  var a=art.find(function(x){return x.id===id});
-  if(!a||!isArtworkAvailable(a.av))return;
-  curBk=a;
-  var hasImg=a.img&&a.img.length>10;
-  document.getElementById('bkImg').src=hasImg?a.img:noImgSvg;
-  document.getElementById('bkTitle').textContent=a.title;
-  document.getElementById('bkMeta').textContent=(a.md||'')+' · '+(a.ly||'')+' · '+a.yr;
-  var ps=formatPrice(a.price);
-  document.getElementById('bkPrice').textContent=ps;
-  document.getElementById('bkSize').textContent=a.sz||'';
-  document.getElementById('bkN').value='';document.getElementById('bkP').value='';document.getElementById('bkE').value='';document.getElementById('bkM').value='';
-  document.getElementById('bkFormV').classList.remove('hidden');
-  document.getElementById('bkSucV').classList.add('hidden');
-  document.getElementById('bkMod').classList.add('op');document.getElementById('bkOv').classList.add('op');document.body.style.overflow='hidden'
-}
-function closeBk(){document.getElementById('bkMod').classList.remove('op');document.getElementById('bkOv').classList.remove('op');document.body.style.overflow='';curBk=null}
-function doBk(ev){
-  ev.preventDefault();if(!curBk)return;
-  var a=curBk,nm=document.getElementById('bkN').value.trim(),ph=document.getElementById('bkP').value.trim(),em=document.getElementById('bkE').value.trim(),mg=document.getElementById('bkM').value.trim();
-  var ps=formatPrice(a.price);
-  var msg='NEW BOOKING REQUEST\n========================\n\nARTWORK: '+a.title+'\nPRICE: '+ps+'\nSIZE: '+(a.sz||'')+'\nMEDIUM: '+(a.md||'')+'\nLAYERS: '+(a.ly||'')+'\n\nBUYER INFO\nName: '+nm+'\nPhone: '+ph+(em?'\nEmail: '+em:'')+(mg?'\nMessage: '+mg:'')+'\n\nSent: '+new Date().toLocaleString();
-  window.open('https://wa.me/'+st.wa+'?text='+encodeURIComponent(msg),'_blank');
-  window.open('mailto:'+st.em+'?subject='+encodeURIComponent('BOOKING: '+a.title+' - '+ps)+'&body='+encodeURIComponent(msg),'_blank');
-  document.getElementById('bkFormV').classList.add('hidden');
-  document.getElementById('bkSucV').classList.remove('hidden');
-}
-/* ====== SETTINGS =====*/
-function updDisp(){
-  var n=st.nm||'STNCL';
-  document.getElementById('logoN').textContent=n;document.getElementById('ftN').textContent=n;
-  document.getElementById('dEm').textContent=st.em;document.getElementById('dPh').textContent=st.ph;
-  var w=String(st.wa||'254143374333').replace(/\D/g,'');
-  document.getElementById('dWa').textContent='+'+w.slice(0,3)+' '+w.slice(3,6)+' '+w.slice(6);
-  document.getElementById('waLk').href='https://wa.me/'+w;document.getElementById('emLk').href='mailto:'+st.em;
-}
-function resetArt(){
-  if(!confirm('Reset gallery to defaults?\nThis deletes ALL your artwork and images!'))return;
-  art=JSON.parse(JSON.stringify(defArt));svA();renAdmList();renGal();updStats();toast('Reset','Gallery reset to defaults.')
-}
+    function openBk(id) {
+      var a = art.find(function(x) { return x.id === id });
+      if (!a || !isArtworkAvailable(a.av)) return;
+      curBk = a;
+      bkData = null;
+      var hasImg = a.img && a.img.length > 10;
+      document.getElementById('bkImg').src = hasImg ? a.img : noImgSvg;
+      document.getElementById('bkTitle').textContent = a.title;
+      document.getElementById('bkMeta').textContent = (a.md || '') + ' · ' + (a.ly || '') + ' · ' + a.yr;
+      var ps = formatPrice(a.price);
+      document.getElementById('bkPrice').textContent = ps;
+      document.getElementById('bkSize').textContent = a.sz || '';
+      document.getElementById('bkN').value = '';
+      document.getElementById('bkP').value = '';
+      document.getElementById('bkE').value = '';
+      document.getElementById('bkM').value = '';
+      document.getElementById('bkFormV').classList.remove('hidden');
+      document.getElementById('bkSucV').classList.add('hidden');
+      document.getElementById('bkMod').classList.add('op');
+      document.getElementById('bkOv').classList.add('op');
+      document.body.style.overflow = 'hidden'
+    }
 
-/* ====== CONTACT ====== */
-function doContact(ev){
-  ev.preventDefault();
-  var nm=document.getElementById('cN').value.trim(),ph=document.getElementById('cP').value.trim(),sj=document.getElementById('cS').value.trim(),mg=document.getElementById('cM').value.trim();
-  var msg='CONTACT FROM WEBSITE\n====================\n\nName: '+nm+'\nPhone: '+ph+(sj?'\nSubject: '+sj:'')+'\nMessage: '+mg+'\n\nSent: '+new Date().toLocaleString();
-  window.open('https://wa.me/'+st.wa+'?text='+encodeURIComponent(msg),'_blank');
-  toast('Sent','WhatsApp opened with your message');
-  document.getElementById('cN').value='';document.getElementById('cP').value='';document.getElementById('cS').value='';document.getElementById('cM').value=''
-}
+    function closeBk() {
+      document.getElementById('bkMod').classList.remove('op');
+      document.getElementById('bkOv').classList.remove('op');
+      document.body.style.overflow = '';
+      curBk = null;
+      bkData = null;
+    }
 
-/* ====== HERO REEL ====== */
-var rSlides=document.querySelectorAll('.rf'),rIdx=0,rTimer=null;
-function startReel(){rTimer=setInterval(function(){rSlides[rIdx].classList.remove('ac');rIdx=(rIdx+1)%rSlides.length;rSlides[rIdx].classList.add('ac');document.getElementById('chN').textContent=String(rIdx+1).padStart(2,'0');updProg()},5000)}
-function updProg(){var p=document.getElementById('rProg'),w=0;var iv=setInterval(function(){w+=2;p.style.width=w+'%';if(w>=100)clearInterval(iv)},100)}
-startReel();updProg();
+    function prepareBk(ev) {
+      ev.preventDefault();
+      if (!curBk) return;
+      var a = curBk,
+        nm = document.getElementById('bkN').value.trim(),
+        ph = document.getElementById('bkP').value.trim(),
+        em = document.getElementById('bkE').value.trim(),
+        mg = document.getElementById('bkM').value.trim();
+      var ps = formatPrice(a.price);
+      var msg = 'NEW BOOKING REQUEST\n========================\n\nARTWORK: ' + a.title + '\nPRICE: ' + ps + '\nSIZE: ' + (a
+        .sz || '') + '\nMEDIUM: ' + (a.md || '') + '\nLAYERS: ' + (a.ly || '') + '\n\nBUYER INFO\nName: ' + nm + '\nPhone: ' +
+        ph + (em ? '\nEmail: ' + em : '') + (mg ? '\nMessage: ' + mg : '') + '\n\nSent: ' + new Date().toLocaleString();
+      bkData = { msg: msg, wa: '254143374333', em: 'injuguna308@gmail.com', title: a.title };
+      document.getElementById('bkSummary').innerHTML =
+        '<div><span class="text-[var(--mt)]">Artwork:</span> ' + a.title + '</div><div><span class="text-[var(--mt)]">Price:</span> ' +
+        ps + '</div><div><span class="text-[var(--mt)]">Buyer:</span> ' + nm + ' (' + ph + ')</div>';
+      document.getElementById('bkFormV').classList.add('hidden');
+      document.getElementById('bkSucV').classList.remove('hidden');
+    }
 
-/* ====== SCROLL ANIMATIONS ====== */
-var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('iv')})},{threshold:.1});
-document.querySelectorAll('.rv,.rst').forEach(function(el){obs.observe(el)});
+    function sendBkWaFinal() {
+      if (!bkData) return;
+      window.open('https://wa.me/' + bkData.wa + '?text=' + encodeURIComponent(bkData.msg), '_blank');
+      toast('WhatsApp Sent', 'Opened WhatsApp with your booking request');
+    }
 
-/* ====== DRAG & DROP ====== */
-var dz=document.getElementById('dz');
-var dragOv=document.getElementById('dragOv');
-var dragCounter=0;
+    function sendBkEmailFinal() {
+      if (!bkData) return;
+      window.open('mailto:' + bkData.em + '?subject=' + encodeURIComponent('BOOKING: ' + bkData.title) + '&body=' + encodeURIComponent(
+        bkData.msg), '_blank');
+      toast('Email Sent', 'Opened email with your booking request');
+    }
 
-ld(); 
-</script>
+    function sendBkEmail() {
+      if (!bkData) {
+        var ev = new Event('submit', { cancelable: true });
+        var form = document.querySelector('#bkFormV form');
+        form.dispatchEvent(ev);
+        setTimeout(function() { sendBkEmailFinal(); }, 100);
+        return;
+      }
+      sendBkEmailFinal();
+    }
+
+    var contactData = null;
+
+    function prepareContact(ev) {
+      ev.preventDefault();
+      var nm = document.getElementById('cN').value.trim(),
+        ph = document.getElementById('cP').value.trim(),
+        sj = document.getElementById('cS').value.trim(),
+        mg = document.getElementById('cM').value.trim();
+      if (!nm || !ph || !mg) { toast('Error', 'Name, phone and message are required'); return }
+      var msg = 'CONTACT FROM WEBSITE\n====================\n\nName: ' + nm + '\nPhone: ' + ph + (sj ? '\nSubject: ' + sj :
+        '') + '\nMessage: ' + mg + '\n\nSent: ' + new Date().toLocaleString();
+      contactData = { msg: msg, wa: '254143374333', em: 'injuguna308@gmail.com' };
+      window.open('https://wa.me/' + contactData.wa + '?text=' + encodeURIComponent(contactData.msg), '_blank');
+      toast('WhatsApp Sent', 'Opened WhatsApp with your message');
+      document.getElementById('cN').value = '';
+      document.getElementById('cP').value = '';
+      document.getElementById('cS').value = '';
+      document.getElementById('cM').value = '';
+    }
+
+    function sendContactEmail() {
+      if (!contactData) {
+        var nm = document.getElementById('cN').value.trim(),
+          ph = document.getElementById('cP').value.trim(),
+          sj = document.getElementById('cS').value.trim(),
+          mg = document.getElementById('cM').value.trim();
+        if (!nm || !ph || !mg) { toast('Error', 'Please fill in name, phone and message first'); return }
+        var msg = 'CONTACT FROM WEBSITE\n====================\n\nName: ' + nm + '\nPhone: ' + ph + (sj ? '\nSubject: ' + sj :
+          '') + '\nMessage: ' + mg + '\n\nSent: ' + new Date().toLocaleString();
+        contactData = { msg: msg, wa: '254143374333', em: 'injuguna308@gmail.com' };
+      }
+      window.open('mailto:' + contactData.em + '?subject=' + encodeURIComponent('Website Contact') + '&body=' + encodeURIComponent(
+        contactData.msg), '_blank');
+      toast('Email Sent', 'Opened email with your message');
+    }
+
+    var rSlides = document.querySelectorAll('.rf'),
+      rIdx = 0,
+      rTimer = null;
+
+    function startReel() {
+      rTimer = setInterval(function() {
+        rSlides[rIdx].classList.remove('ac');
+        rIdx = (rIdx + 1) % rSlides.length;
+        rSlides[rIdx].classList.add('ac');
+        document.getElementById('chN').textContent = String(rIdx + 1).padStart(2, '0');
+        updProg()
+      }, 5000)
+    }
+
+    function updProg() {
+      var p = document.getElementById('rProg'),
+        w = 0;
+      var iv = setInterval(function() { w += 2;
+        p.style.width = w + '%'; if (w >= 100) clearInterval(iv) }, 100)
+    }
+
+    function ld() {
+      art = JSON.parse(JSON.stringify(defArt));
+      document.getElementById('dWa').textContent = '+254 143 374333';
+      document.getElementById('dPh').textContent = '+254 143 374333';
+      document.getElementById('dEm').textContent = 'injuguna308@gmail.com';
+      document.getElementById('waLk').href = 'https://wa.me/254143374333';
+      document.getElementById('emLk').href = 'mailto:injuguna308@gmail.com';
+      renGal();
+      updStats();
+      startReel();
+      updProg();
+    }
+
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('iv') })
+    }, { threshold: .1 });
+    document.querySelectorAll('.rv,.rst').forEach(function(el) { obs.observe(el) });
+
+    document.addEventListener('DOMContentLoaded', ld);
+  </script>
 </body>
 </html>
