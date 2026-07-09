@@ -54,80 +54,14 @@
 .bgt{background-color:var(--bg);background-image:radial-gradient(circle at 20% 30%,rgba(255,77,0,.05) 0%,transparent 40%),radial-gradient(circle at 80% 70%,rgba(80,80,80,.05) 0%,transparent 40%),url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='r'><feTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23r)' opacity='0.35'/></svg>");background-blend-mode:normal,normal,overlay}
 @media(max-width:768px){.ap{width:100%}.pnb{width:52px;height:52px;font-size:1.5rem}}
 
-/* Admin art row */
-.ai-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--bd);background:var(--bg);transition:border-color .3s,background .3s}
-.ai-row:hover{border-color:var(--bdl);background:var(--bch)}
-.ai-row.no-img{border-left:2px solid #eab308;}
-.ai-thumb{width:48px;height:60px;object-fit:cover;border:1px solid var(--bdl);flex-shrink:0;background:var(--bc)}
-.ai-thumb-none{width:48px;height:60px;border:1px solid var(--bdl);flex-shrink:0;background:var(--bc);display:flex;align-items:center;justify-content:center;color:var(--svd);font-size:10px}
-.ai-info{flex:1;min-width:0;overflow:hidden}
-.ai-title{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ai-meta{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--mt);margin-top:3px;display:flex;align-items:center;gap:6px}
-.ai-status{font-size:8px;padding:1px 6px;border-radius:2px;text-transform:uppercase;letter-spacing:.1em;font-family:'JetBrains Mono',monospace}
-.ai-status.avail{background:rgba(34,197,94,.15);color:#22c55e;border:1px solid rgba(34,197,94,.3)}
-.ai-status.sold{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3)}
-.ai-btns{display:flex;gap:4px;flex-shrink:0}
-.ai-btn{width:34px;height:34px;border:1px solid var(--bdl);background:transparent;color:var(--fgd);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .25s;font-size:13px}
-.ai-btn:hover{border-color:var(--ac);color:var(--ac);background:rgba(255,77,0,.08)}
-.ai-btn.eye-on{border-color:rgba(34,197,94,.4);color:#22c55e}
-.ai-btn.eye-on:hover{background:rgba(34,197,94,.1);border-color:#22c55e}
-.ai-btn.eye-off{border-color:rgba(239,68,68,.3);color:#ef4444}
-.ai-btn.eye-off:hover{background:rgba(239,68,68,.1);border-color:#ef4444}
-.ai-btn.del:hover{border-color:#ef4444;color:#ef4444;background:rgba(239,68,68,.08)}
-
-/* Preview overlay in admin */
-.preview-ov{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:290;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
-.preview-ov.show{opacity:1;pointer-events:all}
-.preview-ov img{max-width:85vw;max-height:85vh;object-fit:contain;border:1px solid var(--bdl)}
-.preview-ov .close-prev{position:absolute;top:20px;right:20px;width:40px;height:40px;border:1px solid var(--bdl);background:var(--bc);color:var(--fg);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:all .3s}
-.preview-ov .close-prev:hover{border-color:var(--ac);color:var(--ac)}
-.preview-ov .prev-info{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);text-align:center}
 </style>
 <style>
-/* Fullscreen drag overlay */
-.drag-overlay{position:fixed;inset:0;background:rgba(255,77,0,.1);border:2px dashed var(--ac);z-index:9999;display:none;align-items:center;justify-content:center;pointer-events:none}
-.drag-overlay.show{display:flex}
-.drag-overlay-content{background:var(--bgd);padding:2rem 3rem;border:1px solid var(--bd);text-align:center}
-.drag-overlay-content i{font-size:3rem;color:var(--ac);margin-bottom:.5rem}
-.drag-overlay-content div{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.1em}
 </style>
 </head>
 <body class="bgt">
 <div class="grain"></div>
 <div class="toast" id="toast"><div class="flex items-start gap-3"><i class="fas fa-check-circle text-[var(--ac)] mt-0.5"></i><div><div class="fh text-sm tracking-wider uppercase" id="toastT"></div><div class="text-xs mt-1" id="toastM"></div></div></div></div>
 
-<!-- IMAGE PREVIEW OVERLAY -->
-<div class="preview-ov" id="prevOv" onclick="closePrev(event)">
-  <button class="close-prev" onclick="closePrev(event)"><i class="fas fa-xmark"></i></button>
-  <img id="prevImg" src="" alt="">
-  <div class="prev-info">
-    <div class="fd text-3xl" id="prevTitle"></div>
-    <div class="fm text-[10px] text-[var(--mt)] mt-1 tracking-wider" id="prevMeta"></div>
-    <div class="fm text-[9px] text-[var(--svd)] mt-2">Click anywhere to close</div>
-  </div>
-</div>
-
-<!-- DRAG & DROP OVERLAY -->
-<div class="drag-overlay" id="dragOv">
-  <div class="drag-overlay-content">
-    <i class="fas fa-file-image"></i>
-    <div>Drop image to upload</div>
-  </div>
-</div>
-
-<!-- PASSWORD MODAL -->
-<div class="mo" id="pinOv" onclick="closePin()"></div>
-<div class="mp" id="pinMod" style="max-width:360px"><div class="p-8 text-center">
-<div class="w-14 h-14 border border-[var(--ac)] flex items-center justify-center mx-auto mb-5"><i class="fas fa-lock text-[var(--ac)] text-xl"></i></div>
-<div class="fd text-3xl tracking-wider mb-1">ADMIN ACCESS</div>
-<div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] mb-5">ENTER YOUR ADMIN PASSWORD</div>
-<div class="text-red-400 text-xs fm tracking-wider mb-4 hidden" id="pinErr">Wrong password. Try again.</div>
-<input type="password" id="pinInput" class="fi text-center" placeholder="Password" autocomplete="current-password">
-<button onclick="psb()" class="w-full mt-4 fh text-sm tracking-[.15em] uppercase bg-[var(--ac)] text-black py-3 hover:bg-[var(--acb)] transition-colors"><i class="fas fa-arrow-right mr-2"></i>Unlock Admin</button>
-<div class="fm text-[10px] text-[var(--mt)] tracking-wider mt-5 hidden" id="pinLoad"><i class="fas fa-spinner fa-spin mr-2"></i>Connecting...</div>
-<button onclick="closePin()" class="mt-5 fm text-[10px] text-[var(--mt)] tracking-wider hover:text-[var(--fg)] transition-colors">Cancel</button>
-<div class="mt-4 fm text-[9px] text-[var(--svd)] tracking-wider">Default password: stncl2024</div>
-</div></div>
 
 <!-- BOOKING MODAL -->
 <div class="mo" id="bkOv" onclick="closeBk()"></div>
@@ -155,126 +89,6 @@
 <button onclick="closeBk()" class="fh text-sm tracking-[.15em] uppercase bg-[var(--ac)] text-black px-8 py-3 hover:bg-[var(--acb)] transition-colors">Done</button>
 </div></div></div>
 
-<!-- ADMIN PANEL -->
-<div class="ao" id="admOv" onclick="togAdm()"></div>
-<div class="ap" id="admPan">
-<div class="p-5 border-b border-[var(--bd)] flex items-center justify-between sticky top-0 bg-[var(--bgd)] z-10">
-  <div><div class="fd text-xl tracking-wider">ADMIN PANEL</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] mt-0.5">MANAGE YOUR ART</div></div>
-  <button onclick="togAdm()" class="w-8 h-8 border border-[var(--bdl)] flex items-center justify-center hover:border-[var(--ac)] transition-colors"><i class="fas fa-xmark text-sm"></i></button>
-</div>
-<div class="flex border-b border-[var(--bd)]">
-  <button class="atb flex-1 py-3 fm text-[10px] tracking-[.12em] uppercase text-center" data-t="art" onclick="swTab('art')" style="color:var(--ac);border-bottom:1px solid var(--ac)"><i class="fas fa-palette mr-1"></i>Art</button>
-  <button class="atb flex-1 py-3 fm text-[10px] tracking-[.12em] uppercase text-center text-[var(--mt)]" data-t="blog" onclick="swTab('blog')"><i class="fas fa-bell mr-1"></i>Bookings <span class="bg-[var(--ac)] text-black px-1.5 rounded-full text-[9px] ml-1 hidden" id="bkBadge">0</span></button>
-  <button class="atb flex-1 py-3 fm text-[10px] tracking-[.12em] uppercase text-center text-[var(--mt)]" data-t="set" onclick="swTab('set')"><i class="fas fa-gear mr-1"></i>Settings</button>
-</div>
-
-<!-- ART TAB -->
-<div class="atc p-5" id="t-art">
-  <div class="flex items-center justify-between mb-4">
-    <button onclick="openEd()" class="fh text-sm tracking-[.12em] uppercase border border-dashed border-[var(--acd)] text-[var(--ac)] px-4 py-2.5 hover:bg-[var(--ac)] hover:text-black transition-all"><i class="fas fa-plus mr-2"></i>Add</button>
-    <div class="fm text-[10px] text-[var(--mt)] text-right"><span id="artCount">0</span> total · <span id="soldCount">0</span> sold</div>
-  </div>
-  <div class="flex items-center justify-between mb-4 border-t border-[var(--bd)] pt-4">
-    <div class="fm text-[9px] text-[var(--mt)] tracking-wider">SORT BY:</div>
-    <div class="flex gap-1" id="sortBtns"><button class="cp srt-btn acl" data-sort="newest">Newest</button><button class="cp srt-btn" data-sort="oldest">Oldest</button><button class="cp srt-btn" data-sort="price_desc">Price</button></div>
-  </div>
-  <div id="admList" class="space-y-2"></div>
-</div>
-
-<!-- BOOKINGS TAB -->
-<div class="atc p-5 hidden" id="t-blog">
-  <div class="flex items-center justify-between mb-4"><div class="fh text-sm tracking-wider uppercase">Booking Log</div><button onclick="clrBlog()" class="fm text-[9px] text-[var(--mt)] tracking-wider uppercase hover:text-red-400 transition-colors">Clear All</button></div>
-  <div class="bg-[var(--bg)] border border-[var(--bd)] p-3 mb-4"><p class="text-xs leading-relaxed"><i class="fas fa-check-double text-green-500 mr-1"></i>Every booking sends <b>WhatsApp + Email</b>. All logged here.</p></div>
-  <div id="blogList"></div>
-  <div id="noBlog" class="text-center py-8"><i class="fas fa-bell-slash text-2xl text-[var(--mt)] mb-2"></i><div class="fm text-[10px] text-[var(--mt)] tracking-wider">No bookings yet</div></div>
-</div>
-
-<!-- SETTINGS TAB -->
-<div class="atc p-5 hidden" id="t-set"><div class="space-y-4">
-<div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Admin Password</label><input type="password" class="ax" id="sPin" placeholder="stncl2024"><p class="text-[var(--mt)] text-[9px] fm mt-1">Current: <span id="curPin">stncl2024</span></p></div>
-<div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">WhatsApp Number</label><input type="text" class="ax" id="sWa" placeholder="254143374333"></div>
-<div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Email</label><input type="email" class="ax" id="sEm" placeholder="injuguna308@gmail.com"></div>
-<div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Phone on Site</label><input type="text" class="ax" id="sPh" placeholder="0143374333"></div>
-<div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Studio Name</label><input type="text" class="ax" id="sNm" placeholder="STNCL"></div>
-<div><label class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Years Active (leave blank for auto)</label><input type="number" class="ax" id="sYr" placeholder="Auto"></div>
-<button onclick="saveSet()" class="w-full fh text-sm tracking-[.12em] uppercase bg-[var(--ac)] text-black py-3 hover:bg-[var(--acb)] transition-colors"><i class="fas fa-save mr-2"></i>Save All Settings</button>
-<div class="pt-4 border-t border-[var(--bd)]"><button onclick="resetArt()" class="w-full fh text-xs tracking-[.12em] uppercase border border-red-900/50 text-red-400 py-2.5 hover:bg-red-900/20 transition-colors"><i class="fas fa-rotate-left mr-2"></i>Reset Gallery to Defaults</button></div>
-</div></div>
-
-<!-- ART EDITOR (slides open below the list) -->
-<div class="hidden border-t border-[var(--bd)]" id="artEd">
-  <div class="p-5">
-    <div class="flex items-center justify-between mb-4">
-      <div class="fh text-sm tracking-[.12em] uppercase" id="edTitle">New Artwork</div>
-      <button onclick="closeEd()" class="text-[var(--mt)] hover:text-[var(--fg)] transition-colors text-lg"><i class="fas fa-xmark"></i></button>
-    </div>
-    <div class="space-y-4">
-      <input type="hidden" id="eId">
-      <div>
-        <label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1.5">Photo *</label>
-        <div class="bg-[var(--bg)] border border-[var(--bd)] p-3 mb-3">
-          <p class="text-xs leading-relaxed"><i class="fas fa-info-circle text-[var(--ac)] mr-1"></i> You can either <b class="text-[var(--fg)]">upload a file</b> from your PC OR <b class="text-[var(--fg)]">paste an image URL</b> below.</p>
-        </div>
-        <div class="dz" id="dz" onclick="document.getElementById('fIn').click()">
-          <div id="dzC">
-            <i class="fas fa-cloud-upload-alt text-3xl text-[var(--mt)] mb-3"></i>
-            <div class="fm text-[11px] text-[var(--mt)] tracking-wider">Click to Upload from PC</div>
-            <div class="fm text-[9px] text-[var(--svd)] mt-1">JPG, PNG, WEBP — Max 2MB</div>
-          </div>
-          <div id="dzUp" class="hidden w-full text-center">
-            <div class="fm text-[10px] text-[var(--ac)] tracking-wider mb-2" id="upProgText">Uploading... 0%</div>
-            <div class="w-full bg-[var(--bg)] h-1 border border-[var(--bdl)]"><div class="h-full bg-[var(--ac)] transition-all duration-150" id="upProgBar" style="width:0%"></div></div>
-            <div class="fm text-[9px] text-[var(--svd)] mt-2">Please wait...</div>
-          </div>
-          <img id="dzP" src="" class="hidden" alt="">
-        </div>
-        <input type="file" id="fIn" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="hFile(event)">
-        <div class="relative flex items-center mt-3">
-          <input type="text" class="ax pr-20" id="eUrl" placeholder="Paste direct image URL here">
-          <button onclick="loadUrl()" class="absolute right-1 top-1 bottom-1 text-xs fm tracking-wider bg-[var(--bch)] px-2 hover:bg-[var(--bdl)] transition-colors">PREVIEW</button>
-        </div>
-        <div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mt-2">Use a direct URL for GitHub-hosted pages</div>
-        <div class="mt-4 border border-[var(--bd)] bg-[var(--bg)] p-3">
-          <div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mb-2">Quick URL slots (1–7)</div>
-          <div class="fm text-[9px] text-[var(--svd)] tracking-wider mb-2">Paste up to seven public image links here. Each filled slot can create a new artwork card.</div>
-          <div class="grid gap-2">
-            <input type="text" class="ax" id="urlSlot1" placeholder="Image URL 1">
-            <input type="text" class="ax" id="urlSlot2" placeholder="Image URL 2">
-            <input type="text" class="ax" id="urlSlot3" placeholder="Image URL 3">
-            <input type="text" class="ax" id="urlSlot4" placeholder="Image URL 4">
-            <input type="text" class="ax" id="urlSlot5" placeholder="Image URL 5">
-            <input type="text" class="ax" id="urlSlot6" placeholder="Image URL 6">
-            <input type="text" class="ax" id="urlSlot7" placeholder="Image URL 7">
-          </div>
-          <div class="flex gap-2 mt-3">
-            <button type="button" onclick="addFromUrlSlots()" class="fh text-[11px] tracking-[.15em] uppercase bg-[var(--ac)] text-black px-4 py-2.5 hover:bg-[var(--acb)] transition-colors">Add from URL slots</button>
-            <button type="button" onclick="clearUrlSlots()" class="fh text-[11px] tracking-[.15em] uppercase border border-[var(--bdl)] px-4 py-2.5 hover:border-[var(--mt)] transition-colors">Clear</button>
-          </div>
-        </div>
-        <div id="imgErr" class="text-red-400 text-[10px] fm mt-2 hidden"><i class="fas fa-exclamation-triangle mr-1"></i>Please upload an image from your PC</div>
-      </div>
-      <div class="grid grid-cols-2 gap-3">
-        <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Title *</label><input type="text" class="ax" id="eTi" placeholder="TITLE"></div>
-        <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Price (KSH) *</label><input type="number" class="ax" id="ePr" placeholder="15000" min="0"></div>
-      </div>
-      <div class="grid grid-cols-2 gap-3">
-        <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Category</label><select class="ax" id="eCa"><option value="portrait">Portrait</option><option value="urban">Urban</option><option value="abstract">Abstract</option><option value="typography">Typography</option><option value="nature">Nature</option></select></div>
-        <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Size</label><input type="text" class="ax" id="eSz" placeholder="60 x 80 cm"></div>
-      </div>
-      <div class="grid grid-cols-2 gap-3">
-        <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Medium</label><input type="text" class="ax" id="eMd" placeholder="Spray paint on canvas"></div>
-        <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Layers</label><input type="text" class="ax" id="eLy" placeholder="4 layers"></div>
-      </div>
-      <div class="grid grid-cols-2 gap-3">
-        <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Year</label><input type="number" class="ax" id="eYr" placeholder="2024" min="2020" max="2030"></div>
-        <div class="flex items-end"><div class="flex items-center gap-3 pb-2"><input type="checkbox" id="eAv" checked class="accent-[var(--ac)] w-4 h-4"><label for="eAv" class="fm text-[10px] tracking-[.15em] uppercase">Available</label></div></div>
-      </div>
-      <div><label class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase block mb-1">Description</label><textarea class="ax resize-none" id="eDe" rows="2" placeholder="Brief description..."></textarea></div>
-      <button onclick="saveArt()" class="w-full fh text-sm tracking-[.12em] uppercase bg-[var(--ac)] text-black py-3 hover:bg-[var(--acb)] transition-colors"><i class="fas fa-save mr-2"></i><span id="saveBtnText">Save Artwork</span></button>
-    </div>
-  </div>
-</div>
-</div>
 
 <!-- HEADER -->
 <header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-black/50 border-b border-white/5">
@@ -283,7 +97,6 @@
 <nav class="hidden lg:flex items-center gap-10"><a href="#gallery" class="nl">Gallery</a><a href="#process" class="nl">Process</a><a href="#about" class="nl">About</a><a href="#contact" class="nl">Contact</a></nav>
 <div class="flex items-center gap-3">
 <div class="hidden md:flex items-center gap-2 fm text-[10px] text-[var(--mt)]"><span class="rdd w-2 h-2 bg-[var(--ac)] rounded-full inline-block"></span><span class="tracking-[.15em]">ACCEPTING COMMISSIONS</span></div>
-<button onclick="openPin()" class="w-9 h-9 border border-[var(--bdl)] flex items-center justify-center hover:border-[var(--ac)] hover:text-[var(--ac)] transition-all" title="Admin"><i class="fas fa-lock text-xs"></i></button>
 <a href="#gallery" class="hidden sm:inline-block fh text-xs tracking-[.2em] uppercase text-black bg-[var(--sv)] px-5 py-2.5 hover:bg-white transition-colors">View Art</a>
 </div></div></header>
 
@@ -318,7 +131,6 @@
 <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="artG"></div>
 <div class="text-center mt-12 hidden" id="empG"><div class="fd text-4xl text-[var(--mt)] mb-3">No pieces here</div></div>
 </div></section>
-
 <!-- PROCESS -->
 <section class="relative py-24 lg:py-32 border-t border-[var(--bd)] bg-[var(--bgd)]" id="process"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
 <div class="rv grid lg:grid-cols-12 gap-8 mb-16"><div class="lg:col-span-6"><div class="sm mb-6"><span>02 — The Process</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">From digital<br>to <span class="ts">physical.</span><br><span class="text-[var(--ac)]">Layer by layer.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed">No shortcuts — blades, acetate, spray cans, and patience.</p></div></div>
@@ -356,9 +168,9 @@
 <button type="submit" class="mt-7 fh text-sm tracking-[.15em] uppercase bg-[var(--ac)] text-black px-8 py-3.5 hover:bg-[var(--acb)] transition-colors"><i class="fab fa-whatsapp mr-2"></i>Send via WhatsApp</button>
 </form></div></div>
 <div class="lg:col-span-4 lg:col-start-9 flex flex-col gap-5">
-<a id="waLk" href="https://wa.me/0143374333" target="_blank" class="ic p-5 flex items-center gap-4 hover:border-green-600 transition-colors group"><div class="w-10 h-10 bg-green-600 flex items-center justify-center flex-shrink-0"><i class="fab fa-whatsapp text-white text-lg"></i></div><div><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase">WhatsApp (fastest)</div><div class="fh text-sm" id="dWa">0143374333</div></div><i class="fas fa-arrow-right text-[var(--mt)] group-hover:text-green-500 ml-auto"></i></a>
+<a id="waLk" href="https://wa.me/254143374333" target="_blank" class="ic p-5 flex items-center gap-4 hover:border-green-600 transition-colors group"><div class="w-10 h-10 bg-green-600 flex items-center justify-center flex-shrink-0"><i class="fab fa-whatsapp text-white text-lg"></i></div><div><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase">WhatsApp (fastest)</div><div class="fh text-sm" id="dWa">254 143 374333</div></div><i class="fas fa-arrow-right text-[var(--mt)] group-hover:text-green-500 ml-auto"></i></a>
 <a id="emLk" href="mailto:injuguna308@gmail.com" class="ic p-5 flex items-center gap-4 hover:border-[var(--ac)] transition-colors group"><div class="w-10 h-10 bg-[var(--ac)] flex items-center justify-center flex-shrink-0"><i class="fas fa-envelope text-black text-sm"></i></div><div><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase">Email</div><div class="fh text-sm" id="dEm">injuguna308@gmail.com</div></div><i class="fas fa-arrow-right text-[var(--mt)] group-hover:text-[var(--ac)] ml-auto"></i></a>
-<div class="ic p-5 flex items-center gap-4"><div class="w-10 h-10 border border-[var(--bdl)] flex items-center justify-center flex-shrink-0"><i class="fas fa-phone text-[var(--ac)]"></i></div><div><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase">Phone</div><div class="fh text-sm" id="dPh">0143374333</div></div></div>
+<div class="ic p-5 flex items-center gap-4"><div class="w-10 h-10 border border-[var(--bdl)] flex items-center justify-center flex-shrink-0"><i class="fas fa-phone text-[var(--ac)]"></i></div><div><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase">Phone</div><div class="fh text-sm" id="dPh">254 143 374333</div></div></div>
 <div class="ic p-5"><div class="fm text-[9px] text-[var(--mt)] tracking-[.2em] uppercase mb-3">Social</div><div class="flex gap-3"><a href="#" class="w-10 h-10 border border-[var(--bdl)] flex items-center justify-center hover:border-[var(--ac)] hover:text-[var(--ac)] transition-all"><i class="fab fa-instagram"></i></a><a href="#" class="w-10 h-10 border border-[var(--bdl)] flex items-center justify-center hover:border-[var(--ac)] hover:text-[var(--ac)] transition-all"><i class="fab fa-tiktok"></i></a><a href="#" class="w-10 h-10 border border-[var(--bdl)] flex items-center justify-center hover:border-[var(--ac)] hover:text-[var(--ac)] transition-all"><i class="fab fa-twitter"></i></a></div></div>
 </div></div></div></section>
 
@@ -366,38 +178,9 @@
 <footer class="border-t border-[var(--bd)] bg-[var(--bgd)] py-10"><div class="max-w-[1600px] mx-auto px-6 lg:px-10 flex flex-col md:flex-row items-center justify-between gap-4">
 <div class="flex items-center gap-3"><div class="w-7 h-7 bg-[var(--ac)] flex items-center justify-center"><i class="fas fa-spray-can text-black text-[10px]"></i></div><span class="fd text-xl tracking-wider" id="ftN">STNCL</span></div>
 <div class="fm text-[10px] text-[var(--mt)] tracking-[.2em]">ALL WORKS ONE-OF-ONE ORIGINALS &copy; 2026</div>
-<div class="fm text-[10px] text-[var(--mt)] tracking-[.15em]">Tap <i class="fas fa-lock text-[var(--ac)] mx-1"></i> for admin</div>
 </div></footer>
 
-<!-- START FIREBASE INTEGRATION -->
-<!-- 1. Add Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
-<!-- 2. Initialize Firebase -->
-<script>
-  // TODO: Replace with your own Firebase project configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyD1z9igwUSBJD0cfSQ53YoYQbB_sAV9_n8",
-    authDomain: "artweb-b8a82.firebaseapp.com",
-    databaseURL: "https://artweb-b8a82-default-rtdb.firebaseio.com",
-    projectId: "artweb-b8a82",
-    storageBucket: "artweb-b8a82.appspot.com",
-    messagingSenderId: "456716979318",
-    appId: "1:456716979318:web:f669b470adad5f9b69a357"
-  };
-  var db = null;
-  if (window.firebase) {
-    try {
-      firebase.initializeApp(firebaseConfig);
-      db = firebase.database();
-    } catch (err) {
-      console.warn('Firebase init skipped:', err);
-    }
-  }
-</script>
-<!-- END FIREBASE INTEGRATION -->
-
+<script src="artworks.js"></script>
 <script>
 var SA='stncl_a',SS='stncl_s',SL='stncl_l';
 
@@ -408,18 +191,31 @@ var SA='stncl_a',SS='stncl_s',SL='stncl_l';
    - img: paste a direct image URL here to show a picture instantly
    - av: true = available, false = sold
 ======================================== */
-var defArt=[
-  {id:1,title:"URBAN REBEL",cat:"portrait",price:15000,sz:"60 x 80 cm",md:"Spray paint on canvas",ly:"4 layers",img:"",desc:"Multi-layered stencil portrait exploring urban defiance.",av:true,yr:"2024"},
-  {id:2,title:"CONCRETE JUNGLE",cat:"urban",price:12000,sz:"50 x 70 cm",md:"Acrylic & spray on wood",ly:"6 layers",img:"",desc:"Layered cityscape through hand-cut stencils.",av:true,yr:"2024"},
-  {id:3,title:"SILENCE BREAKER",cat:"abstract",price:18000,sz:"80 x 100 cm",md:"Spray paint on canvas",ly:"5 layers",img:"",desc:"Bold abstract with overlapping stencils.",av:true,yr:"2024"},
-  {id:4,title:"WORD ON THE STREET",cat:"typography",price:10000,sz:"40 x 60 cm",md:"Spray on reclaimed metal",ly:"3 layers",img:"",desc:"Typographic stencil on found metal.",av:false,yr:"2023"},
-  {id:5,title:"NOCTURNAL",cat:"portrait",price:22000,sz:"90 x 120 cm",md:"Spray & acrylic on canvas",ly:"7 layers",img:"",desc:"Large-scale 7-layer portrait.",av:true,yr:"2024"},
-  {id:6,title:"DECONSTRUCTED",cat:"abstract",price:14000,sz:"60 x 60 cm",md:"Mixed media on canvas",ly:"5 layers",img:"",desc:"Geometric deconstruction.",av:false,yr:"2024"},
-  {id:7,title:"BOTANICAL CUT",cat:"nature",price:11000,sz:"45 x 60 cm",md:"Spray paint on canvas",ly:"4 layers",img:"",desc:"Organic forms meet sharp stencil edges.",av:true,yr:"2024"},
-  {id:8,title:"BRICK & MORTAR",cat:"urban",price:16000,sz:"70 x 90 cm",md:"Spray on wood panel",ly:"6 layers",img:"",desc:"Architectural stencil — decay and urban memory.",av:false,yr:"2023"}
-];
+/* ====== EDITABLE GALLERY CONTENT ======
+   Edit these seven objects directly in the code.
+   Fields:
+   - title: artwork name
+   - img: direct image URL
+   - price: numeric price
+   - period: availability period or date range
+   - av: true = available, false = sold
+   - sz: size
+   - md: medium
+   - ly: layers
+   - desc: description
+   - yr: year
+======================================== */
+var defArt = normalizeArtList([
+  {id:1,title:"PINKY",cat:"portrait",price:1500,period:"",sz:"60 x 80 cm",md:"Spray paint on canvas",ly:"2 layers",img:"",desc:"Multi-layered stencil portrait exploring urban defiance.",av:true,yr:"2026"},
+  {id:2,title:"CONCRETE JUNGLE",cat:"urban",price:12000,period:"",sz:"50 x 70 cm",md:"Acrylic & spray on wood",ly:"6 layers",img:"",desc:"Layered cityscape through hand-cut stencils.",av:true,yr:"2024"},
+  {id:3,title:"SILENCE BREAKER",cat:"abstract",price:18000,period:"",sz:"80 x 100 cm",md:"Spray paint on canvas",ly:"5 layers",img:"",desc:"Bold abstract with overlapping stencils.",av:true,yr:"2024"},
+  {id:4,title:"WORD ON THE STREET",cat:"typography",price:10000,period:"",sz:"40 x 60 cm",md:"Spray on reclaimed metal",ly:"3 layers",img:"",desc:"Typographic stencil on found metal.",av:false,yr:"2023"},
+  {id:5,title:"NOCTURNAL",cat:"portrait",price:22000,period:"",sz:"90 x 120 cm",md:"Spray & acrylic on canvas",ly:"7 layers",img:"",desc:"Large-scale 7-layer portrait.",av:true,yr:"2024"},
+  {id:6,title:"escalade v8",cat:"abstract",price:14000,period:"",sz:"60 x 60 cm",md:"Mixed media on canvas",ly:"5 layers",img:"",desc:"Geometric deconstruction.",av:true,yr:"2026"},
+  {id:7,title:"BOTANICAL CUT",cat:"nature",price:11000,period:"",sz:"45 x 60 cm",md:"Spray paint on canvas",ly:"4 layers",img:"",desc:"Organic forms meet sharp stencil edges.",av:true,yr:"2024"}
+]);
 
-var art=[],st={},blog=[],curBk=null,curFil='all',upImg=null,pinVal='',isDataLoaded=false,adminSort='newest';
+var art=[],st={},curBk=null,curFil='all',upImg=null,isDataLoaded=false;
 var STORAGE_KEY='stncl_data_v1';
 
 /* ====== PRICE HELPERS ======
@@ -430,8 +226,25 @@ function formatPrice(value){
   if(!Number.isFinite(price) || price < 0) price = 0;
   return 'KSH ' + price.toLocaleString('en-US');
 }
+function isArtworkAvailable(value){
+  if(typeof value === 'boolean') return value;
+  if(typeof value === 'string'){
+    var v = value.trim().toLowerCase();
+    if(v === 'true' || v === 'available' || v === 'yes' || v === '1') return true;
+    if(v === 'false' || v === 'sold' || v === 'no' || v === '0') return false;
+  }
+  return Boolean(value);
+}
+function normalizeArtList(list){
+  if(!Array.isArray(list)) return [];
+  return list.map(function(item,index){
+    var normalized = Object.assign({}, item);
+    normalized.id = normalized.id || index + 1;
+    normalized.av = isArtworkAvailable(normalized.av);
+    return normalized;
+  });
+}
 
-function getAdminPassword(){return String(st.password || st.pin || 'stncl2024');}
 function loadLocalData(){
   try {
     var raw = localStorage.getItem(STORAGE_KEY);
@@ -444,77 +257,39 @@ function loadLocalData(){
 }
 function saveLocalData(){
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({settings:st, art:art, log:blog}));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({settings:st, art:art}));
   } catch (e) {
     console.warn('Could not save local data:', e);
   }
 }
 function applyData(data){
-  var defaultSettings = {password:'stncl2024',wa:'0143374333',em:'injuguna308@gmail.com',ph:'0143374333',nm:'STNCL',yr:''};
-  if (data) {
-    st = data.settings || defaultSettings;
-    art = data.art ? Object.values(data.art) : JSON.parse(JSON.stringify(defArt));
-    blog = data.log ? Object.values(data.log) : [];
-  } else {
-    st = defaultSettings;
-    art = JSON.parse(JSON.stringify(defArt));
-    blog = [];
-  }
-  if (!st.password && st.pin) st.password = st.pin;
-  if (!st.pin && st.password) st.pin = st.password;
+  var defaultSettings = {wa:'254143374333',em:'injuguna308@gmail.com',ph:'254143374333',nm:'STNCL',yr:''};
+  st = Object.assign({}, defaultSettings, data && data.settings ? data.settings : {});
+  art = normalizeArtList(JSON.parse(JSON.stringify(defArt)));
   var waRaw = String(st.wa || '').trim();
   var phRaw = String(st.ph || '').trim();
-  st.wa = waRaw && waRaw !== '254114255987' && waRaw !== '+254114255987' ? waRaw.replace(/\D/g,'') : '0143374333';
-  st.ph = phRaw && phRaw !== '254114255987' && phRaw !== '+254114255987' ? phRaw.trim() : '0143374333';
+  st.wa = waRaw && waRaw !== '254114255987' && waRaw !== '+254114255987' ? waRaw.replace(/\D/g,'') : '254143374333';
+  st.ph = phRaw && phRaw !== '254114255987' && phRaw !== '+254114255987' ? phRaw.trim() : '254143374333';
 }
 
 /* Placeholder SVG for artworks without images */
 var noImgSvg="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000"><rect width="800" height="1000" fill="#111"/><line x1="0" y1="0" x2="800" y2="1000" stroke="#222" stroke-width="1"/><line x1="800" y1="0" x2="0" y2="1000" stroke="#222" stroke-width="1"/><text x="400" y="480" text-anchor="middle" fill="#333" font-family="sans-serif" font-size="16">NO IMAGE</text><text x="400" y="520" text-anchor="middle" fill="#444" font-family="sans-serif" font-size="12">Upload in admin</text></svg>');
-var noImgSm="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="48" height="60"><rect width="48" height="60" fill="#111"/><text x="24" y="34" text-anchor="middle" fill="#444" font-family="sans-serif" font-size="8">NO IMG</text></svg>');
+
 
 function ld() {
   const localData = loadLocalData();
   applyData(localData);
   saveLocalData();
+  art = normalizeArtList(JSON.parse(JSON.stringify(defArt)));
 
   updDisp();
   renGal();
+  populateArtworkSlotsForm();
   updStats();
-  renAdmList();
-  renBlog();
 
   isDataLoaded = true;
-  if (document.getElementById('pinMod').classList.contains('op')) {
-    document.getElementById('pinLoad').classList.add('hidden');
-  }
-
-  if (!db) {
-    return;
-  }
-
-  db.ref().once('value').then(snapshot => {
-    const data = snapshot.val();
-    if (data) {
-      applyData({settings:data.settings||st, art:data.art, log:data.log});
-      saveLocalData();
-      updDisp(); renGal(); updStats(); renAdmList(); renBlog();
-    }
-
-    db.ref().on('value', (subsequentSnapshot) => {
-      const updatedData = subsequentSnapshot.val();
-      if (updatedData) {
-        applyData({settings:updatedData.settings||st, art:updatedData.art, log:updatedData.log});
-        saveLocalData();
-        updDisp(); renGal(); updStats(); renAdmList(); renBlog();
-      }
-    });
-  }).catch(error => {
-    console.error('Firebase initial read failed: ' + error.code, error);
-  });
 }
-function svA(){ if (db) { db.ref('art').set(art).catch(e => toast('Save Failed', 'Could not save artwork: ' + e.message)); } else { saveLocalData(); } }
-function svS(){ if (db) { db.ref('settings').set(st).catch(e => toast('Save Failed', 'Could not save settings: ' + e.message)); } else { saveLocalData(); } }
-function svL(){ if (db) { db.ref('log').set(blog).catch(e => toast('Save Failed', 'Could not save booking log: ' + e.message)); } else { saveLocalData(); } }
+function svA(){ saveLocalData(); }
 function toast(t,m){var el=document.getElementById('toast');document.getElementById('toastT').textContent=t;document.getElementById('toastM').textContent=m;el.classList.add('v');setTimeout(function(){el.classList.remove('v')},4000)}
 
 /* ====== DYNAMIC STATS ====== */
@@ -542,73 +317,57 @@ function updStats(){
   document.getElementById('aboutSold').textContent=s.sold;
   document.getElementById('aboutYears').textContent=s.years+'+';
   document.getElementById('aboutLayers').textContent=s.maxLayers;
-  document.getElementById('artCount').textContent=art.length;
-  document.getElementById('soldCount').textContent=s.sold;
 }
 
-/* ====== PIN ====== */
-function openPin(){
-  pinVal='';
-document.getElementById('pinInput').value='';
-document.getElementById('pinErr').classList.add('hidden');
-if (!isDataLoaded) {
-  document.getElementById('pinLoad').classList.remove('hidden');
-} else {
-  document.getElementById('pinLoad').classList.add('hidden');
-}
-document.getElementById('pinMod').classList.add('op');
-document.getElementById('pinOv').classList.add('op');
-}
-function closePin(){document.getElementById('pinMod').classList.remove('op');document.getElementById('pinOv').classList.remove('op')}
-function psb(){
-  if(!isDataLoaded)return;
-  var entered=document.getElementById('pinInput').value.trim();
-  if(entered===getAdminPassword()){closePin();togAdm()}else{document.getElementById('pinErr').classList.remove('hidden');document.getElementById('pinInput').value='';setTimeout(function(){document.getElementById('pinErr').classList.add('hidden')},2000)}}
-
-/* ====== FILE UPLOAD ====== */
-function hFile(ev){
-  var file=ev.target.files[0];
-  if(!file)return;
-  if(!file.type.match(/^image\/(jpeg|png|webp)$/)){toast('Invalid File','Only JPG, PNG, or WEBP images are allowed.');return}
-  if(file.size > 2 * 1024 * 1024){toast('File Too Large','Image must be under 2MB. Please compress it first.');return}
-
-  // --- Convert image to Base64 text to store in the database ---
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    upImg = e.target.result; // This is the Base64 text string
-    document.getElementById('dzP').src = upImg;
-    document.getElementById('dzP').classList.remove('hidden');
-    document.getElementById('dzC').classList.add('hidden');
-    document.getElementById('imgErr').classList.add('hidden');
-    toast('Image Ready', 'Image has been loaded and is ready to save.');
-  };
-  reader.onerror = function() {
-    toast('Error', 'Failed to read file.');
-  };
-  reader.readAsDataURL(file);
-}
-
-/* ====== ADMIN PANEL ====== */
-function togAdm(){
-  var p=document.getElementById('admPan'),o=document.getElementById('admOv');
-  if(p.classList.contains('op')){
-    p.classList.remove('op');o.classList.remove('op');document.body.style.overflow='';closeEd()
-  }else{
-    ldSet(); // ld() already calls the render functions, just load settings into the form
-    p.classList.add('op');o.classList.add('op');document.body.style.overflow='hidden'
+/* ====== SEVEN SLOT ARTWORK EDITOR ======
+   This section gives you seven clear boxes for editing:
+   - picture name
+   - image URL
+   - price
+   - available/sold
+======================================== */
+function populateArtworkSlotsForm(){
+  for(var i=0;i<7;i++){
+    var item = art[i] || {title:'', img:'', price:0, av:true};
+    document.getElementById('slot'+(i+1)+'Name').value = item.title || '';
+    document.getElementById('slot'+(i+1)+'Url').value = item.img || '';
+    document.getElementById('slot'+(i+1)+'Price').value = item.price || 0;
+    document.getElementById('slot'+(i+1)+'Status').value = item.av ? 'available' : 'sold';
+    document.getElementById('slot'+(i+1)+'Period').value = item.period || '';
   }
 }
-function swTab(t){
-  document.querySelectorAll('.atb').forEach(function(b){
-    b.style.color=b.dataset.t===t?'var(--ac)':'var(--mt)';
-    b.style.borderBottom=b.dataset.t===t?'1px solid var(--ac)':'none'
-  });
-  document.getElementById('t-art').classList.toggle('hidden',t!=='art');
-  document.getElementById('t-blog').classList.toggle('hidden',t!=='blog');
-  document.getElementById('t-set').classList.toggle('hidden',t!=='set');
-  closeEd();
-  if(t==='blog')renBlog();
-  if(t==='art'){renAdmList();updStats()}
+function saveArtworkSlotsFromForm(){
+  var updatedFirstSeven = [];
+  for(var i=0;i<7;i++){
+    var title = document.getElementById('slot'+(i+1)+'Name').value.trim();
+    var img = document.getElementById('slot'+(i+1)+'Url').value.trim();
+    var price = parseInt(document.getElementById('slot'+(i+1)+'Price').value,10);
+    var period = document.getElementById('slot'+(i+1)+'Period').value.trim();
+    var status = document.getElementById('slot'+(i+1)+'Status').value;
+    var existing = art[i] || {};
+    var item = {
+      id: existing.id || (i+1),
+      title: title || ('Artwork ' + (i+1)),
+      cat: existing.cat || 'portrait',
+      price: isNaN(price) ? 0 : price,
+      sz: existing.sz || '',
+      md: existing.md || '',
+      ly: existing.ly || '',
+      period: period,
+      img: img,
+      desc: existing.desc || '',
+      av: status === 'available',
+      yr: existing.yr || String(new Date().getFullYear())
+    };
+    updatedFirstSeven.push(item);
+  }
+
+  var rest = art.slice(7);
+  art = updatedFirstSeven.concat(rest);
+  svA();
+  renGal();
+  updStats();
+  toast('Saved','The seven artwork slots were updated.');
 }
 
 /* ====== ADMIN ART LIST ======
@@ -907,12 +666,13 @@ function renGal(){
     var hasImg=a.img&&a.img.length>10;
     var imgSrc=hasImg?a.img:noImgSvg;
     var ps=formatPrice(a.price);
+    var isAvail=isArtworkAvailable(a.av);
 
     html+='<article class="acard ic group" style="opacity:0;transform:translateY(30px)">';
     html+='<div class="relative overflow-hidden aspect-[3/4]">';
     html+='<img src="'+imgSrc+'" class="aimg w-full h-full object-cover inr" alt="'+a.title+'" loading="lazy">';
     html+='<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>';
-    if(a.av){
+    if(isAvail){
       html+='<div class="absolute top-4 right-4 px-3 py-1 bg-[var(--ac)] text-black fm text-[10px] tracking-[.2em]">AVAILABLE</div>';
     }else{
       html+='<div class="absolute top-4 right-4 px-3 py-1 bg-red-700/90 text-white fm text-[10px] tracking-[.2em]">SOLD</div>';
@@ -926,7 +686,7 @@ function renGal(){
     html+='<p class="text-[var(--fgd)] text-xs leading-relaxed mb-4 lc2">'+(a.desc||'')+'</p>';
     html+='<div class="flex items-center justify-between pt-3 border-t border-[var(--bdl)]">';
     html+='<div class="fd text-3xl text-[var(--ac)]">'+ps+'</div>';
-    if(a.av){
+    if(isAvail){
       html+='<button class="bbk fh text-[11px] tracking-[.12em] uppercase px-4 py-2.5 border border-[var(--ac)] text-[var(--ac)] hover:bg-[var(--ac)] hover:text-black transition-all" data-id="'+a.id+'">Book This Piece</button>';
     }else{
       html+='<span class="fh text-[11px] tracking-[.12em] uppercase px-4 py-2.5 border border-[var(--mt)] text-[var(--mt)]">Sold</span>';
@@ -968,7 +728,7 @@ document.getElementById('catF').addEventListener('click',function(e){
 /* ====== BOOKING ====== */
 function openBk(id){
   var a=art.find(function(x){return x.id===id});
-  if(!a||!a.av)return;
+  if(!a||!isArtworkAvailable(a.av))return;
   curBk=a;
   var hasImg=a.img&&a.img.length>10;
   document.getElementById('bkImg').src=hasImg?a.img:noImgSvg;
@@ -988,46 +748,18 @@ function doBk(ev){
   var a=curBk,nm=document.getElementById('bkN').value.trim(),ph=document.getElementById('bkP').value.trim(),em=document.getElementById('bkE').value.trim(),mg=document.getElementById('bkM').value.trim();
   var ps=formatPrice(a.price);
   var msg='NEW BOOKING REQUEST\n========================\n\nARTWORK: '+a.title+'\nPRICE: '+ps+'\nSIZE: '+(a.sz||'')+'\nMEDIUM: '+(a.md||'')+'\nLAYERS: '+(a.ly||'')+'\n\nBUYER INFO\nName: '+nm+'\nPhone: '+ph+(em?'\nEmail: '+em:'')+(mg?'\nMessage: '+mg:'')+'\n\nSent: '+new Date().toLocaleString();
-  blog.unshift({id:Date.now(),art:a.title,price:ps,name:nm,phone:ph,email:em,msg:mg,date:new Date().toISOString()});
-  svL();
   window.open('https://wa.me/'+st.wa+'?text='+encodeURIComponent(msg),'_blank');
   window.open('mailto:'+st.em+'?subject='+encodeURIComponent('BOOKING: '+a.title+' - '+ps)+'&body='+encodeURIComponent(msg),'_blank');
   document.getElementById('bkFormV').classList.add('hidden');
   document.getElementById('bkSucV').classList.remove('hidden');
-  var badge=document.getElementById('bkBadge');badge.textContent=blog.length;badge.classList.remove('hidden')
 }
-function renBlog(){
-  var c=document.getElementById('blogList'),n=document.getElementById('noBlog'),b=document.getElementById('bkBadge');
-  if(blog.length){b.textContent=blog.length;b.classList.remove('hidden');n.classList.add('hidden');
-    c.innerHTML=blog.map(function(l){return '<div class="le"><div class="flex items-center justify-between mb-1"><span class="fd text-lg">'+l.art+'</span><span class="fm text-[9px] text-[var(--ac)]">'+l.price+'</span></div><div class="fm text-[9px] text-[var(--mt)]">'+l.name+' · '+l.phone+' · '+new Date(l.date).toLocaleDateString()+'</div>'+(l.msg?'<div class="text-xs text-[var(--fgd)] mt-1">'+l.msg+'</div>':'')+'</div>'}).join('')
-  }else{b.classList.add('hidden');n.classList.remove('hidden');c.innerHTML=''}
-}
-function clrBlog(){if(!blog.length)return;if(!confirm('Clear all booking logs?'))return;blog=[];svL();renBlog();toast('Cleared','Booking logs cleared.')}
-
-/* ====== SETTINGS ====== */
-function ldSet(){
-  document.getElementById('sPin').value=getAdminPassword();document.getElementById('sWa').value=st.wa;
-  document.getElementById('sEm').value=st.em;document.getElementById('sPh').value=st.ph;
-  document.getElementById('sNm').value=st.nm;document.getElementById('sYr').value=st.yr||'';
-  document.getElementById('curPin').textContent=getAdminPassword();
-}
-function saveSet(){
-  var np=document.getElementById('sPin').value.trim();
-  if(np){st.password=np;st.pin=np;}
-  st.wa=document.getElementById('sWa').value.trim().replace(/\D/g,'')||'0143374333';
-  st.em=document.getElementById('sEm').value.trim()||'injuguna308@gmail.com';
-  st.ph=document.getElementById('sPh').value.trim()||'0143374333';
-  st.nm=document.getElementById('sNm').value.trim()||'STNCL';
-  st.yr=document.getElementById('sYr').value.trim()||'';
-  svS();updDisp();updStats();document.getElementById('curPin').textContent=getAdminPassword();
-  toast('Saved','All settings updated.')
-}
+/* ====== SETTINGS =====*/
 function updDisp(){
   var n=st.nm||'STNCL';
   document.getElementById('logoN').textContent=n;document.getElementById('ftN').textContent=n;
   document.getElementById('dEm').textContent=st.em;document.getElementById('dPh').textContent=st.ph;
-  var w=st.wa||'0143374333';
-  document.getElementById('dWa').textContent=w;
+  var w=String(st.wa||'254143374333').replace(/\D/g,'');
+  document.getElementById('dWa').textContent='+'+w.slice(0,3)+' '+w.slice(3,6)+' '+w.slice(6);
   document.getElementById('waLk').href='https://wa.me/'+w;document.getElementById('emLk').href='mailto:'+st.em;
 }
 function resetArt(){
@@ -1060,37 +792,6 @@ var dz=document.getElementById('dz');
 var dragOv=document.getElementById('dragOv');
 var dragCounter=0;
 
-window.addEventListener('dragenter',function(e){e.preventDefault();dragCounter++;dragOv.classList.add('show')});
-window.addEventListener('dragleave',function(e){e.preventDefault();dragCounter--;if(dragCounter===0)dragOv.classList.remove('show')});
-window.addEventListener('dragover',function(e){e.preventDefault()});
-window.addEventListener('drop',function(e){
-  e.preventDefault();
-  dragCounter=0;
-  dragOv.classList.remove('show');
-  // Only handle drop if it's over the admin panel editor
-  if(document.getElementById('artEd').contains(e.target)){
-    var file=e.dataTransfer.files[0];
-    if(file)hFile({target:{files:[file]}});
-  }
-});
-
-dz.addEventListener('drop',function(e){
-  // Stop window drop from firing as well
-  e.stopPropagation();
-});
-
-/* ====== ADMIN SORTING ====== */
-document.getElementById('sortBtns').addEventListener('click', function(e){
-  var btn = e.target.closest('.srt-btn');
-  if(!btn) return;
-  var sortType = btn.dataset.sort;
-  if(sortType === 'price_desc' && adminSort === 'price_desc') adminSort = 'price_asc';
-  else adminSort = sortType;
-  
-  document.querySelectorAll('.srt-btn').forEach(b => b.classList.remove('acl'));
-  btn.classList.add('acl');
-  renAdmList();
-});
 ld(); 
 </script>
 </body>
