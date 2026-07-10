@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>STNCL — Stencil Art Studio</title>
+  <title>IsaaCart — Isaac Stencil Art Studio</title>
   <script src="https://cdn.tailwindcss.com">
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;500;600;700&family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -297,8 +297,8 @@
       transition: transform .8s cubic-bezier(.22, 1, .36, 1), filter .8s
     }
     .acard:hover .aimg {
-      transform: scale(1.06);
-      filter: grayscale(70%) contrast(1.4) brightness(.75)
+      transform: scale(1.04);
+      filter: grayscale(60%) contrast(1.3) brightness(.8)
     }
     .bf {
       background: linear-gradient(135deg, rgba(255, 77, 0, .04) 0%, transparent 50%, rgba(255, 77, 0, .02) 100%);
@@ -588,11 +588,141 @@
     #contact .contact-btns .btn-em:hover {
       opacity: 0.85;
     }
+    /* Enhanced gallery image styling */
+    .gallery-img-wrap {
+      cursor: zoom-in;
+      position: relative;
+      overflow: hidden;
+      background: #0a0a0a;
+      aspect-ratio: 4/3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .gallery-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), filter 0.6s;
+      background: #0a0a0a;
+    }
+    .gallery-img-wrap .zoom-icon {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.4s;
+      background: rgba(0,0,0,0.3);
+      pointer-events: none;
+    }
+    .gallery-img-wrap:hover .zoom-icon {
+      opacity: 1;
+    }
+    .gallery-img-wrap:hover img {
+      transform: scale(1.05);
+      filter: brightness(0.9) saturate(1.1);
+    }
+    .gallery-img-wrap .zoom-icon span {
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
+      padding: 0.6rem 1.2rem;
+      border-radius: 30px;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .gallery-img-wrap .zoom-icon span i {
+      font-size: 0.9rem;
+    }
+    /* Zoom overlay improvements */
+    .zoom-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 400;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+      backdrop-filter: blur(8px);
+      padding: 2rem;
+    }
+    .zoom-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .zoom-overlay img {
+      max-width: 94vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 4px;
+      box-shadow: 0 0 80px rgba(0,0,0,0.9), 0 0 20px rgba(255,77,0,0.08);
+      transform: scale(0.92);
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .zoom-overlay.open img {
+      transform: scale(1);
+    }
+    .zoom-close {
+      position: absolute;
+      top: 28px;
+      right: 36px;
+      color: #fff;
+      font-size: 2.8rem;
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity 0.25s, transform 0.25s;
+      background: none;
+      border: none;
+      line-height: 1;
+    }
+    .zoom-close:hover {
+      opacity: 1;
+      transform: rotate(90deg);
+    }
+    /* Colored hero images - remove grayscale */
+    .hero-img {
+      filter: none !important;
+    }
+    .rf img.hero-img {
+      filter: none !important;
+    }
+    .rf.ac img.hero-img {
+      animation: kb 10s ease-out forwards;
+    }
+    /* Artist image color */
+    .artist-img {
+      filter: none !important;
+    }
+    /* Card image container */
+    .acard .relative {
+      background: #0a0a0a;
+    }
+    .acard .relative img {
+      background: #0a0a0a;
+      object-fit: cover;
+    }
   </style>
 </head>
 <body class="bgt">
   <div class="grain"></div>
   <div class="toast" id="toast"><div class="flex items-start gap-3"><i class="fas fa-check-circle text-[var(--ac)] mt-0.5"></i><div><div class="fh text-sm tracking-wider uppercase" id="toastT"></div><div class="text-xs mt-1" id="toastM"></div></div></div></div>
+
+  <!-- ZOOM OVERLAY -->
+  <div class="zoom-overlay" id="zoomOverlay" onclick="closeZoom()">
+    <button class="zoom-close" onclick="closeZoom()">&times;</button>
+    <img id="zoomImg" src="" alt="zoom">
+  </div>
 
   <!-- BOOKING MODAL -->
   <div class="mo" id="bkOv" onclick="closeBk()"></div>
@@ -650,7 +780,7 @@
   <!-- HEADER -->
   <header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-black/50 border-b border-white/5">
     <div class="max-w-[1600px] mx-auto px-6 lg:px-10 py-4 flex items-center justify-between">
-      <a href="#" class="flex items-center gap-3"><div class="w-9 h-9 bg-[var(--ac)] flex items-center justify-center"><i class="fas fa-spray-can text-black text-sm"></i></div><div><div class="fd text-2xl leading-none tracking-wider" id="logoN">STNCL</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.3em] mt-0.5">STENCIL ART STUDIO</div></div></a>
+      <a href="#" class="flex items-center gap-3"><div class="w-9 h-9 bg-[var(--ac)] flex items-center justify-center"><i class="fas fa-spray-can text-black text-sm"></i></div><div><div class="fd text-2xl leading-none tracking-wider" id="logoN">IsaaCart</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.3em] mt-0.5">ISAAC STENCIL ART STUDIO</div></div></a>
       <nav class="hidden lg:flex items-center gap-10"><a href="#gallery" class="nl">Gallery</a><a href="#process" class="nl">Process</a><a href="#about" class="nl">About</a><a href="#contact" class="nl">Contact</a></nav>
       <div class="flex items-center gap-3">
         <div class="hidden md:flex items-center gap-2 fm text-[10px] text-[var(--mt)]"><span class="rdd w-2 h-2 bg-[var(--ac)] rounded-full inline-block"></span><span class="tracking-[.15em]">ACCEPTING COMMISSIONS</span></div>
@@ -661,12 +791,12 @@
 
   <!-- HERO -->
   <section class="relative h-screen min-h-[700px] w-full overflow-hidden">
-    <div class="absolute inset-0"><div class="rf ac"><img src="https://picsum.photos/seed/stnclH1/1920/1080.jpg" alt=""></div><div class="rf"><img src="https://picsum.photos/seed/stnclH2/1920/1080.jpg" alt=""></div><div class="rf"><img src="https://picsum.photos/seed/stnclH3/1920/1080.jpg" alt=""></div></div>
+    <div class="absolute inset-0"><div class="rf ac"><img src="https://i.imgur.com/2sVOnu6.jpeg" class="hero-img" alt=""></div><div class="rf"><img src="https://i.imgur.com/xXa4sWP.jpeg" class="hero-img" alt=""></div><div class="rf"><img src="https://i.imgur.com/OmzMUMq.jpeg" class="hero-img" alt=""></div></div>
     <div class="hov"></div><div class="sl"></div>
     <div class="relative z-10 h-full max-w-[1600px] mx-auto px-6 lg:px-10 flex flex-col justify-end pb-24 pt-32">
       <div class="rv iv max-w-5xl">
-        <div class="sm mb-6"><span>Stencil Art Studio</span></div>
-        <h1 class="fd text-[14vw] md:text-[10vw] lg:text-[8.5vw] leading-[.85] mb-8"><span class="hl"><span>MEASURED BY</span></span><span class="hl"><span class="ts">SKILL.</span></span><span class="hl"><span>MADE BY <span class="text-[var(--ac)]">HEART.</span></span></span></h1>
+        <div class="sm mb-6"><span>Isaac Stencil Art Studio</span></div>
+        <h1 class="fd text-[14vw] md:text-[10vw] lg:text-[8.5vw] leading-[.85] mb-8"><span class="hl"><span>HAND-CUT</span></span><span class="hl"><span class="ts">STENCILS.</span></span><span class="hl"><span>LAYER BY <span class="text-[var(--ac)]">LAYER.</span></span></span></h1>
         <p class="max-w-xl text-[var(--fgd)] text-base md:text-lg leading-relaxed">Hand-cut multi-layer stencil art — each piece built from precisely cut layers, made with care and soul. Original works available for collectors.</p>
       </div>
       <div class="mt-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
@@ -682,39 +812,39 @@
         <div class="border-l border-[var(--bdl)] pl-6"><div class="fd text-5xl md:text-6xl ndd" id="statYears">1</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mt-1">Years cutting stencils</div></div>
         <div class="border-l border-[var(--bdl)] pl-6"><div class="fd text-5xl md:text-6xl text-[var(--ac)] ndd" id="statSold">0</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mt-1">Originals sold</div></div>
         <div class="border-l border-[var(--bdl)] pl-6"><div class="fd text-5xl md:text-6xl ndd" id="statCollections">0</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mt-1">Private collections</div></div>
-        <div class="border-l border-[var(--bdl)] pl-6"><div class="fd text-5xl md:text-6xl ndd" id="statLayers">4</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mt-1">Max layers per piece</div></div>
+        <div class="border-l border-[var(--bdl)] pl-6"><div class="fd text-5xl md:text-6xl ndd" id="statLayers">3</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mt-1">Max layers per piece</div></div>
       </div></div></section>
 
   <!-- GALLERY -->
   <section class="relative py-24 lg:py-32" id="gallery"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
-      <div class="rv grid lg:grid-cols-12 gap-8 mb-14"><div class="lg:col-span-6"><div class="sm mb-6"><span>01 — Available Works</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">Original stencil<br>art for <span class="text-[var(--ac)]">collectors.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed mb-5">Every piece is one-of-one. Select a piece to book — artist gets notified via WhatsApp and email instantly.</p><div class="flex flex-wrap gap-2" id="catF"><span class="cp acl" data-c="all">All</span><span class="cp" data-c="portrait">Portrait</span><span class="cp" data-c="urban">Urban</span><span class="cp" data-c="abstract">Abstract</span><span class="cp" data-c="typography">Typography</span><span class="cp" data-c="nature">Nature</span></div></div></div>
+      <div class="rv grid lg:grid-cols-12 gap-8 mb-14"><div class="lg:col-span-6"><div class="sm mb-6"><span>01 — Available Works</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">Original stencil<br>art for <span class="text-[var(--ac)]">collectors.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed mb-5">Every piece is one-of-one. Select a piece to book — artist gets notified via WhatsApp and email instantly.</p><div class="flex flex-wrap gap-2" id="catF"><span class="cp acl" data-c="all">All</span><span class="cp" data-c="portrait">Portrait</span><span class="cp" data-c="urban">Urban</span><span class="cp" data-c="landscape">Landscape</span></div></div></div>
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="artG"></div>
       <div class="text-center mt-12 hidden" id="empG"><div class="fd text-4xl text-[var(--mt)] mb-3">No pieces here</div></div>
     </div></section>
 
   <!-- PROCESS -->
   <section class="relative py-24 lg:py-32 border-t border-[var(--bd)] bg-[var(--bgd)]" id="process"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
-      <div class="rv grid lg:grid-cols-12 gap-8 mb-16"><div class="lg:col-span-6"><div class="sm mb-6"><span>02 — The Process</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">From digital<br>to <span class="ts">physical.</span><br><span class="text-[var(--ac)]">Layer by layer.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed">No shortcuts — blades, acetate, spray cans, and patience.</p></div></div>
+      <div class="rv grid lg:grid-cols-12 gap-8 mb-16"><div class="lg:col-span-6"><div class="sm mb-6"><span>02 — The Process</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">From digital<br>to <span class="ts">physical.</span><br><span class="text-[var(--ac)]">Layer by layer.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed">No shortcuts — blades, patience, and passion.</p></div></div>
       <div class="rst grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="ic p-6"><div class="pst" data-s="01"><h3 class="fd text-3xl mb-3">DESIGN</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Digital composition broken into individual color layers.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">LAYER SEPARATION</div></div></div></div>
-        <div class="ic p-6"><div class="pst" data-s="02"><h3 class="fd text-3xl mb-3">CUT</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Each layer hand-cut from acetate with precision blades.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">HAND-CUT</div></div></div></div>
-        <div class="ic p-6"><div class="pst" data-s="03"><h3 class="fd text-3xl mb-3">SPRAY</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Stencils layered one at a time with controlled overspray.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">LAYER-BY-LAYER</div></div></div></div>
-        <div class="ic p-6"><div class="pst" data-s="04"><h3 class="fd text-3xl mb-3">FINISH</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Freehand details, UV varnish, signed and catalogued.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">SEALED & SIGNED</div></div></div></div>
+        <div class="ic p-6"><div><h3 class="fd text-3xl mb-3">PREPARE</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Plywood is sanded smooth, then painted white and left to dry.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">SAND & PRIME</div></div></div></div>
+        <div class="ic p-6"><div><h3 class="fd text-3xl mb-3">MASK</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">The board is masked with tape, ready for the stencil design.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">MASKING</div></div></div></div>
+        <div class="ic p-6"><div><h3 class="fd text-3xl mb-3">CUT & SPRAY</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Design from stencil software is hand-cut and layered with spray.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">CUT & LAYER</div></div></div></div>
+        <div class="ic p-6"><div><h3 class="fd text-3xl mb-3">FINISH</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Varnished for protection, signed, and ready to hang.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">VARNISH & SIGN</div></div></div></div>
       </div></div></section>
 
   <!-- ABOUT -->
   <section class="relative py-24 lg:py-32 border-t border-[var(--bd)]" id="about"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
       <div class="rv grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-        <div class="lg:col-span-5"><div class="relative"><div class="nc"><img src="https://picsum.photos/seed/spraycans99/600/750.jpg" class="w-full aspect-[4/5] object-cover inr" alt="Studio"></div><div class="absolute -bottom-4 -right-4 bg-[var(--ac)] text-black p-5 fd text-center"><div class="text-4xl leading-none" id="aboutYears">1+</div><div class="text-[10px] fm tracking-[.2em] mt-1">YEARS</div></div></div></div>
+        <div class="lg:col-span-5"><div class="relative"><div class="nc"><img src="https://i.imgur.com/HUGWEe9.jpeg" class="w-full aspect-[4/5] object-cover artist-img" alt="Isaac Njuguna Bridget"></div><div class="absolute -bottom-4 -right-4 bg-[var(--ac)] text-black p-5 fd text-center"><div class="text-4xl leading-none" id="aboutYears">22</div><div class="text-[10px] fm tracking-[.2em] mt-1">YEARS YOUNG</div></div></div></div>
         <div class="lg:col-span-6 lg:col-start-7">
           <div class="sm mb-6"><span>03 — The Artist</span></div>
           <h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9] mb-6">Obsessed with<br><span class="text-[var(--ac)]">layers.</span></h2>
-          <p class="text-[var(--fgd)] text-base leading-relaxed mb-5">I started cutting stencils years ago.</p>
+          <p class="text-[var(--fgd)] text-base leading-relaxed mb-5">Isaac Njuguna Bridget — 22 years old. Three pillars: artist, football player, software dev. Held by three foundations: God, Jesus, and the Holy Spirit.</p>
           <p class="text-[var(--fgd)] text-base leading-relaxed mb-8">Every piece is original. No prints, no reproductions. When you collect my work, you get something that cannot be replicated.</p>
           <div class="grid grid-cols-3 gap-4 pt-6 border-t border-[var(--bdl)]">
             <div><div class="fd text-3xl text-[var(--ac)]" id="aboutSold">0</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase mt-1">Works Sold</div></div>
-            <div><div class="fd text-3xl" id="aboutLayers">4</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase mt-1">Max Layers</div></div>
-            <div><div class="fd text-3xl">3</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase mt-1">Exhibitions</div></div>
+            <div><div class="fd text-3xl" id="aboutLayers">3</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase mt-1">Max Layers</div></div>
+            <div><div class="fd text-3xl">3</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase mt-1">Pillars</div></div>
           </div>
         </div>
       </div></div></section>
@@ -744,7 +874,7 @@
 
   <!-- FOOTER -->
   <footer class="border-t border-[var(--bd)] bg-[var(--bgd)] py-10"><div class="max-w-[1600px] mx-auto px-6 lg:px-10 flex flex-col md:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-3"><div class="w-7 h-7 bg-[var(--ac)] flex items-center justify-center"><i class="fas fa-spray-can text-black text-[10px]"></i></div><span class="fd text-xl tracking-wider" id="ftN">STNCL</span></div>
+      <div class="flex items-center gap-3"><div class="w-7 h-7 bg-[var(--ac)] flex items-center justify-center"><i class="fas fa-spray-can text-black text-[10px]"></i></div><span class="fd text-xl tracking-wider" id="ftN">IsaaCart</span></div>
       <div class="fm text-[10px] text-[var(--mt)] tracking-[.2em]">ALL WORKS ONE-OF-ONE ORIGINALS &copy; 2026</div>
     </div></footer>
 
@@ -771,7 +901,7 @@
       price: 12000,
       sz: "50 x 70 cm",
       md: "Acrylic & spray on wood",
-      ly: "6 layers",
+      ly: "3 layers",
       img: "https://i.imgur.com/IPO1zur.jpeg",
       desc: "Layered cityscape through hand-cut stencils.",
       av: true,
@@ -779,11 +909,11 @@
     }, {
       id: 3,
       title: "ESCLADE V WHITE",
-      cat: "abstract",
+      cat: "landscape",
       price: 18000,
       sz: "80 x 100 cm",
       md: "Spray paint on canvas",
-      ly: "4 layers",
+      ly: "3 layers",
       img: "https://i.imgur.com/mFHSnOq.jpeg",
       desc: "Bold abstract with overlapping stencils.",
       av: false,
@@ -791,11 +921,11 @@
     }, {
       id: 4,
       title: "WORD ON THE STREET",
-      cat: "typography",
+      cat: "urban",
       price: 10000,
       sz: "40 x 60 cm",
       md: "Spray on reclaimed metal",
-      ly: "3 layers",
+      ly: "2 layers",
       img: "",
       desc: "Typographic stencil on found metal.",
       av: false,
@@ -807,35 +937,23 @@
       price: 22000,
       sz: "90 x 120 cm",
       md: "Spray & acrylic on canvas",
-      ly: "7 layers",
+      ly: "3 layers",
       img: "",
-      desc: "Large-scale 7-layer portrait.",
+      desc: "Large-scale 3-layer portrait.",
       av: true,
       yr: "2024"
     }, {
       id: 6,
       title: "escalade v8",
-      cat: "abstract",
+      cat: "landscape",
       price: 14000,
       sz: "60 x 60 cm",
       md: "Mixed media on canvas",
-      ly: "5 layers",
+      ly: "3 layers",
       img: "",
       desc: "Geometric deconstruction.",
       av: true,
       yr: "2026"
-    }, {
-      id: 7,
-      title: "BOTANICAL CUT",
-      cat: "nature",
-      price: 11000,
-      sz: "45 x 60 cm",
-      md: "Spray paint on canvas",
-      ly: "4 layers",
-      img: "",
-      desc: "Organic forms meet sharp stencil edges.",
-      av: true,
-      yr: "2024"
     }];
 
     // ============================================================
@@ -875,7 +993,7 @@
 
     function getStats() {
       var sold = art.filter(function(a) { return !a.av }).length;
-      var maxLayers = 4;
+      var maxLayers = 3;
       art.forEach(function(a) {
         if (a.ly) {
           var m = parseInt(a.ly);
@@ -893,9 +1011,23 @@
       document.getElementById('statLayers').textContent = s.maxLayers;
       document.getElementById('statCollections').textContent = s.collections;
       document.getElementById('aboutSold').textContent = s.sold;
-      document.getElementById('aboutYears').textContent = s.years + '+';
+      document.getElementById('aboutYears').textContent = '22';
       document.getElementById('aboutLayers').textContent = s.maxLayers;
     }
+
+    // ZOOM
+    function openZoom(src) {
+      document.getElementById('zoomImg').src = src;
+      document.getElementById('zoomOverlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeZoom() {
+      document.getElementById('zoomOverlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeZoom();
+    });
 
     function renGal() {
       var g = document.getElementById('artG'),
@@ -912,20 +1044,20 @@
         var ps = formatPrice(a.price);
         var isAvail = isArtworkAvailable(a.av);
         html += '<article class="acard ic group" style="opacity:0;transform:translateY(30px)">';
-        html += '<div class="relative overflow-hidden aspect-[3/4]">';
-        html += '<img src="' + imgSrc + '" class="aimg w-full h-full object-cover inr" alt="' + a.title + '" loading="lazy">';
+        html += '<div class="gallery-img-wrap">';
+        html += '<img src="' + imgSrc + '" class="aimg w-full h-full object-cover" alt="' + a.title + '" loading="lazy">';
         html +=
-          '<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>';
+          '<div class="zoom-icon"><span><i class="fas fa-expand"></i> Zoom</span></div>';
         if (isAvail) {
           html +=
-            '<div class="absolute top-4 right-4 px-3 py-1 bg-[var(--ac)] text-black fm text-[10px] tracking-[.2em]">AVAILABLE</div>';
+            '<div class="absolute top-4 right-4 px-3 py-1 bg-[var(--ac)] text-black fm text-[10px] tracking-[.2em] pointer-events-none z-10">AVAILABLE</div>';
         } else {
           html +=
-            '<div class="absolute top-4 right-4 px-3 py-1 bg-red-700/90 text-white fm text-[10px] tracking-[.2em]">SOLD</div>';
+            '<div class="absolute top-4 right-4 px-3 py-1 bg-red-700/90 text-white fm text-[10px] tracking-[.2em] pointer-events-none z-10">SOLD</div>';
         }
         if (!hasImg) {
           html +=
-            '<div class="absolute bottom-4 left-4 px-2 py-1 bg-black/70 text-yellow-500 fm text-[9px] tracking-wider"><i class="fas fa-exclamation-circle mr-1"></i>NO IMAGE</div>';
+            '<div class="absolute bottom-4 left-4 px-2 py-1 bg-black/70 text-yellow-500 fm text-[9px] tracking-wider pointer-events-none z-10"><i class="fas fa-exclamation-circle mr-1"></i>NO IMAGE</div>';
         }
         html += '</div>';
         html += '<div class="p-5">';
@@ -946,6 +1078,17 @@
         html += '</div></div></article>';
       }
       g.innerHTML = html;
+      // Attach click events for zoom on the entire image container
+      g.querySelectorAll('.gallery-img-wrap').forEach(function(wrap) {
+        var img = wrap.querySelector('img');
+        if (img) {
+          wrap.addEventListener('click', function(e) {
+            if (!e.target.closest('.bbk') && !e.target.closest('.absolute')) {
+              openZoom(img.src);
+            }
+          });
+        }
+      });
       g.querySelectorAll('.bbk').forEach(function(b) {
         b.addEventListener('click', function(ev) {
           ev.stopPropagation();
@@ -1112,6 +1255,8 @@
       document.getElementById('dEm').textContent = 'injuguna308@gmail.com';
       document.getElementById('waLk').href = 'https://wa.me/254143374333';
       document.getElementById('emLk').href = 'mailto:injuguna308@gmail.com';
+      document.getElementById('logoN').textContent = 'IsaaCart';
+      document.getElementById('ftN').textContent = 'IsaaCart';
       renGal();
       updStats();
       startReel();
