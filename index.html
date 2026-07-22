@@ -588,7 +588,6 @@
     #contact .contact-btns .btn-em:hover {
       opacity: 0.85;
     }
-    /* Enhanced gallery image styling */
     .gallery-img-wrap {
       cursor: zoom-in;
       position: relative;
@@ -642,7 +641,6 @@
     .gallery-img-wrap .zoom-icon span i {
       font-size: 0.9rem;
     }
-    /* Zoom overlay improvements */
     .zoom-overlay {
       position: fixed;
       inset: 0;
@@ -690,7 +688,6 @@
       opacity: 1;
       transform: rotate(90deg);
     }
-    /* Colored hero images - remove grayscale */
     .hero-img {
       filter: none !important;
     }
@@ -700,17 +697,25 @@
     .rf.ac img.hero-img {
       animation: kb 10s ease-out forwards;
     }
-    /* Artist image color */
     .artist-img {
       filter: none !important;
     }
-    /* Card image container */
     .acard .relative {
       background: #0a0a0a;
     }
     .acard .relative img {
       background: #0a0a0a;
       object-fit: cover;
+    }
+    /* top nav tweaks */
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+    @media (max-width: 1024px) {
+      .nav-links {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -777,11 +782,17 @@
     </div>
   </div>
 
-  <!-- HEADER -->
+  <!-- HEADER with 4 nav links -->
   <header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-black/50 border-b border-white/5">
     <div class="max-w-[1600px] mx-auto px-6 lg:px-10 py-4 flex items-center justify-between">
       <a href="#" class="flex items-center gap-3"><div class="w-9 h-9 bg-[var(--ac)] flex items-center justify-center"><i class="fas fa-spray-can text-black text-sm"></i></div><div><div class="fd text-2xl leading-none tracking-wider" id="logoN">IsaaCart</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.3em] mt-0.5">ISAAC STENCIL ART STUDIO</div></div></a>
-      <nav class="hidden lg:flex items-center gap-10"><a href="#gallery" class="nl">Gallery</a><a href="#process" class="nl">Process</a><a href="#about" class="nl">About</a><a href="#contact" class="nl">Contact</a></nav>
+      <!-- Navigation links: Gallery, Process, About, Contact -->
+      <nav class="hidden lg:flex items-center gap-10">
+        <a href="#gallery" class="nl">Gallery</a>
+        <a href="#process" class="nl">Process</a>
+        <a href="#about" class="nl">About</a>
+        <a href="#contact" class="nl">Contact</a>
+      </nav>
       <div class="flex items-center gap-3">
         <div class="hidden md:flex items-center gap-2 fm text-[10px] text-[var(--mt)]"><span class="rdd w-2 h-2 bg-[var(--ac)] rounded-full inline-block"></span><span class="tracking-[.15em]">ACCEPTING COMMISSIONS</span></div>
         <a href="#gallery" class="hidden sm:inline-block fh text-xs tracking-[.2em] uppercase text-black bg-[var(--sv)] px-5 py-2.5 hover:bg-white transition-colors">View Art</a>
@@ -817,7 +828,7 @@
 
   <!-- GALLERY -->
   <section class="relative py-24 lg:py-32" id="gallery"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
-      <div class="rv grid lg:grid-cols-12 gap-8 mb-14"><div class="lg:col-span-6"><div class="sm mb-6"><span>01 — Available Works</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">Original stencil<br>art for <span class="text-[var(--ac)]">collectors.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed mb-5">Every piece is one-of-one. Select a piece to book — artist gets notified via WhatsApp and email instantly.</p><div class="flex flex-wrap gap-2" id="catF"><span class="cp acl" data-c="all">All</span><span class="cp" data-c="portrait">Portrait</span><span class="cp" data-c="urban">Urban</span><span class="cp" data-c="landscape">Landscape</span></div></div></div>
+      <div class="rv grid lg:grid-cols-12 gap-8 mb-14"><div class="lg:col-span-6"><div class="sm mb-6"><span>01 — Available Works</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">Original stencil<br>art for <span class="text-[var(--ac)]">collectors.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed mb-5">Every piece is one-of-one. Select a piece to book — artist gets notified via WhatsApp and email instantly.</p><div class="flex flex-wrap gap-2" id="catF"><span class="cp acl" data-c="all">All</span><span class="cp" data-c="portrait">Portrait</span><span class="cp" data-c="landscape">Landscape</span></div></div></div>
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="artG"></div>
       <div class="text-center mt-12 hidden" id="empG"><div class="fd text-4xl text-[var(--mt)] mb-3">No pieces here</div></div>
     </div></section>
@@ -832,15 +843,16 @@
         <div class="ic p-6"><div><h3 class="fd text-3xl mb-3">FINISH</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Varnished for protection, signed, and ready to hang.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">VARNISH & SIGN</div></div></div></div>
       </div></div></section>
 
-  <!-- ABOUT -->
+  <!-- ABOUT (more personal) -->
   <section class="relative py-24 lg:py-32 border-t border-[var(--bd)]" id="about"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
       <div class="rv grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         <div class="lg:col-span-5"><div class="relative"><div class="nc"><img src="https://i.imgur.com/HUGWEe9.jpeg" class="w-full aspect-[4/5] object-cover artist-img" alt="Isaac Njuguna Bridget"></div><div class="absolute -bottom-4 -right-4 bg-[var(--ac)] text-black p-5 fd text-center"><div class="text-4xl leading-none" id="aboutYears">22</div><div class="text-[10px] fm tracking-[.2em] mt-1">YEARS YOUNG</div></div></div></div>
         <div class="lg:col-span-6 lg:col-start-7">
           <div class="sm mb-6"><span>03 — The Artist</span></div>
           <h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9] mb-6">Obsessed with<br><span class="text-[var(--ac)]">layers.</span></h2>
-          <p class="text-[var(--fgd)] text-base leading-relaxed mb-5">Isaac Njuguna Bridget — 22 years old. Three pillars: artist, football player, software dev. Held by three foundations: God, Jesus, and the Holy Spirit.</p>
-          <p class="text-[var(--fgd)] text-base leading-relaxed mb-8">Every piece is original. No prints, no reproductions. When you collect my work, you get something that cannot be replicated.</p>
+          <p class="text-[var(--fgd)] text-base leading-relaxed mb-5">Isaac Njuguna Bridget — 22 years old. He lives at the intersection of art, sport, and code. A stencil artist, a football player, and a software developer. Three pillars that define his rhythm: creativity, discipline, and logic.</p>
+          <p class="text-[var(--fgd)] text-base leading-relaxed mb-5">Guided by faith — God, Jesus, and the Holy Spirit — Isaac approaches every canvas with precision and soul. His work is a meditation on structure, contrast, and the beauty found in layered complexity.</p>
+          <p class="text-[var(--fgd)] text-base leading-relaxed mb-8">Every piece is original. No prints, no reproductions. When you collect his work, you own a fragment of his process — something that cannot be replicated.</p>
           <div class="grid grid-cols-3 gap-4 pt-6 border-t border-[var(--bdl)]">
             <div><div class="fd text-3xl text-[var(--ac)]" id="aboutSold">0</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase mt-1">Works Sold</div></div>
             <div><div class="fd text-3xl" id="aboutLayers">3</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase mt-1">Max Layers</div></div>
@@ -880,7 +892,7 @@
 
   <script>
     // ============================================================
-    // 🔥 EDIT YOUR ARTWORK HERE — Just change this array
+    // ARTWORK DATA — only portrait & landscape (urban removed)
     // ============================================================
     var defArt = [{
       id: 1,
@@ -897,7 +909,7 @@
     }, {
       id: 2,
       title: "APATAL",
-      cat: "urban",
+      cat: "landscape",
       price: 12000,
       sz: "50 x 70 cm",
       md: "Acrylic & spray on wood",
@@ -921,7 +933,7 @@
     }, {
       id: 4,
       title: "WORD ON THE STREET",
-      cat: "urban",
+      cat: "portrait",
       price: 10000,
       sz: "40 x 60 cm",
       md: "Spray on reclaimed metal",
@@ -1078,7 +1090,6 @@
         html += '</div></div></article>';
       }
       g.innerHTML = html;
-      // Attach click events for zoom on the entire image container
       g.querySelectorAll('.gallery-img-wrap').forEach(function(wrap) {
         var img = wrap.querySelector('img');
         if (img) {
