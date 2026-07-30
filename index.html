@@ -1,3 +1,5 @@
+Here is the HTML code with the requested changes. It personalizes the artist's story, centers the top section text, removes hyphens, and ensures the email booking function works correctly.
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -717,6 +719,36 @@
         display: none;
       }
     }
+    /* center hero text on mobile and desktop */
+    .hero-center {
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-center .sm {
+      justify-content: center;
+    }
+    .hero-center .sm::before {
+      display: none;
+    }
+    .hero-center .sm::after {
+      content: '';
+      width: 32px;
+      height: 1px;
+      background: var(--ac);
+    }
+    @media (min-width: 768px) {
+      .hero-center .sm::before {
+        display: inline-block;
+      }
+      .hero-center .sm::after {
+        display: none;
+      }
+    }
+    .hero-center p {
+      margin-left: auto;
+      margin-right: auto;
+    }
   </style>
 </head>
 <body class="bgt">
@@ -800,18 +832,18 @@
     </div>
   </header>
 
-  <!-- HERO -->
+  <!-- HERO with centered text -->
   <section class="relative h-screen min-h-[700px] w-full overflow-hidden">
     <div class="absolute inset-0"><div class="rf ac"><img src="https://i.imgur.com/2sVOnu6.jpeg" class="hero-img" alt=""></div><div class="rf"><img src="https://i.imgur.com/xXa4sWP.jpeg" class="hero-img" alt=""></div><div class="rf"><img src="https://i.imgur.com/OmzMUMq.jpeg" class="hero-img" alt=""></div></div>
     <div class="hov"></div><div class="sl"></div>
     <div class="relative z-10 h-full max-w-[1600px] mx-auto px-6 lg:px-10 flex flex-col justify-end pb-24 pt-32">
-      <div class="rv iv max-w-5xl">
-        <div class="sm mb-6"><span>Isaac Stencil Art Studio</span></div>
-        <h1 class="fd text-[14vw] md:text-[10vw] lg:text-[8.5vw] leading-[.85] mb-8"><span class="hl"><span>HAND-CUT</span></span><span class="hl"><span class="ts">STENCILS.</span></span><span class="hl"><span>LAYER BY <span class="text-[var(--ac)]">LAYER.</span></span></span></h1>
-        <p class="max-w-xl text-[var(--fgd)] text-base md:text-lg leading-relaxed">Hand-cut multi-layer stencil art each piece built from precisely cut layers, made with care.Original works available for collectors.</p>
+      <div class="rv iv max-w-5xl mx-auto text-center hero-center">
+        <div class="sm mb-6 justify-center"><span>Isaac Stencil Art Studio</span></div>
+        <h1 class="fd text-[14vw] md:text-[10vw] lg:text-[8.5vw] leading-[.85] mb-8"><span class="hl"><span>HAND CUT</span></span><span class="hl"><span class="ts">STENCILS.</span></span><span class="hl"><span>LAYER BY <span class="text-[var(--ac)]">LAYER.</span></span></span></h1>
+        <p class="max-w-xl mx-auto text-[var(--fgd)] text-base md:text-lg leading-relaxed">Hand cut multi layer stencil art, each piece built from precisely cut layers, made with care. Original works available for collectors.</p>
       </div>
       <div class="mt-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-        <a href="#gallery" class="inline-flex items-center gap-3 fh text-sm tracking-[.15em] uppercase bg-[var(--ac)] text-black px-7 py-3.5 hover:bg-[var(--acb)] transition-colors pbtn w-fit"><span>Explore Available Works</span><i class="fas fa-arrow-down"></i></a>
+        <a href="#gallery" class="inline-flex items-center gap-3 fh text-sm tracking-[.15em] uppercase bg-[var(--ac)] text-black px-7 py-3.5 hover:bg-[var(--acb)] transition-colors pbtn w-fit mx-auto lg:mx-0"><span>Explore Available Works</span><i class="fas fa-arrow-down"></i></a>
         <div class="flex items-center gap-6 max-w-sm w-full lg:w-auto"><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em]"><span id="chN">01</span> / 03</div><div class="flex-1 pbar"><div class="pbf" id="rProg"></div></div><div class="fm text-[10px] text-[var(--ac)] tracking-[.2em]">REEL</div></div>
       </div>
     </div>
@@ -828,7 +860,7 @@
 
   <!-- GALLERY -->
   <section class="relative py-24 lg:py-32" id="gallery"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
-      <div class="rv grid lg:grid-cols-12 gap-8 mb-14"><div class="lg:col-span-6"><div class="sm mb-6"><span>01 Available Works</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">Original stencil<br>art for <span class="text-[var(--ac)]">collectors.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed mb-5">Every piece is one-of-one. Select a piece to book — artist gets notified via WhatsApp and email instantly.</p><div class="flex flex-wrap gap-2" id="catF"><span class="cp acl" data-c="all">All</span><span class="cp" data-c="portrait">Portrait</span><span class="cp" data-c="landscape">Landscape</span></div></div></div>
+      <div class="rv grid lg:grid-cols-12 gap-8 mb-14"><div class="lg:col-span-6"><div class="sm mb-6"><span>01 Available Works</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">Original stencil<br>art for <span class="text-[var(--ac)]">collectors.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed mb-5">Every piece is one of one. Select a piece to book — artist gets notified via WhatsApp and email instantly.</p><div class="flex flex-wrap gap-2" id="catF"><span class="cp acl" data-c="all">All</span><span class="cp" data-c="portrait">Portrait</span><span class="cp" data-c="landscape">Landscape</span></div></div></div>
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="artG"></div>
       <div class="text-center mt-12 hidden" id="empG"><div class="fd text-4xl text-[var(--mt)] mb-3">No pieces here</div></div>
     </div></section>
@@ -839,7 +871,7 @@
       <div class="rst grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <div class="ic p-6"><div><h3 class="fd text-3xl mb-3">PREPARE</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Plywood is sanded smooth, then painted white and left to dry.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">SAND & PRIME</div></div></div></div>
         <div class="ic p-6"><div><h3 class="fd text-3xl mb-3">MASK</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">The board is masked with tape, ready for the stencil design.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">MASKING</div></div></div></div>
-        <div class="ic p-6"><div><h3 class="fd text-3xl mb-3">CUT & SPRAY</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Design from stencil software is hand-cut and layered with spray.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">CUT & LAYER</div></div></div></div>
+        <div class="ic p-6"><div><h3 class="fd text-3xl mb-3">CUT & SPRAY</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Design from stencil software is hand cut and layered with spray.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">CUT & LAYER</div></div></div></div>
         <div class="ic p-6"><div><h3 class="fd text-3xl mb-3">FINISH</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Varnished for protection, signed, and ready to hang.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">VARNISH & SIGN</div></div></div></div>
       </div></div></section>
 
@@ -850,8 +882,8 @@
         <div class="lg:col-span-6 lg:col-start-7">
           <div class="sm mb-6"><span>03 The Artist</span></div>
           <h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9] mb-6">Obsessed with<br><span class="text-[var(--ac)]">layers.</span></h2>
-          <p class="text-[var(--fgd)] text-base leading-relaxed mb-5">Isaac Njuguna Bridget,22 years old.Lives at the intersection of art, sport, and code. A stencil artist, a football player, and a software developer. I have Three pillars that define my rhythm: creativity, discipline, and logic.</p>
-          <p class="text-[var(--fgd)] text-base leading-relaxed mb-5">Guided by faith ..through God, Jesus, and the Holy Spirit.I approach every canvas with precision,my work is a meditation on structure, contrast, and the beauty found in layered complexity.</p>
+          <p class="text-[var(--fgd)] text-base leading-relaxed mb-5">Isaac Njuguna Bridget. 22 years old. Lives at the intersection of art, sport, and code. A stencil artist, a football player, and a software developer. Three pillars define my rhythm: creativity, discipline, and logic.</p>
+          <p class="text-[var(--fgd)] text-base leading-relaxed mb-5">Guided by faith — through God, Jesus, and the Holy Spirit — I approach every canvas with precision. My work is a meditation on structure, contrast, and the beauty found in layered complexity.</p>
           <p class="text-[var(--fgd)] text-base leading-relaxed mb-8">Every piece is original. No prints, no reproductions. When you collect my work, you own an art piece that cannot be replicated.</p>
           <div class="grid grid-cols-3 gap-4 pt-6 border-t border-[var(--bdl)]">
             <div><div class="fd text-3xl text-[var(--ac)]" id="aboutSold">0</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase mt-1">Works Sold</div></div>
@@ -1283,3 +1315,4 @@
   </script>
 </body>
 </html>
+```
