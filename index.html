@@ -1,10 +1,22 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IsaaCart — Isaac Stencil Art Studio</title>
+  
+  <!-- Google Search Console Verification -->
+  <meta name="google-site-verification" content="oeDfPU047d5Lk5H24rfTv4vU2PEvHqSo0VTYtD4FUUU" />
+  
+  <!-- SEO: Title & Description with isaacbridgetart keyword -->
+  <title>IsaaCart — Isaac Bridget Stencil Art Studio | isaacbridgetart</title>
+  <meta name="description" content="Isaac Bridget's original hand-cut stencil art. Explore multi-layer spray paint works, commission a piece, and discover isaacbridgetart — one-of-one originals from Kenya." />
+  
+  <!-- Open Graph for social sharing -->
+  <meta property="og:title" content="IsaaCart — Isaac Bridget Stencil Art Studio | isaacbridgetart" />
+  <meta property="og:description" content="Original hand-cut stencil art by Isaac Bridget. Multi-layer spray paint works, commissions open. isaacbridgetart." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://artweb.isaacbridget.workers.dev" />
+  
   <script src="https://cdn.tailwindcss.com">
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;500;600;700&family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -748,6 +760,24 @@
       margin-left: auto;
       margin-right: auto;
     }
+    /* isaacbridgetart keyword tag — visible for SEO */
+    .seo-tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--mt);
+      border: 1px solid var(--bdl);
+      padding: 0.25rem 1rem;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.02);
+    }
+    .seo-tag:hover {
+      border-color: var(--ac);
+      color: var(--fg);
+      transition: all 0.3s;
+    }
   </style>
 </head>
 <body class="bgt">
@@ -813,11 +843,10 @@
     </div>
   </div>
 
-  <!-- HEADER with 4 nav links -->
+  <!-- HEADER -->
   <header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-black/50 border-b border-white/5">
     <div class="max-w-[1600px] mx-auto px-6 lg:px-10 py-4 flex items-center justify-between">
       <a href="#" class="flex items-center gap-3"><div class="w-9 h-9 bg-[var(--ac)] flex items-center justify-center"><i class="fas fa-spray-can text-black text-sm"></i></div><div><div class="fd text-2xl leading-none tracking-wider" id="logoN">IsaaCart</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.3em] mt-0.5">ISAAC STENCIL ART STUDIO</div></div></a>
-      <!-- Navigation links: Gallery, Process, About, Contact -->
       <nav class="hidden lg:flex items-center gap-10">
         <a href="#gallery" class="nl">Gallery</a>
         <a href="#process" class="nl">Process</a>
@@ -831,12 +860,16 @@
     </div>
   </header>
 
-  <!-- HERO with centered text and NO HYPHENS -->
+  <!-- HERO with isaacbridgetart keyword -->
   <section class="relative h-screen min-h-[700px] w-full overflow-hidden">
-    <div class="absolute inset-0"><div class="rf ac"><img src="https://i.imgur.com/2sVOnu6.jpeg" class="hero-img" alt=""></div><div class="rf"><img src="https://i.imgur.com/xXa4sWP.jpeg" class="hero-img" alt=""></div><div class="rf"><img src="https://i.imgur.com/OmzMUMq.jpeg" class="hero-img" alt=""></div></div>
+    <div class="absolute inset-0"><div class="rf ac"><img src="https://i.imgur.com/2sVOnu6.jpeg" class="hero-img" alt="Isaac Bridget stencil art"></div><div class="rf"><img src="https://i.imgur.com/xXa4sWP.jpeg" class="hero-img" alt="Isaac Bridget stencil art"></div><div class="rf"><img src="https://i.imgur.com/OmzMUMq.jpeg" class="hero-img" alt="Isaac Bridget stencil art"></div></div>
     <div class="hov"></div><div class="sl"></div>
     <div class="relative z-10 h-full max-w-[1600px] mx-auto px-6 lg:px-10 flex flex-col justify-end pb-24 pt-32">
       <div class="rv iv max-w-5xl mx-auto text-center hero-center">
+        <!-- isaacbridgetart keyword — visible tag in hero -->
+        <div class="flex justify-center mb-4">
+          <span class="seo-tag">isaacbridgetart</span>
+        </div>
         <div class="sm mb-6 justify-center"><span>Isaac Stencil Art Studio</span></div>
         <h1 class="fd text-[14vw] md:text-[10vw] lg:text-[8.5vw] leading-[.85] mb-8"><span class="hl"><span>HAND CUT</span></span><span class="hl"><span class="ts">STENCILS.</span></span><span class="hl"><span>LAYER BY <span class="text-[var(--ac)]">LAYER.</span></span></span></h1>
         <p class="max-w-xl mx-auto text-[var(--fgd)] text-base md:text-lg leading-relaxed">Hand cut multi layer stencil art, each piece built from precisely cut layers, made with care. Original works available for collectors.</p>
@@ -846,7 +879,6 @@
         <div class="flex items-center gap-6 max-w-sm w-full lg:w-auto"><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em]"><span id="chN">01</span> / 03</div><div class="flex-1 pbar"><div class="pbf" id="rProg"></div></div><div class="fm text-[10px] text-[var(--ac)] tracking-[.2em]">REEL</div></div>
       </div>
     </div>
-    <!-- NO HYPHENS IN TICKER -->
     <div class="absolute bottom-0 left-0 right-0 border-t border-white/5 bg-black/60 backdrop-blur-sm py-3 overflow-hidden z-10"><div class="mqt fd text-sm tracking-[.25em] text-[var(--svd)]"><span class="px-8">HAND CUT STENCILS</span><span class="text-[var(--ac)]">/</span><span class="px-8">MULTI LAYER PROCESS</span><span class="text-[var(--ac)]">/</span><span class="px-8">ORIGINAL WORKS ONLY</span><span class="text-[var(--ac)]">/</span><span class="px-8">NO PRINTS NO REPRODUCTIONS</span><span class="text-[var(--ac)]">/</span><span class="px-8">EACH PIECE IS ONE OF ONE</span><span class="text-[var(--ac)]">/</span><span class="px-8">HAND CUT STENCILS</span><span class="text-[var(--ac)]">/</span><span class="px-8">MULTI LAYER PROCESS</span><span class="text-[var(--ac)]">/</span><span class="px-8">ORIGINAL WORKS ONLY</span><span class="text-[var(--ac)]">/</span><span class="px-8">NO PRINTS NO REPRODUCTIONS</span><span class="text-[var(--ac)]">/</span><span class="px-8">EACH PIECE IS ONE OF ONE</span><span class="text-[var(--ac)]">/</span></div></div>
   </section>
 
@@ -858,7 +890,7 @@
         <div class="border-l border-[var(--bdl)] pl-6"><div class="fd text-5xl md:text-6xl ndd" id="statLayers">3</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mt-1">Max layers per piece</div></div>
       </div></div></section>
 
-  <!-- GALLERY (NO HYPHENS IN DESCRIPTIONS) -->
+  <!-- GALLERY -->
   <section class="relative py-24 lg:py-32" id="gallery"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
       <div class="rv grid lg:grid-cols-12 gap-8 mb-14"><div class="lg:col-span-6"><div class="sm mb-6"><span>01 Available Works</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">Original stencil<br>art for <span class="text-[var(--ac)]">collectors.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed mb-5">Every piece is one of one. Select a piece to book — artist gets notified via WhatsApp and email instantly.</p><div class="flex flex-wrap gap-2" id="catF"><span class="cp acl" data-c="all">All</span><span class="cp" data-c="portrait">Portrait</span><span class="cp" data-c="landscape">Landscape</span></div></div></div>
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="artG"></div>
@@ -875,21 +907,17 @@
         <div class="ic p-6"><div><h3 class="fd text-3xl mb-3">FINISH</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Varnished for protection, signed, and ready to hang.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">VARNISH & SIGN</div></div></div></div>
       </div></div></section>
 
-  <!-- ABOUT (PERSONAL & HUMAN STORY) -->
+  <!-- ABOUT -->
   <section class="relative py-24 lg:py-32 border-t border-[var(--bd)]" id="about"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
       <div class="rv grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         <div class="lg:col-span-5"><div class="relative"><div class="nc"><img src="https://i.imgur.com/HUGWEe9.jpeg" class="w-full aspect-[4/5] object-cover artist-img" alt="Isaac Njuguna Bridget"></div><div class="absolute -bottom-4 -right-4 bg-[var(--ac)] text-black p-5 fd text-center"><div class="text-4xl leading-none" id="aboutYears">22</div><div class="text-[10px] fm tracking-[.2em] mt-1">YEARS YOUNG</div></div></div></div>
         <div class="lg:col-span-6 lg:col-start-7">
           <div class="sm mb-6"><span>03 The Artist</span></div>
           <h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9] mb-6">get to know<br><span class="text-[var(--ac)]">the artist</span></h2>
-          
-          <!-- PERSONAL STORY STARTS HERE -->
           <p class="text-[var(--fgd)] text-base leading-relaxed mb-5">I'm Isaac Bridget Njuguna 22 years old. Born and raised in Kenya. Student. Developer. Artist.Footballer.Problem solver.</p>
           <p class="text-[var(--fgd)] text-base leading-relaxed mb-5">I started cutting stencils when I was 19. Honestly? I was broke and bored. Grabbed some plywood, a scalpel, and a can of spray paint.</p>
           <p class="text-[var(--fgd)] text-base leading-relaxed mb-5">My faith is what keeps me grounded. God, His son, and the Spirit of God give me the patience to sit for hours, cutting by hand, without rushing. It's like a meditation.</p>
           <p class="text-[var(--fgd)] text-base leading-relaxed mb-8">I don't do prints.Every piece I make is a one-off. A moment in time you can't get back. When you buy my work, you're not just getting a painting. You're getting a piece of my time, my energy, and a little bit of me.</p>
-          <!-- PERSONAL STORY ENDS HERE -->
-
           <div class="grid grid-cols-3 gap-4 pt-6 border-t border-[var(--bdl)]">
             <div><div class="fd text-3xl text-[var(--ac)]" id="aboutSold">0</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase mt-1">Works Sold</div></div>
             <div><div class="fd text-3xl" id="aboutLayers">3</div><div class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase mt-1">Max Layers</div></div>
@@ -921,15 +949,19 @@
         </div>
       </div></div></section>
 
-  <!-- FOOTER -->
+  <!-- FOOTER with isaacbridgetart keyword -->
   <footer class="border-t border-[var(--bd)] bg-[var(--bgd)] py-10"><div class="max-w-[1600px] mx-auto px-6 lg:px-10 flex flex-col md:flex-row items-center justify-between gap-4">
       <div class="flex items-center gap-3"><div class="w-7 h-7 bg-[var(--ac)] flex items-center justify-center"><i class="fas fa-spray-can text-black text-[10px]"></i></div><span class="fd text-xl tracking-wider" id="ftN">IsaaCart</span></div>
       <div class="fm text-[10px] text-[var(--mt)] tracking-[.2em]">ALL WORKS ONE-OF-ONE ORIGINALS &copy; 2026</div>
+      <!-- isaacbridgetart keyword in footer -->
+      <div class="flex items-center gap-3">
+        <span class="seo-tag text-[9px]">isaacbridgetart</span>
+      </div>
     </div></footer>
 
   <script>
     // ============================================================
-    // ARTWORK DATA (NO HYPHENS IN DESCRIPTIONS)
+    // ARTWORK DATA
     // ============================================================
     var defArt = [{
       id: 1,
