@@ -1437,6 +1437,19 @@
       updStats();
       startReel();
       updProg();
+      loadArtworks();
+    }
+
+    // Load artworks from the database (managed via /admin).
+    // Falls back to the built-in defArt list if the API is empty or unreachable.
+    function loadArtworks() {
+      fetch('/api/artworks').then(function(r) { return r.ok ? r.json() : null }).then(function(j) {
+        if (j && j.ok && Array.isArray(j.artworks) && j.artworks.length) {
+          art = j.artworks;
+          renGal();
+          updStats();
+        }
+      }).catch(function() { });
     }
 
     var obs = new IntersectionObserver(function(entries) {
