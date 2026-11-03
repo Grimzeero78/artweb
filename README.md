@@ -68,6 +68,26 @@ npx wrangler dev          # → http://localhost:8787
 Built-in protections: field validation + length caps, honeypot field (`website`),
 per-IP flood control (5 submissions / 10 min), 20 KB body limit, parameterized SQL only.
 
+## Admin dashboard (manage everything, no code)
+
+Open **https://artweb.dev078.workers.dev/admin** and log in with the admin password.
+
+From there you can:
+
+- **Upload pictures** from your phone/computer (auto-resized, stored in D1, served from `/img/...`)
+- **Add / edit / delete artworks** — title, price, size, medium, layers, year, description, availability
+- **Mark artworks sold/available** with one click — the public gallery updates instantly
+- **Read visitor messages and booking requests** — mark read, archive, delete
+
+### Change the admin password
+
+```bash
+npx wrangler secret put ADMIN_PASSWORD   # type the new password, press Enter
+```
+
+Security: sessions are HMAC-signed HttpOnly cookies (12 h), failed logins are
+rate-limited (5 tries / 10 min / IP), and the admin page is `noindex`.
+
 ## Repo layout
 
 ```
