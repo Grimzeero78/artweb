@@ -1,0 +1,26 @@
+# ============================================================
+# IsaaCart — Cloudflare Worker configuration
+# Static site (public/) + JSON API (src/worker.js) + D1 database
+# ============================================================
+
+name = "artweb"
+main = "src/worker.js"
+compatibility_date = "2026-10-01"
+
+# Static assets are served for every non-API path (/, /favicon.ico, ...)
+[assets]
+directory = "./public"
+binding = "ASSETS"
+# API routes always hit the worker first
+run_worker_first = ["/api/*"]
+
+# ------------------------------------------------------------
+# D1 database — ONE-TIME SETUP:
+#   1. npx wrangler d1 create artweb-db
+#   2. Copy the "database_id" it prints and paste it below
+#   3. npx wrangler d1 execute artweb-db --remote --file=./schema.sql
+# ------------------------------------------------------------
+[[d1_databases]]
+binding = "DB"
+database_name = "artweb-db"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"

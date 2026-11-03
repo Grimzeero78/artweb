@@ -779,6 +779,26 @@
       color: var(--fg);
       transition: all 0.3s;
     }
+
+    /* ============================================================
+       FULLSTACK ADDITIONS — send button, honeypot, a11y polish
+       ============================================================ */
+    #contact .btn-send {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      font-family: 'Archivo', sans-serif; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+      font-size: 12px; background: var(--ac); color: #000; border: 1px solid var(--ac);
+      padding: 16px 34px; cursor: pointer; transition: all .25s ease;
+    }
+    #contact .btn-send:hover { background: var(--acb); border-color: var(--acb); transform: translateY(-1px); box-shadow: 0 10px 30px -10px rgba(255, 77, 0, .45); }
+    #contact .btn-send:active { transform: translateY(0); }
+    #contact .btn-send:disabled { opacity: .55; cursor: not-allowed; transform: none; box-shadow: none; }
+    .hp { position: absolute !important; left: -10000px !important; top: auto !important; width: 1px; height: 1px; overflow: hidden; }
+    ::selection { background: var(--ac); color: #000; }
+    .fi { transition: border-color .25s ease, background .25s ease; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
   </style>
 </head>
 <body class="bgt">
@@ -933,12 +953,15 @@
       <div class="rv grid lg:grid-cols-12 gap-8">
         <div class="lg:col-span-7"><div class="bf p-8 lg:p-10">
             <form onsubmit="prepareContact(event)">
-              <div class="grid sm:grid-cols-2 gap-x-6 gap-y-5"><div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Name *</label><input type="text" class="fi" id="cN" required placeholder="Your name"></div><div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Phone *</label><input type="tel" class="fi" id="cP" required placeholder="+254 ..."></div></div>
-              <div class="mt-5"><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Subject</label><input type="text" class="fi" id="cS" placeholder="Commission inquiry..."></div>
+              <div class="grid sm:grid-cols-2 gap-x-6 gap-y-5"><div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Name *</label><input type="text" class="fi" id="cN" required autocomplete="name" placeholder="Your name"></div><div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Phone *</label><input type="tel" class="fi" id="cP" required autocomplete="tel" placeholder="+254 ..."></div></div>
+              <div class="mt-5 grid sm:grid-cols-2 gap-x-6 gap-y-5"><div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Email</label><input type="email" class="fi" id="cE" autocomplete="email" placeholder="you@example.com (optional)"></div><div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Subject</label><input type="text" class="fi" id="cS" placeholder="Commission inquiry..."></div></div>
               <div class="mt-5"><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Message *</label><textarea class="fi resize-none" id="cM" rows="4" required placeholder="Tell me about your idea..."></textarea></div>
-              <div class="contact-btns">
-                <button type="submit" class="btn-wa"><i class="fab fa-whatsapp"></i> Send via WhatsApp</button>
-                <button type="button" class="btn-em" onclick="sendContactEmail()"><i class="fas fa-envelope"></i> Send via Email</button>
+              <!-- Honeypot: hidden from humans, spam bots fill it in -->
+              <div class="hp" aria-hidden="true"><label>Website</label><input type="text" id="cW" tabindex="-1" autocomplete="off"></div>
+              <div class="mt-7"><button type="submit" id="cBtn" class="btn-send"><i class="fas fa-paper-plane"></i> Send Message</button></div>
+              <div class="contact-btns mt-4">
+                <button type="button" class="btn-wa" onclick="sendContactWa()"><i class="fab fa-whatsapp"></i> WhatsApp instead</button>
+                <button type="button" class="btn-em" onclick="sendContactEmail()"><i class="fas fa-envelope"></i> Email instead</button>
               </div>
             </form>
           </div></div>
@@ -1241,9 +1264,36 @@
         .sz || '') + '\nMEDIUM: ' + (a.md || '') + '\nLAYERS: ' + (a.ly || '') + '\n\nBUYER INFO\nName: ' + nm + '\nPhone: ' +
         ph + (mg ? '\nMessage: ' + mg : '') + '\n\nSent: ' + new Date().toLocaleString();
       bkData = { msg: msg, wa: '254143374333', em: 'injuguna308@gmail.com', title: a.title };
-      document.getElementById('bkSummary').innerHTML =
-        '<div><span class="text-[var(--mt)]">Artwork:</span> ' + a.title + '</div><div><span class="text-[var(--mt)]">Price:</span> ' +
-        ps + '</div><div><span class="text-[var(--mt)]">Buyer:</span> ' + nm + ' (' + ph + ')</div>';
+      // Persist the booking in the database (fire-and-forget — the
+      // WhatsApp / email handoff below works even if this fails)
+      fetch(API_BOOK, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: nm,
+          phone: ph,
+          message: mg,
+          artworkId: String(a.id),
+          artworkTitle: a.title || 'Untitled',
+          artworkPrice: ps,
+          artworkSize: a.sz || '',
+          artworkMedium: a.md || '',
+          artworkLayers: a.ly || ''
+        })
+      }).catch(function() { });
+      var sum = document.getElementById('bkSummary');
+      sum.innerHTML = '';
+      [['Artwork', a.title || 'Untitled'], ['Price', ps], ['Buyer', nm + ' (' + ph + ')']].forEach(function(row) {
+        var line = document.createElement('div');
+        var lbl = document.createElement('span');
+        lbl.className = 'text-[var(--mt)]';
+        lbl.textContent = row[0] + ': ';
+        var val = document.createElement('span');
+        val.textContent = row[1];
+        line.appendChild(lbl);
+        line.appendChild(val);
+        sum.appendChild(line);
+      });
       document.getElementById('bkFormV').classList.add('hidden');
       document.getElementById('bkSucV').classList.remove('hidden');
     }
@@ -1282,42 +1332,76 @@
       return false;
     }
 
-    var contactData = null;
+    // ============================================================
+    // CONTACT + BOOKING → BACKEND API (Cloudflare Worker + D1)
+    // ============================================================
+    var API_CONTACT = '/api/contact';
+    var API_BOOK = '/api/book';
 
-    function prepareContact(ev) {
+    function contactPayload() {
+      return {
+        name: document.getElementById('cN').value.trim(),
+        phone: document.getElementById('cP').value.trim(),
+        email: document.getElementById('cE') ? document.getElementById('cE').value.trim() : '',
+        subject: document.getElementById('cS').value.trim(),
+        message: document.getElementById('cM').value.trim(),
+        website: document.getElementById('cW') ? document.getElementById('cW').value : ''
+      };
+    }
+
+    function contactValid(d) {
+      return d.name && d.phone && d.message;
+    }
+
+    function setContactBusy(busy) {
+      var b = document.getElementById('cBtn');
+      if (!b) return;
+      b.disabled = busy;
+      b.innerHTML = busy
+        ? '<i class="fas fa-circle-notch fa-spin"></i> Sending...'
+        : '<i class="fas fa-paper-plane"></i> Send Message';
+    }
+
+    async function prepareContact(ev) {
       ev.preventDefault();
-      var nm = document.getElementById('cN').value.trim(),
-        ph = document.getElementById('cP').value.trim(),
-        sj = document.getElementById('cS').value.trim(),
-        mg = document.getElementById('cM').value.trim();
-      if (!nm || !ph || !mg) { toast('Error', 'Name, phone and message are required'); return }
-      var msg = 'CONTACT FROM WEBSITE\n====================\n\nName: ' + nm + '\nPhone: ' + ph + (sj ? '\nSubject: ' + sj :
-        '') + '\nMessage: ' + mg + '\n\nSent: ' + new Date().toLocaleString();
-      contactData = { msg: msg, wa: '254143374333', em: 'injuguna308@gmail.com' };
-      window.open('https://wa.me/' + contactData.wa + '?text=' + encodeURIComponent(contactData.msg), '_blank');
-      toast('WhatsApp Sent', 'Opened WhatsApp with your message');
-      document.getElementById('cN').value = '';
-      document.getElementById('cP').value = '';
-      document.getElementById('cS').value = '';
-      document.getElementById('cM').value = '';
+      var d = contactPayload();
+      if (!contactValid(d)) { toast('Error', 'Name, phone and message are required'); return }
+      setContactBusy(true);
+      try {
+        var r = await fetch(API_CONTACT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(d)
+        });
+        var j = null;
+        try { j = await r.json(); } catch (e) { }
+        if (r.ok && j && j.ok) {
+          ['cN', 'cP', 'cE', 'cS', 'cM'].forEach(function(id) { document.getElementById(id).value = '' });
+          toast('Message Received', 'Saved — Isaac will get back to you shortly');
+        } else {
+          toast('Could Not Send', (j && j.error) ? j.error : 'Server error — try WhatsApp below');
+        }
+      } catch (e) {
+        toast('Network Error', 'Could not reach the server — try WhatsApp below');
+      }
+      setContactBusy(false);
+    }
+
+    function sendContactWa() {
+      var d = contactPayload();
+      if (!contactValid(d)) { toast('Error', 'Name, phone and message are required'); return }
+      var msg = 'CONTACT FROM WEBSITE\n====================\n\nName: ' + d.name + '\nPhone: ' + d.phone + (d.subject ? '\nSubject: ' + d.subject : '') + '\nMessage: ' + d.message + '\n\nSent: ' + new Date().toLocaleString();
+      window.open('https://wa.me/254143374333?text=' + encodeURIComponent(msg), '_blank');
+      toast('WhatsApp Opened', 'Your message is prefilled — just hit send');
     }
 
     function sendContactEmail() {
-      if (!contactData) {
-        var nm = document.getElementById('cN').value.trim(),
-          ph = document.getElementById('cP').value.trim(),
-          sj = document.getElementById('cS').value.trim(),
-          mg = document.getElementById('cM').value.trim();
-        if (!nm || !ph || !mg) { toast('Error', 'Please fill in name, phone and message first'); return }
-        var msg = 'CONTACT FROM WEBSITE\n====================\n\nName: ' + nm + '\nPhone: ' + ph + (sj ? '\nSubject: ' + sj :
-          '') + '\nMessage: ' + mg + '\n\nSent: ' + new Date().toLocaleString();
-        contactData = { msg: msg, wa: '254143374333', em: 'injuguna308@gmail.com' };
-      }
-      var subject = 'Website Contact';
-      var body = contactData.msg;
-      var mailtoLink = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(contactData.em) + '&su=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      var d = contactPayload();
+      if (!contactValid(d)) { toast('Error', 'Please fill in name, phone and message first'); return }
+      var msg = 'CONTACT FROM WEBSITE\n====================\n\nName: ' + d.name + '\nPhone: ' + d.phone + (d.subject ? '\nSubject: ' + d.subject : '') + '\nMessage: ' + d.message + '\n\nSent: ' + new Date().toLocaleString();
+      var mailtoLink = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent('injuguna308@gmail.com') + '&su=' + encodeURIComponent('Website Contact') + '&body=' + encodeURIComponent(msg);
       window.open(mailtoLink, '_blank');
-      toast('Email Sent', 'Opened Gmail with your message');
+      toast('Gmail Opened', 'Your message is prefilled — just hit send');
     }
 
     var rSlides = document.querySelectorAll('.rf'),
