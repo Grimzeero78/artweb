@@ -62,7 +62,10 @@
     .row .acts { display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
     .badge { font-size:9px; letter-spacing:.15em; text-transform:uppercase; padding:3px 8px; font-weight:800; }
     .b-av { background:var(--ac); color:#000; }
+    .b-bk { background:#1d4ed8; color:#fff; }
     .b-sold { background:#7f1d1d; color:#fff; }
+    .stsel { width:auto; font-size:11px; padding:7px 8px; background:#0f0f0f; border:1px solid var(--bdl); color:var(--fg); font-family:inherit; cursor:pointer; }
+    .stsel:focus { border-color:var(--ac); }
     .b-new { background:var(--warn); color:#000; }
     .b-arch { background:#333; color:#aaa; }
     .b-type { background:#0f172a; color:#7dd3fc; border:1px solid #1e3a5f; }
@@ -134,7 +137,7 @@
             <div class="f"><label>Medium</label><input id="fMd" placeholder="Spray paint on plywood"></div>
             <div class="f"><label>Layers</label><input id="fLy" placeholder="2 layers"></div>
             <div class="f"><label>Status</label>
-              <select id="fAv"><option value="1">Available</option><option value="0">Sold</option></select>
+              <select id="fAv"><option value="1">Available</option><option value="2">Booked</option><option value="0">Sold</option></select>
             </div>
           </div>
           <div class="f">
@@ -226,7 +229,10 @@
     loadArtworks(); loadMessages();
   }
 
-  api('/api/admin/session').then(function(j){ if (j.authed) enter(); }).catch(function(){});
+  // SECURITY FIX: never auto-login. Every visit to /admin asks for the
+  // password again. We also clear any old login cookie so a saved session
+  // can never be reused.
+  api('/api/admin/logout', { method:'POST' }).catch(function(){});
 
   /* ---------- tabs ---------- */
   document.querySelectorAll('.tab[data-tab]').forEach(function(t) {
@@ -296,7 +302,7 @@
       title: $('fTitle').value, cat: $('fCat').value,
       price: Number($('fPrice').value || 0), sz: $('fSz').value, yr: $('fYr').value,
       md: $('fMd').value, ly: $('fLy').value,
-      av: $('fAv').value === '1', img: $('fImg').value, descr: $('fDescr').value
+      av: Number($('fAv').value), img: $('fImg').value, descr: $('fDescr').value
     };
     try {
       if (editingId) await api('/api/admin/artworks/' + editingId, { method:'POST', body: body });
@@ -324,16 +330,20 @@
         m.textContent = 'KSH ' + a.price.toLocaleString() + ' · ' + a.cat + (a.sz ? ' · ' + a.sz : '') + (a.md ? ' · ' + a.md : '');
         info.appendChild(t); info.appendChild(m);
         var acts = document.createElement('div'); acts.className = 'acts';
-        var badge = document.createElement('span'); badge.className = 'badge ' + (a.av ? 'b-av' : 'b-sold'); badge.textContent = a.av ? 'Available' : 'Sold';
+        var stTxt = a.st === 'booked' ? 'Booked' : (a.st === 'sold' ? 'Sold' : 'Available');
+        var bcls = a.st === 'booked' ? 'b-bk' : (a.st === 'sold' ? 'b-sold' : 'b-av');
+        var badge = document.createElement('span'); badge.className = 'badge ' + bcls; badge.textContent = stTxt;
         acts.appendChild(badge);
-        function mkBtn(label, icon, cls, fn) {
-          var b = document.createElement('button'); b.className = 'btn sm ' + cls;
-          b.innerHTML = '<i class="fas fa-' + icon + '"></i> ' + label;
-          b.addEventListener('click', fn); return b;
-        }
-        acts.appendChild(mkBtn(a.av ? 'Sold' : 'Available', 'rotate', 'ghost', async function() {
-          try { await api('/api/admin/artworks/' + a.id, { method:'POST', body:{ av: !a.av } }); loadArtworks(); } catch (e) { toast(e.message, true); }
-        }));
+        // status dropdown: available → booked → sold
+        var sel = document.createElement('select'); sel.className = 'stsel'; sel.title = 'Change status';
+        [['1','Available'],['2','Booked'],['0','Sold']].forEach(function(o) {
+          var op = document.createElement('option'); op.value = o[0]; op.textContent = o[1]; sel.appendChild(op);
+        });
+        sel.value = String(a.av);
+        sel.addEventListener('change', async function() {
+          try { await api('/api/admin/artworks/' + a.id, { method:'POST', body:{ av: Number(sel.value) } }); toast('Status updated ✓'); loadArtworks(); } catch (e) { toast(e.message, true); loadArtworks(); }
+        });
+        acts.appendChild(sel);
         acts.appendChild(mkBtn('Edit', 'pen', 'ghost', function() {
           editingId = a.id;
           $('formTitle').textContent = 'Edit: ' + a.title;
@@ -341,7 +351,7 @@
           $('resetBtn').style.display = 'inline-flex';
           $('fId').value = a.id; $('fTitle').value = a.title; $('fCat').value = a.cat;
           $('fPrice').value = a.price; $('fSz').value = a.sz; $('fYr').value = a.yr;
-          $('fMd').value = a.md; $('fLy').value = a.ly; $('fAv').value = a.av ? '1' : '0';
+          $('fMd').value = a.md; $('fLy').value = a.ly; $('fAv').value = String(a.av);
           $('fImg').value = a.img; $('fDescr').value = a.desc;
           if (a.img) { $('imgPrev').src = a.img; $('imgPrev').style.display = 'block'; } else { $('imgPrev').style.display = 'none'; }
           window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -395,6 +405,14 @@
           b.addEventListener('click', fn); return b;
         }
         if (x.status === 'new') acts.appendChild(mkBtn('Mark read', 'envelope-open', 'ghost', async function(){ await api('/api/admin/messages/'+x.id,{method:'POST',body:{status:'read'}}).catch(function(e){toast(e.message,true)}); loadMessages(filter); }));
+        if (x.type === 'booking' && x.artwork_id) {
+          acts.appendChild(mkBtn('Piece → Sold', 'tag', 'ghost', async function(){
+            try { await api('/api/admin/artworks/' + Number(x.artwork_id), { method:'POST', body:{ av: 0 } }); toast('Artwork marked as sold ✓'); } catch (e) { toast(e.message, true); }
+          }));
+          acts.appendChild(mkBtn('Piece → Available', 'rotate', 'ghost', async function(){
+            try { await api('/api/admin/artworks/' + Number(x.artwork_id), { method:'POST', body:{ av: 1 } }); toast('Artwork marked as available ✓'); } catch (e) { toast(e.message, true); }
+          }));
+        }
         if (x.status !== 'archived') acts.appendChild(mkBtn('Archive', 'box-archive', 'ghost', async function(){ await api('/api/admin/messages/'+x.id,{method:'POST',body:{status:'archived'}}).catch(function(e){toast(e.message,true)}); loadMessages(filter); }));
         else acts.appendChild(mkBtn('Unarchive', 'rotate', 'ghost', async function(){ await api('/api/admin/messages/'+x.id,{method:'POST',body:{status:'read'}}).catch(function(e){toast(e.message,true)}); loadMessages(filter); }));
         acts.appendChild(mkBtn('Delete', 'trash', 'danger', async function(){ if (!confirm('Delete this message?')) return; await api('/api/admin/messages/'+x.id,{method:'DELETE'}).catch(function(e){toast(e.message,true)}); loadMessages(filter); }));

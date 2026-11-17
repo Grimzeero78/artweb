@@ -77,7 +77,10 @@ async function hmacHex(data, secret) {
 }
 
 function sessionCookie(exp, sig) {
-  return `adm=${exp}.${sig}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=${SESSION_HOURS * 3600}`;
+  // No Max-Age → this is a browser-session cookie: it disappears when the
+  // browser closes, so the admin is always asked for the password again on
+  // the next visit. `exp` is still a hard server-side cap (12 hours).
+  return `adm=${exp}.${sig}; HttpOnly; Secure; SameSite=Strict; Path=/`;
 }
 
 const CLEAR_COOKIE = 'adm=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0';
@@ -176,27 +179,56 @@ async function handleBooking(env, request) {
     medium: text(d.artworkMedium, 80),
     layers: text(d.artworkLayers, 40),
   });
-  const res = await env.DB
-    .prepare(
-      `INSERT INTO messages (type, name, phone, message, artwork_id, artwork_title, artwork_price, meta, ip, user_agent)
-       VALUES ('booking', ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)`
-    )
-    .bind(
-      v.name, v.phone, v.message || null,
-      text(d.artworkId, 40) || null,
-      text(d.artworkTitle, 120) || 'Untitled',
-      text(d.artworkPrice, 30) || null,
-      meta, clientIp(request), userAgent(request)
-    )
-    .run();
-  return json({ ok: true, id: res.meta.last_row_id });
+
+  // Booking flow: a booking on an available artwork automatically marks it
+  // as BOOKED (av = 2) so nobody else can book it at the same time.
+  // Isaac flips it to SOLD from the admin dashboard when it ships.
+  const artId = text(d.artworkId, 40);
+  const stmts = [];
+  let artwork = null;
+  if (artId) {
+    artwork = await env.DB
+      .prepare(`SELECT id, title, av FROM artworks WHERE id = ?1`)
+      .bind(Number(artId) || 0)
+      .first();
+    if (!artwork) return fail('That artwork no longer exists');
+    const av = Number(artwork.av);
+    if (av === 0) return fail('Sorry — this piece has already been sold');
+    if (av === 2) return fail('This piece is already booked — Isaac will confirm the reservation soon');
+  }
+
+  stmts.push(
+    env.DB
+      .prepare(
+        `INSERT INTO messages (type, name, phone, message, artwork_id, artwork_title, artwork_price, meta, ip, user_agent)
+         VALUES ('booking', ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)`
+      )
+      .bind(
+        v.name, v.phone, v.message || null,
+        artId || null,
+        text(d.artworkTitle, 120) || 'Untitled',
+        text(d.artworkPrice, 30) || null,
+        meta, clientIp(request), userAgent(request)
+      )
+  );
+  if (artwork) {
+    stmts.push(env.DB.prepare(`UPDATE artworks SET av = 2 WHERE id = ?1`).bind(artwork.id));
+  }
+  const results = await env.DB.batch(stmts);
+  return json({ ok: true, id: results[0].meta.last_row_id, booked: !!artwork });
 }
 
 /* ============================================================
    ARTWORK HELPERS
    ============================================================ */
 
+/**
+ * Artwork status: `av` column holds 1 = available, 2 = booked, 0 = sold.
+ * Legacy booleans map to available/sold. `st` is the normalized string.
+ */
 function artworkOut(r) {
+  const n = Number(r.av);
+  const avInt = n === 2 ? 2 : (n === 1 || r.av === true ? 1 : 0);
   return {
     id: r.id,
     title: r.title,
@@ -207,7 +239,8 @@ function artworkOut(r) {
     ly: r.ly || '',
     img: r.img || '',
     desc: r.descr || '',
-    av: !!r.av,
+    av: avInt,
+    st: avInt === 2 ? 'booked' : avInt === 1 ? 'available' : 'sold',
     yr: r.yr || '',
     sort: r.sort || 0,
   };
@@ -238,7 +271,13 @@ function artworkFields(d, partial, existing) {
     out.img = img || null;
   }
   if (!partial || d.descr !== undefined) out.descr = text(d.descr !== undefined ? d.descr : d.desc, 2000) || null;
-  if (!partial || d.av !== undefined) out.av = (d.av === undefined ? true : (d.av === true || d.av === 1 || d.av === '1' || d.av === 'true')) ? 1 : 0;
+  if (!partial || d.av !== undefined) {
+    let v = d.av;
+    if (typeof v === 'string') v = v.trim().toLowerCase();
+    if (v === 2 || v === '2' || v === 'booked') out.av = 2;
+    else if (v === true || v === 1 || v === '1' || v === 'true' || v === 'available' || v === 'yes') out.av = 1;
+    else out.av = 0;
+  }
   if (!partial || d.yr !== undefined) out.yr = text(d.yr, 10) || null;
   if (!partial || d.sort !== undefined) {
     const s = Number(d.sort);

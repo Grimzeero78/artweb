@@ -16,12 +16,13 @@
   <meta property="og:title" content="IsaaCart — Isaac Bridget Stencil Art Studio | isaacbridgetart" />
   <meta property="og:description" content="Original hand-cut stencil art by Isaac Bridget. Multi-layer spray paint works, commissions open. isaacbridgetart." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://artweb.isaacbridget.workers.dev" />
+  <meta property="og:url" content="https://artweb.dev078.workers.dev" />
   
   <script src="https://cdn.tailwindcss.com">
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;500;600;700&family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preload" as="image" href="/img/hero/hero-1.jpg">
   <style>
     :root {
       --bg: #0a0a0a;
@@ -107,7 +108,9 @@
       position: absolute;
       inset: 0;
       opacity: 0;
-      transition: opacity 2.5s ease-in-out
+      transition: opacity 1.8s ease-in-out;
+      will-change: opacity;
+      backface-visibility: hidden
     }
     .rf.ac {
       opacity: 1
@@ -117,17 +120,19 @@
       height: 100%;
       object-fit: cover;
       filter: grayscale(100%) contrast(1.5) brightness(.35);
-      transform: scale(1.06)
+      transform: scale(1.08);
+      will-change: transform;
+      backface-visibility: hidden
     }
     .rf.ac img {
-      animation: kb 10s ease-out forwards
+      animation: kb 14s ease-out forwards
     }
     @keyframes kb {
       0% {
-        transform: scale(1.06)
+        transform: scale(1.08)
       }
       100% {
-        transform: scale(1.18) translate(-2%, -2%)
+        transform: scale(1.18) translate(-1.5%, -1.5%)
       }
     }
     .hov {
@@ -799,6 +804,51 @@
       html { scroll-behavior: auto; }
       *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
+
+    /* ============================================================
+       THEME TOGGLE — dark is default, light via moon/sun button
+       ============================================================ */
+    .tbtn {
+      width: 40px; height: 40px;
+      border: 1px solid var(--bdl); background: transparent; color: var(--fgd);
+      display: inline-flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all .3s;
+    }
+    .tbtn:hover { border-color: var(--ac); color: var(--ac); }
+
+    html[data-theme="light"] {
+      --bg: #f4efe8; --bgd: #eae3d9; --bc: #ffffff; --bch: #faf6ef;
+      --fg: #17150f; --fgd: #4d473d; --mt: #8b8276;
+      --sv: #443e35; --svd: #a89e8f; --bd: #e1dacf; --bdl: #d5cdc0;
+      --acd: #c73c00;
+    }
+    html[data-theme="light"] header { background: rgba(244, 239, 232, .82); border-color: rgba(0,0,0,.07); }
+    html[data-theme="light"] .hdr-cta { color: #fff !important; }
+    html[data-theme="light"] .hdr-cta:hover { background: var(--ac) !important; }
+    html[data-theme="light"] .gallery-img-wrap,
+    html[data-theme="light"] .acard .relative,
+    html[data-theme="light"] .gallery-img-wrap img { background: #e7e0d5; }
+    html[data-theme="light"] .grain { opacity: .05; }
+    html[data-theme="light"] #hero h1 .hl span { color: #f6f1e7; }
+    html[data-theme="light"] #hero h1 span.ts { color: transparent !important; -webkit-text-stroke-color: rgba(255,255,255,.55); }
+    html[data-theme="light"] #hero p { color: #dbd4c6; }
+    html[data-theme="light"] #hero .seo-tag { color: #cfc7b8; border-color: rgba(255,255,255,.25); background: rgba(0,0,0,.2); }
+
+    /* ============================================================
+       LIBRARY — the full archive of every piece
+       ============================================================ */
+    .lib-g { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; }
+    .libc { background: var(--bc); border: 1px solid var(--bd); overflow: hidden; cursor: zoom-in; transition: transform .5s cubic-bezier(.22,1,.36,1), border-color .4s; }
+    .libc:hover { transform: translateY(-5px); border-color: var(--acd); }
+    .libc .lw { aspect-ratio: 4/3; overflow: hidden; background: var(--bgd); position: relative; }
+    .libc .lw img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s cubic-bezier(.22,1,.36,1); }
+    .libc:hover .lw img { transform: scale(1.05); }
+    .libc .lb { padding: 1rem 1.1rem 1.2rem; }
+    .badge-st { position: absolute; top: .7rem; right: .7rem; padding: 3px 9px; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: .18em; font-weight: 700; z-index: 2; }
+    .st-av { background: var(--ac); color: #000; }
+    .st-bk { background: #1d4ed8; color: #fff; }
+    .st-so { background: #7f1d1d; color: #fff; }
+    .lib-sold-img { filter: grayscale(85%); opacity: .85; }
   </style>
 </head>
 <body class="bgt">
@@ -830,7 +880,7 @@
             <div><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase">Price</div><div class="fd text-4xl text-[var(--ac)]" id="bkPrice"></div></div>
             <div class="text-right"><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase">Size</div><div class="fh text-sm" id="bkSize"></div></div>
           </div>
-          <div class="bg-[var(--bg)] border border-[var(--bd)] p-3 mb-5"><p class="text-[var(--fgd)] text-xs leading-relaxed"><i class="fas fa-bolt text-[var(--ac)] mr-1"></i> Sends artist a <b class="text-[var(--fg)]">WhatsApp + Email</b> at the same time.</p></div>
+          <div class="bg-[var(--bg)] border border-[var(--bd)] p-3 mb-5"><p class="text-[var(--fgd)] text-xs leading-relaxed"><i class="fas fa-bolt text-[var(--ac)] mr-1"></i> Your booking goes <b class="text-[var(--fg)]">straight to Isaac</b> — no email needed. WhatsApp chat is optional.</p></div>
           <form onsubmit="prepareBk(event)">
             <div class="space-y-4">
               <div class="grid grid-cols-1 gap-4">
@@ -840,8 +890,7 @@
               <div><label class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase block mb-1">Message</label><textarea class="fi resize-none" id="bkM" rows="2" placeholder="Any questions..."></textarea></div>
             </div>
             <div class="booking-btns">
-              <button type="submit" class="btn-wa"><i class="fab fa-whatsapp"></i> Send via WhatsApp</button>
-              <button type="button" class="btn-em" onclick="sendBkEmail()"><i class="fas fa-envelope"></i> Send via Email</button>
+              <button type="submit" class="btn-em"><i class="fas fa-check"></i> Confirm Booking</button>
               <button type="button" onclick="closeBk()" class="btn-close-bk">Cancel</button>
             </div>
           </form>
@@ -849,15 +898,14 @@
       </div>
       <div id="bkSucV" class="hidden p-10 text-center">
         <div class="suc-anim"><svg class="w-20 h-20 mx-auto mb-6" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="none" stroke="var(--ac)" stroke-width="3" class="suc-cir"/><polyline points="24,42 36,54 56,30" fill="none" stroke="var(--ac)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="suc-chk"/></svg></div>
-        <div class="fd text-4xl tracking-wider mb-2">REQUEST READY</div>
-        <div class="fm text-[11px] text-[var(--ac)] tracking-[.2em] uppercase mb-6">Choose how to send</div>
+        <div class="fd text-4xl tracking-wider mb-2" id="bkSucT">BOOKED!</div>
+        <div class="fm text-[11px] text-[var(--ac)] tracking-[.2em] uppercase mb-6" id="bkSucM">Isaac has been notified</div>
         <div class="bg-[var(--bg)] border border-[var(--bd)] p-5 text-left mb-6">
           <div class="fm text-[10px] text-[var(--mt)] tracking-[.2em] uppercase mb-3">Your booking details:</div>
           <div class="space-y-2 text-sm text-[var(--fgd)]" id="bkSummary"></div>
         </div>
         <div class="booking-btns justify-center">
-          <button class="btn-wa" onclick="sendBkWaFinal()"><i class="fab fa-whatsapp"></i> WhatsApp</button>
-          <button class="btn-em" onclick="sendBkEmailFinal()"><i class="fas fa-envelope"></i> Email</button>
+          <button class="btn-wa" onclick="sendBkWaFinal()"><i class="fab fa-whatsapp"></i> Chat on WhatsApp (optional)</button>
           <button onclick="closeBk()" class="btn-close-bk">Done</button>
         </div>
       </div>
@@ -870,20 +918,22 @@
       <a href="#" class="flex items-center gap-3"><div class="w-9 h-9 bg-[var(--ac)] flex items-center justify-center"><i class="fas fa-spray-can text-black text-sm"></i></div><div><div class="fd text-2xl leading-none tracking-wider" id="logoN">IsaaCart</div><div class="fm text-[10px] text-[var(--mt)] tracking-[.3em] mt-0.5">ISAAC STENCIL ART STUDIO</div></div></a>
       <nav class="hidden lg:flex items-center gap-10">
         <a href="#gallery" class="nl">Gallery</a>
+        <a href="#library" class="nl">Library</a>
         <a href="#process" class="nl">Process</a>
         <a href="#about" class="nl">About</a>
         <a href="#contact" class="nl">Contact</a>
       </nav>
       <div class="flex items-center gap-3">
+        <button class="tbtn" id="themeBtn" type="button" aria-label="Switch dark / light theme" title="Dark / light"><i class="fas fa-sun" id="themeIco"></i></button>
         <div class="hidden md:flex items-center gap-2 fm text-[10px] text-[var(--mt)]"><span class="rdd w-2 h-2 bg-[var(--ac)] rounded-full inline-block"></span><span class="tracking-[.15em]">ACCEPTING COMMISSIONS</span></div>
-        <a href="#gallery" class="hidden sm:inline-block fh text-xs tracking-[.2em] uppercase text-black bg-[var(--sv)] px-5 py-2.5 hover:bg-white transition-colors">View Art</a>
+        <a href="#gallery" class="hdr-cta hidden sm:inline-block fh text-xs tracking-[.2em] uppercase text-black bg-[var(--sv)] px-5 py-2.5 hover:bg-white transition-colors">View Art</a>
       </div>
     </div>
   </header>
 
   <!-- HERO with isaacbridgetart keyword -->
-  <section class="relative h-screen min-h-[700px] w-full overflow-hidden">
-    <div class="absolute inset-0"><div class="rf ac"><img src="https://cdn.jsdelivr.net/gh/Grimzeero78/images_cdn/art/Car Drive.jpg" class="hero-img" alt="Isaac Bridget stencil art"></div><div class="rf"><img src="https://cdn.jsdelivr.net/gh/Grimzeero78/images_cdn/art/F40.jpg" class="hero-img" alt="Isaac Bridget stencil art"></div><div class="rf"><img src="https://cdn.jsdelivr.net/gh/Grimzeero78/images_cdn/art/nature.jpg" class="hero-img" alt="Isaac Bridget stencil art"></div></div>
+  <section id="hero" class="relative h-screen min-h-[700px] w-full overflow-hidden">
+    <div class="absolute inset-0"><div class="rf ac"><img src="/img/hero/hero-1.jpg" class="hero-img" alt="Isaac Bridget stencil art studio" fetchpriority="high"></div><div class="rf"><img src="/img/hero/hero-2.jpg" class="hero-img" alt=""></div><div class="rf"><img src="/img/hero/hero-3.jpg" class="hero-img" alt=""></div><div class="rf"><img src="/img/hero/hero-4.jpg" class="hero-img" alt=""></div><div class="rf"><img src="/img/hero/hero-5.jpg" class="hero-img" alt=""></div><div class="rf"><img src="/img/hero/hero-6.jpg" class="hero-img" alt=""></div><div class="rf"><img src="/img/hero/hero-7.jpg" class="hero-img" alt=""></div></div>
     <div class="hov"></div><div class="sl"></div>
     <div class="relative z-10 h-full max-w-[1600px] mx-auto px-6 lg:px-10 flex flex-col justify-end pb-24 pt-32">
       <div class="rv iv max-w-5xl mx-auto text-center hero-center">
@@ -897,7 +947,7 @@
       </div>
       <div class="mt-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
         <a href="#gallery" class="inline-flex items-center gap-3 fh text-sm tracking-[.15em] uppercase bg-[var(--ac)] text-black px-7 py-3.5 hover:bg-[var(--acb)] transition-colors pbtn w-fit mx-auto lg:mx-0"><span>Explore Available Works</span><i class="fas fa-arrow-down"></i></a>
-        <div class="flex items-center gap-6 max-w-sm w-full lg:w-auto"><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em]"><span id="chN">01</span> / 03</div><div class="flex-1 pbar"><div class="pbf" id="rProg"></div></div><div class="fm text-[10px] text-[var(--ac)] tracking-[.2em]">REEL</div></div>
+        <div class="flex items-center gap-6 max-w-sm w-full lg:w-auto"><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em]"><span id="chN">01</span> / 07</div><div class="flex-1 pbar"><div class="pbf" id="rProg"></div></div><div class="fm text-[10px] text-[var(--ac)] tracking-[.2em]">REEL</div></div>
       </div>
     </div>
     <div class="absolute bottom-0 left-0 right-0 border-t border-white/5 bg-black/60 backdrop-blur-sm py-3 overflow-hidden z-10"><div class="mqt fd text-sm tracking-[.25em] text-[var(--svd)]"><span class="px-8">HAND CUT STENCILS</span><span class="text-[var(--ac)]">/</span><span class="px-8">MULTI LAYER PROCESS</span><span class="text-[var(--ac)]">/</span><span class="px-8">ORIGINAL WORKS ONLY</span><span class="text-[var(--ac)]">/</span><span class="px-8">NO PRINTS NO REPRODUCTIONS</span><span class="text-[var(--ac)]">/</span><span class="px-8">EACH PIECE IS ONE OF ONE</span><span class="text-[var(--ac)]">/</span><span class="px-8">HAND CUT STENCILS</span><span class="text-[var(--ac)]">/</span><span class="px-8">MULTI LAYER PROCESS</span><span class="text-[var(--ac)]">/</span><span class="px-8">ORIGINAL WORKS ONLY</span><span class="text-[var(--ac)]">/</span><span class="px-8">NO PRINTS NO REPRODUCTIONS</span><span class="text-[var(--ac)]">/</span><span class="px-8">EACH PIECE IS ONE OF ONE</span><span class="text-[var(--ac)]">/</span></div></div>
@@ -913,14 +963,21 @@
 
   <!-- GALLERY -->
   <section class="relative py-24 lg:py-32" id="gallery"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
-      <div class="rv grid lg:grid-cols-12 gap-8 mb-14"><div class="lg:col-span-6"><div class="sm mb-6"><span>01 Available Works</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">Original stencil<br>art for <span class="text-[var(--ac)]">collectors.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed mb-5">Every piece is one of one. Select a piece to book artist gets notified via WhatsApp and email instantly.</p><div class="flex flex-wrap gap-2" id="catF"><span class="cp acl" data-c="all">All</span><span class="cp" data-c="portrait">Portrait</span><span class="cp" data-c="landscape">Landscape</span></div></div></div>
+      <div class="rv grid lg:grid-cols-12 gap-8 mb-14"><div class="lg:col-span-6"><div class="sm mb-6"><span>01 Available Works</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">Original stencil<br>art for <span class="text-[var(--ac)]">collectors.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed mb-5">Every piece is one of one. Pick a piece and book it in seconds — Isaac is notified instantly. WhatsApp chat is optional.</p><div class="flex flex-wrap gap-2" id="catF"><span class="cp acl" data-c="all">All</span><span class="cp" data-c="portrait">Portrait</span><span class="cp" data-c="landscape">Landscape</span></div></div></div>
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="artG"></div>
-      <div class="text-center mt-12 hidden" id="empG"><div class="fd text-4xl text-[var(--mt)] mb-3">No pieces here</div></div>
+      <div class="text-center mt-12 hidden" id="empG"><div class="fd text-4xl text-[var(--mt)] mb-3">Nothing available right now — see the Library below</div></div>
+    </div></section>
+
+  <!-- LIBRARY -->
+  <section class="relative py-24 lg:py-32 border-t border-[var(--bd)] bg-[var(--bgd)]" id="library"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
+      <div class="rv grid lg:grid-cols-12 gap-8 mb-14"><div class="lg:col-span-6"><div class="sm mb-6"><span>02 The Library</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">Every piece<br>I have <span class="text-[var(--ac)]">ever cut.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed">The full archive — available, booked and sold. Every hand cut stencil that left the studio lives here.</p></div></div>
+      <div class="lib-g rv" id="libG"></div>
+      <div class="text-center mt-12 hidden" id="empL"><div class="fd text-4xl text-[var(--mt)] mb-3">The library is empty</div></div>
     </div></section>
 
   <!-- PROCESS -->
   <section class="relative py-24 lg:py-32 border-t border-[var(--bd)] bg-[var(--bgd)]" id="process"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
-      <div class="rv grid lg:grid-cols-12 gap-8 mb-16"><div class="lg:col-span-6"><div class="sm mb-6"><span>02 The Process</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">From digital<br>to <span class="ts">physical.</span><br><span class="text-[var(--ac)]">Layer by layer.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed">No shortcuts blades, patience, and passion.</p></div></div>
+      <div class="rv grid lg:grid-cols-12 gap-8 mb-16"><div class="lg:col-span-6"><div class="sm mb-6"><span>03 The Process</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">From digital<br>to <span class="ts">physical.</span><br><span class="text-[var(--ac)]">Layer by layer.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed">No shortcuts blades, patience, and passion.</p></div></div>
       <div class="rst grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <div class="ic p-6"><div><h3 class="fd text-3xl mb-3">PREPARE</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">Plywood is sanded smooth, then painted white and left to dry.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">SAND & PRIME</div></div></div></div>
         <div class="ic p-6"><div><h3 class="fd text-3xl mb-3">MASK</h3><p class="text-[var(--fgd)] text-sm leading-relaxed">The board is masked with tape, ready for the stencil design.</p><div class="mt-4 pt-4 border-t border-[var(--bdl)]"><div class="fm text-[10px] text-[var(--ac)] tracking-[.15em]">MASKING</div></div></div></div>
@@ -931,11 +988,11 @@
   <!-- ABOUT -->
   <section class="relative py-24 lg:py-32 border-t border-[var(--bd)]" id="about"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
       <div class="rv grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-        <div class="lg:col-span-5"><div class="relative"><div class="nc"><img src="https://cdn.jsdelivr.net/gh/Grimzeero78/images_cdn/art/isaac.jpg" class="w-full aspect-[4/5] object-cover artist-img" alt="Isaac Njuguna Bridget"></div><div class="absolute -bottom-4 -right-4 bg-[var(--ac)] text-black p-5 fd text-center"><div class="text-4xl leading-none" id="aboutYears">22</div><div class="text-[10px] fm tracking-[.2em] mt-1">YEARS YOUNG</div></div></div></div>
+        <div class="lg:col-span-5"><div class="relative"><div class="nc"><img src="https://cdn.jsdelivr.net/gh/Grimzeero78/images_cdn/art/isaac.jpg" class="w-full aspect-[4/5] object-cover artist-img" alt="Isaac Njuguna Bridget"></div></div></div>
         <div class="lg:col-span-6 lg:col-start-7">
-          <div class="sm mb-6"><span>03 The Artist</span></div>
+          <div class="sm mb-6"><span>04 The Artist</span></div>
           <h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9] mb-6">get to know<br><span class="text-[var(--ac)]">the artist</span></h2>
-          <p class="text-[var(--fgd)] text-base leading-relaxed mb-5">I'm Isaac Bridget Njuguna 22 years old. Born and raised in Kenya. Student. Dev. Artist.Footballer.Problem solver.</p>
+          <p class="text-[var(--fgd)] text-base leading-relaxed mb-5">I'm Isaac Bridget Njuguna. Born and raised in Kenya. Student. Dev. Artist. Footballer. Problem solver.</p>
           <p class="text-[var(--fgd)] text-base leading-relaxed mb-5">I started cutting stencils when I was 19. Honestly? I was broke and bored. Grabbed some plywood, a scalpel, and a can of spray paint.The rest is history.</p>
           <p class="text-[var(--fgd)] text-base leading-relaxed mb-5">My faith is what keeps me grounded.The Spirit of God gives me the patience to sit for hours, cutting by hand, without rushing. It's like a meditation.</p>
           <p class="text-[var(--fgd)] text-base leading-relaxed mb-8">I don't do prints.Every piece I make is a one-off.When you buy my work, you're not just getting a painting. You're getting a piece of art that cant be replicated.</p>
@@ -949,7 +1006,7 @@
 
   <!-- CONTACT -->
   <section class="relative py-24 lg:py-32 border-t border-[var(--bd)] bg-[var(--bgd)]" id="contact"><div class="max-w-[1600px] mx-auto px-6 lg:px-10">
-      <div class="rv grid lg:grid-cols-12 gap-8 mb-14"><div class="lg:col-span-6"><div class="sm mb-6"><span>04 Get In Touch</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">Commission a<br>piece. <span class="ts">Ask anything.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed">Open for commissions. WhatsApp for fastest response.</p></div></div>
+      <div class="rv grid lg:grid-cols-12 gap-8 mb-14"><div class="lg:col-span-6"><div class="sm mb-6"><span>05 Get In Touch</span></div><h2 class="fd text-5xl md:text-6xl lg:text-7xl leading-[.9]">Commission a<br>piece. <span class="ts">Ask anything.</span></h2></div><div class="lg:col-span-5 lg:col-start-8 flex flex-col justify-end"><p class="text-[var(--fgd)] text-base leading-relaxed">Open for commissions. WhatsApp for fastest response.</p></div></div>
       <div class="rv grid lg:grid-cols-12 gap-8">
         <div class="lg:col-span-7"><div class="bf p-8 lg:p-10">
             <form onsubmit="prepareContact(event)">
@@ -1078,14 +1135,14 @@
       return 'KSH ' + price.toLocaleString('en-US');
     }
 
-    function isArtworkAvailable(value) {
-      if (typeof value === 'boolean') return value;
-      if (typeof value === 'string') {
-        var v = value.trim().toLowerCase();
-        if (v === 'true' || v === 'available' || v === 'yes' || v === '1') return true;
-        if (v === 'false' || v === 'sold' || v === 'no' || v === '0') return false;
-      }
-      return Boolean(value);
+    // Status of an artwork: 'available' | 'booked' | 'sold'
+    // Server sends st (string) and av (1 available, 2 booked, 0 sold).
+    function artworkStatus(a) {
+      var v = (a.st !== undefined && a.st !== null) ? a.st : a.av;
+      if (v === 'booked' || v === 2 || v === '2') return 'booked';
+      if (v === 'sold' || v === 0 || v === '0' || v === false || v === 'false' || v === 'no') return 'sold';
+      if (v === 'available' || v === 1 || v === '1' || v === true || v === 'true' || v === 'yes') return 'available';
+      return Boolean(v) ? 'available' : 'sold';
     }
 
     function toast(t, m) {
@@ -1097,7 +1154,7 @@
     }
 
     function getStats() {
-      var sold = art.filter(function(a) { return !a.av }).length;
+      var sold = art.filter(function(a) { return artworkStatus(a) === 'sold' }).length;
       var maxLayers = 3;
       art.forEach(function(a) {
         if (a.ly) {
@@ -1116,7 +1173,6 @@
       document.getElementById('statLayers').textContent = s.maxLayers;
       document.getElementById('statCollections').textContent = s.collections;
       document.getElementById('aboutSold').textContent = s.sold;
-      document.getElementById('aboutYears').textContent = '22';
       document.getElementById('aboutLayers').textContent = s.maxLayers;
     }
 
@@ -1137,7 +1193,9 @@
     function renGal() {
       var g = document.getElementById('artG'),
         e = document.getElementById('empG');
-      var f = curFil === 'all' ? art : art.filter(function(a) { return a.cat === curFil });
+      var pool = curFil === 'all' ? art : art.filter(function(a) { return a.cat === curFil });
+      // Gallery shows pieces still open for booking; the Library holds everything.
+      var f = pool.filter(function(a) { return artworkStatus(a) !== 'sold' });
       if (!f.length) { g.innerHTML = '';
         e.classList.remove('hidden'); return }
       e.classList.add('hidden');
@@ -1147,19 +1205,13 @@
         var hasImg = a.img && a.img.length > 10;
         var imgSrc = hasImg ? a.img : noImgSvg;
         var ps = formatPrice(a.price);
-        var isAvail = isArtworkAvailable(a.av);
+        var st = artworkStatus(a);
         html += '<article class="acard ic group" style="opacity:0;transform:translateY(30px)">';
         html += '<div class="gallery-img-wrap">';
         html += '<img src="' + imgSrc + '" class="aimg w-full h-full object-cover" alt="' + a.title + '" loading="lazy">';
         html +=
           '<div class="zoom-icon"><span><i class="fas fa-expand"></i> Zoom</span></div>';
-        if (isAvail) {
-          html +=
-            '<div class="absolute top-4 right-4 px-3 py-1 bg-[var(--ac)] text-black fm text-[10px] tracking-[.2em] pointer-events-none z-10">AVAILABLE</div>';
-        } else {
-          html +=
-            '<div class="absolute top-4 right-4 px-3 py-1 bg-red-700/90 text-white fm text-[10px] tracking-[.2em] pointer-events-none z-10">SOLD</div>';
-        }
+        html += statusBadge(st);
         if (!hasImg) {
           html +=
             '<div class="absolute bottom-4 left-4 px-2 py-1 bg-black/70 text-yellow-500 fm text-[9px] tracking-wider pointer-events-none z-10"><i class="fas fa-exclamation-circle mr-1"></i>NO IMAGE</div>';
@@ -1172,14 +1224,7 @@
         html += '<p class="text-[var(--fgd)] text-xs leading-relaxed mb-4 lc2">' + (a.desc || '') + '</p>';
         html += '<div class="flex items-center justify-between pt-3 border-t border-[var(--bdl)]">';
         html += '<div class="fd text-3xl text-[var(--ac)]">' + ps + '</div>';
-        if (isAvail) {
-          html +=
-            '<button class="bbk fh text-[11px] tracking-[.12em] uppercase px-4 py-2.5 border border-[var(--ac)] text-[var(--ac)] hover:bg-[var(--ac)] hover:text-black transition-all" data-id="' + a
-            .id + '">Book This Piece</button>';
-        } else {
-          html +=
-            '<span class="fh text-[11px] tracking-[.12em] uppercase px-4 py-2.5 border border-[var(--mt)] text-[var(--mt)]">Sold</span>';
-        }
+        html += cardAction(a, st);
         html += '</div></div></article>';
       }
       g.innerHTML = html;
@@ -1211,6 +1256,59 @@
       }
     }
 
+    function statusBadge(st) {
+      if (st === 'booked') return '<div class="absolute top-4 right-4 px-3 py-1 bg-[#1d4ed8] text-white fm text-[10px] tracking-[.2em] pointer-events-none z-10">BOOKED</div>';
+      if (st === 'sold') return '<div class="absolute top-4 right-4 px-3 py-1 bg-red-700/90 text-white fm text-[10px] tracking-[.2em] pointer-events-none z-10">SOLD</div>';
+      return '<div class="absolute top-4 right-4 px-3 py-1 bg-[var(--ac)] text-black fm text-[10px] tracking-[.2em] pointer-events-none z-10">AVAILABLE</div>';
+    }
+
+    function cardAction(a, st) {
+      if (st === 'available') {
+        return '<button class="bbk fh text-[11px] tracking-[.12em] uppercase px-4 py-2.5 border border-[var(--ac)] text-[var(--ac)] hover:bg-[var(--ac)] hover:text-black transition-all" data-id="' + a.id + '">Book This Piece</button>';
+      }
+      if (st === 'booked') {
+        return '<span class="fh text-[11px] tracking-[.12em] uppercase px-4 py-2.5 border border-[#1d4ed8] text-[#7da4ff]">Booked — Isaac will confirm</span>';
+      }
+      return '<span class="fh text-[11px] tracking-[.12em] uppercase px-4 py-2.5 border border-[var(--mt)] text-[var(--mt)]">Sold</span>';
+    }
+
+    // LIBRARY — every piece ever made: available, booked and sold.
+    function renLib() {
+      var g = document.getElementById('libG'),
+        e = document.getElementById('empL');
+      if (!g) return;
+      if (!art.length) { g.innerHTML = '';
+        e.classList.remove('hidden'); return }
+      e.classList.add('hidden');
+      var html = '';
+      for (var i = 0; i < art.length; i++) {
+        var a = art[i];
+        var st = artworkStatus(a);
+        var hasImg = a.img && a.img.length > 10;
+        var imgSrc = hasImg ? a.img : noImgSvg;
+        var cls = st === 'available' ? 'st-av' : (st === 'booked' ? 'st-bk' : 'st-so');
+        html += '<article class="libc">';
+        html += '<div class="lw">';
+        html += '<img src="' + imgSrc + '" class="' + (st === 'sold' ? 'lib-sold-img' : '') + '" alt="' + a.title + '" loading="lazy">';
+        html += '<span class="badge-st ' + cls + '">' + st.toUpperCase() + '</span>';
+        html += '</div>';
+        html += '<div class="lb">';
+        html += '<div class="flex items-start justify-between mb-1"><h3 class="fd text-2xl leading-none">' + a.title + '</h3>' + (a.yr ? '<span class="fm text-[9px] text-[var(--mt)] mt-1.5">' + a.yr + '</span>' : '') + '</div>';
+        html += '<p class="text-[var(--fgd)] text-xs leading-relaxed lc2 mb-2">' + (a.desc || '') + '</p>';
+        html += '<div class="flex items-center justify-between pt-2 border-t border-[var(--bdl)]">';
+        html += '<div class="fd text-xl ' + (st === 'sold' ? 'text-[var(--mt)]' : 'text-[var(--ac)]') + '">' + formatPrice(a.price) + '</div>';
+        html += '<span class="fm text-[9px] text-[var(--mt)] tracking-[.15em] uppercase">' + (a.cat || 'art') + '</span>';
+        html += '</div></div></article>';
+      }
+      g.innerHTML = html;
+      g.querySelectorAll('.libc').forEach(function(card) {
+        card.addEventListener('click', function() {
+          var img = card.querySelector('img');
+          if (img) openZoom(img.src);
+        });
+      });
+    }
+
     document.getElementById('catF').addEventListener('click', function(e) {
       var p = e.target.closest('.cp');
       if (!p) return;
@@ -1224,7 +1322,7 @@
 
     function openBk(id) {
       var a = art.find(function(x) { return x.id === id });
-      if (!a || !isArtworkAvailable(a.av)) return;
+      if (!a || artworkStatus(a) !== 'available') return;
       curBk = a;
       bkData = null;
       var hasImg = a.img && a.img.length > 10;
@@ -1252,35 +1350,20 @@
       bkData = null;
     }
 
-    function prepareBk(ev) {
+    async function prepareBk(ev) {
       ev.preventDefault();
       if (!curBk) return;
       var a = curBk,
         nm = document.getElementById('bkN').value.trim(),
         ph = document.getElementById('bkP').value.trim(),
         mg = document.getElementById('bkM').value.trim();
+      if (!nm || !ph) { toast('Error', 'Please fill in your name and phone'); return }
       var ps = formatPrice(a.price);
       var msg = 'NEW BOOKING REQUEST\n========================\n\nARTWORK: ' + a.title + '\nPRICE: ' + ps + '\nSIZE: ' + (a
         .sz || '') + '\nMEDIUM: ' + (a.md || '') + '\nLAYERS: ' + (a.ly || '') + '\n\nBUYER INFO\nName: ' + nm + '\nPhone: ' +
         ph + (mg ? '\nMessage: ' + mg : '') + '\n\nSent: ' + new Date().toLocaleString();
-      bkData = { msg: msg, wa: '254143374333', em: 'injuguna308@gmail.com', title: a.title };
-      // Persist the booking in the database (fire-and-forget — the
-      // WhatsApp / email handoff below works even if this fails)
-      fetch(API_BOOK, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: nm,
-          phone: ph,
-          message: mg,
-          artworkId: String(a.id),
-          artworkTitle: a.title || 'Untitled',
-          artworkPrice: ps,
-          artworkSize: a.sz || '',
-          artworkMedium: a.md || '',
-          artworkLayers: a.ly || ''
-        })
-      }).catch(function() { });
+      bkData = { msg: msg, wa: '254143374333', title: a.title };
+
       var sum = document.getElementById('bkSummary');
       sum.innerHTML = '';
       [['Artwork', a.title || 'Untitled'], ['Price', ps], ['Buyer', nm + ' (' + ph + ')']].forEach(function(row) {
@@ -1296,32 +1379,52 @@
       });
       document.getElementById('bkFormV').classList.add('hidden');
       document.getElementById('bkSucV').classList.remove('hidden');
+
+      var tEl = document.getElementById('bkSucT'),
+        mEl = document.getElementById('bkSucM');
+      try {
+        var r = await fetch(API_BOOK, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: nm,
+            phone: ph,
+            message: mg,
+            artworkId: String(a.id),
+            artworkTitle: a.title || 'Untitled',
+            artworkPrice: ps,
+            artworkSize: a.sz || '',
+            artworkMedium: a.md || '',
+            artworkLayers: a.ly || ''
+          })
+        });
+        var j = null;
+        try { j = await r.json(); } catch (e) { }
+        if (r.ok && j && j.ok) {
+          tEl.textContent = 'BOOKED!';
+          mEl.textContent = 'Isaac has been notified \u2014 he will confirm your booking shortly';
+          // The piece is now reserved \u2014 update the page without reloading
+          a.st = 'booked';
+          a.av = 2;
+          renGal();
+          renLib();
+          updStats();
+        } else {
+          tEl.textContent = 'COULD NOT BOOK';
+          mEl.textContent = (j && j.error) ? j.error : 'Server error \u2014 tap WhatsApp below instead';
+          loadArtworks();
+        }
+      } catch (e) {
+        tEl.textContent = 'CONNECTION ISSUE';
+        mEl.textContent = 'Booking may not have reached Isaac \u2014 tap WhatsApp below to be safe';
+        loadArtworks();
+      }
     }
 
     function sendBkWaFinal() {
       if (!bkData) return;
       window.open('https://wa.me/' + bkData.wa + '?text=' + encodeURIComponent(bkData.msg), '_blank');
-      toast('WhatsApp Sent', 'Opened WhatsApp with your booking request');
-    }
-
-    function sendBkEmailFinal() {
-      if (!bkData) return;
-      var subject = 'BOOKING: ' + bkData.title;
-      var body = bkData.msg;
-      var mailtoLink = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(bkData.em) + '&su=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-      window.open(mailtoLink, '_blank');
-      toast('Email Sent', 'Opened Gmail with your booking request');
-    }
-
-    function sendBkEmail() {
-      if (!bkData) {
-        var ev = new Event('submit', { cancelable: true });
-        var form = document.querySelector('#bkFormV form');
-        form.dispatchEvent(ev);
-        setTimeout(function() { sendBkEmailFinal(); }, 100);
-        return;
-      }
-      sendBkEmailFinal();
+      toast('WhatsApp Opened', 'Your booking request is prefilled \u2014 just hit send');
     }
 
     // GMAIL FUNCTION
@@ -1404,29 +1507,58 @@
       toast('Gmail Opened', 'Your message is prefilled — just hit send');
     }
 
+    // ============================================================
+    // HERO REEL — smooth crossfade. All images are preloaded before
+    // the rotation starts, so slides never pop in or stutter.
+    // ============================================================
     var rSlides = document.querySelectorAll('.rf'),
       rIdx = 0,
       rTimer = null;
+    var HERO_MS = 6000;
 
-    function startReel() {
-      rTimer = setInterval(function() {
-        rSlides[rIdx].classList.remove('ac');
-        rIdx = (rIdx + 1) % rSlides.length;
-        rSlides[rIdx].classList.add('ac');
-        document.getElementById('chN').textContent = String(rIdx + 1).padStart(2, '0');
-        updProg()
-      }, 5000)
+    function restartProg() {
+      var p = document.getElementById('rProg');
+      if (!p) return;
+      p.style.transition = 'none';
+      p.style.width = '0%';
+      void p.offsetWidth; /* force reflow so the reset is instant */
+      p.style.transition = 'width ' + HERO_MS + 'ms linear';
+      p.style.width = '100%';
     }
 
-    function updProg() {
-      var p = document.getElementById('rProg'),
-        w = 0;
-      var iv = setInterval(function() { w += 2;
-        p.style.width = w + '%'; if (w >= 100) clearInterval(iv) }, 100)
+    function showSlide(n) {
+      rSlides.forEach(function(s, i) { s.classList.toggle('ac', i === n) });
+      document.getElementById('chN').textContent = String(n + 1).padStart(2, '0');
+      restartProg();
+    }
+
+    function startReel() {
+      var imgs = Array.prototype.slice.call(document.querySelectorAll('.rf img'));
+      var pending = imgs.length;
+      var started = false;
+
+      function kick() {
+        if (started || !rSlides.length) return;
+        started = true;
+        restartProg();
+        rTimer = setInterval(function() {
+          rIdx = (rIdx + 1) % rSlides.length;
+          showSlide(rIdx);
+        }, HERO_MS);
+      }
+
+      imgs.forEach(function(img) {
+        if (img.complete && img.naturalWidth > 0) { pending--; return; }
+        img.addEventListener('load', function() { pending--; if (pending <= 0) kick(); });
+        img.addEventListener('error', function() { pending--; if (pending <= 0) kick(); });
+      });
+      if (pending <= 0) kick();
+      // Safety: never wait more than 3s even on a slow connection
+      setTimeout(kick, 3000);
     }
 
     function ld() {
-      art = JSON.parse(JSON.stringify(defArt));
+      art = JSON.parse(JSON.stringify(defArt)).filter(function(a) { return a.title; });
       document.getElementById('dWa').textContent = '+254 143 374333';
       document.getElementById('dPh').textContent = '+254 143 374333';
       document.getElementById('dEm').textContent = 'injuguna308@gmail.com';
@@ -1434,9 +1566,9 @@
       document.getElementById('logoN').textContent = 'IsaaCart';
       document.getElementById('ftN').textContent = 'IsaaCart';
       renGal();
+      renLib();
       updStats();
       startReel();
-      updProg();
       loadArtworks();
     }
 
@@ -1447,6 +1579,7 @@
         if (j && j.ok && Array.isArray(j.artworks) && j.artworks.length) {
           art = j.artworks;
           renGal();
+          renLib();
           updStats();
         }
       }).catch(function() { });
@@ -1456,6 +1589,31 @@
       entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('iv') })
     }, { threshold: .1 });
     document.querySelectorAll('.rv,.rst').forEach(function(el) { obs.observe(el) });
+
+    // ============================================================
+    // THEME — dark (default) and light, remembered on this device
+    // ============================================================
+    var THEME_KEY = 'isaacart-theme';
+
+    function applyTheme(t) {
+      document.documentElement.setAttribute('data-theme', t);
+      var ico = document.getElementById('themeIco');
+      if (ico) ico.className = (t === 'light') ? 'fas fa-moon' : 'fas fa-sun';
+    }
+
+    function toggleTheme() {
+      var next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      try { localStorage.setItem(THEME_KEY, next); } catch (e) { }
+      applyTheme(next);
+    }
+
+    (function () {
+      var t = 'dark';
+      try { t = localStorage.getItem(THEME_KEY) || 'dark'; } catch (e) { }
+      applyTheme(t);
+      var b = document.getElementById('themeBtn');
+      if (b) b.addEventListener('click', toggleTheme);
+    })();
 
     document.addEventListener('DOMContentLoaded', ld);
   </script>
