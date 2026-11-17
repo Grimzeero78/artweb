@@ -77,7 +77,10 @@ async function hmacHex(data, secret) {
 }
 
 function sessionCookie(exp, sig) {
-  return `adm=${exp}.${sig}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=${SESSION_HOURS * 3600}`;
+  // No Max-Age → this is a browser-session cookie: it disappears when the
+  // browser closes, so the admin is always asked for the password again on
+  // the next visit. `exp` is still a hard server-side cap (12 hours).
+  return `adm=${exp}.${sig}; HttpOnly; Secure; SameSite=Strict; Path=/`;
 }
 
 const CLEAR_COOKIE = 'adm=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0';

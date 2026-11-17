@@ -229,7 +229,10 @@
     loadArtworks(); loadMessages();
   }
 
-  api('/api/admin/session').then(function(j){ if (j.authed) enter(); }).catch(function(){});
+  // SECURITY FIX: never auto-login. Every visit to /admin asks for the
+  // password again. We also clear any old login cookie so a saved session
+  // can never be reused.
+  api('/api/admin/logout', { method:'POST' }).catch(function(){});
 
   /* ---------- tabs ---------- */
   document.querySelectorAll('.tab[data-tab]').forEach(function(t) {
