@@ -138,7 +138,7 @@
     .hov {
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, rgba(10, 10, 10, .93) 0%, rgba(10, 10, 10, .4) 30%, rgba(10, 10, 10, .5) 60%, rgba(10, 10, 10, .98) 100%), linear-gradient(90deg, rgba(10, 10, 10, .8) 0%, rgba(10, 10, 10, .15) 50%, rgba(10, 10, 10, .5) 100%), radial-gradient(ellipse at 30% 55%, rgba(255, 77, 0, .15) 0%, transparent 55%)
+      background: linear-gradient(180deg, rgba(10, 10, 10, .9) 0%, rgba(10, 10, 10, .35) 30%, rgba(10, 10, 10, .45) 60%, rgba(10, 10, 10, .97) 100%), linear-gradient(90deg, rgba(10, 10, 10, .12) 0%, rgba(10, 10, 10, .18) 40%, rgba(10, 10, 10, .84) 100%), radial-gradient(ellipse at 74% 62%, rgba(255, 77, 0, .15) 0%, transparent 55%)
     }
     .sl {
       position: absolute;
@@ -736,14 +736,14 @@
         display: none;
       }
     }
-    /* center hero text on mobile and desktop */
+    /* hero text pinned right — photos stay visible on the left */
     .hero-center {
-      text-align: center;
-      align-items: center;
-      justify-content: center;
+      text-align: right;
+      margin-left: auto;
+      margin-right: 0;
     }
     .hero-center .sm {
-      justify-content: center;
+      justify-content: flex-end;
     }
     .hero-center .sm::before {
       display: none;
@@ -764,7 +764,7 @@
     }
     .hero-center p {
       margin-left: auto;
-      margin-right: auto;
+      margin-right: 0;
     }
     /* isaacbridgetart keyword tag — visible for SEO */
     .seo-tag {
@@ -936,17 +936,17 @@
     <div class="absolute inset-0"><div class="rf ac"><img src="/img/hero/hero-1.jpg" class="hero-img" alt="Isaac Bridget stencil art studio" fetchpriority="high"></div><div class="rf"><img src="/img/hero/hero-2.jpg" class="hero-img" alt=""></div><div class="rf"><img src="/img/hero/hero-3.jpg" class="hero-img" alt=""></div><div class="rf"><img src="/img/hero/hero-4.jpg" class="hero-img" alt=""></div><div class="rf"><img src="/img/hero/hero-5.jpg" class="hero-img" alt=""></div><div class="rf"><img src="/img/hero/hero-6.jpg" class="hero-img" alt=""></div><div class="rf"><img src="/img/hero/hero-7.jpg" class="hero-img" alt=""></div></div>
     <div class="hov"></div><div class="sl"></div>
     <div class="relative z-10 h-full max-w-[1600px] mx-auto px-6 lg:px-10 flex flex-col justify-end pb-24 pt-32">
-      <div class="rv iv max-w-5xl mx-auto text-center hero-center">
+      <div class="rv iv max-w-5xl ml-auto text-right hero-center">
         <!-- isaacbridgetart keyword — visible tag in hero -->
-        <div class="flex justify-center mb-4">
+        <div class="flex justify-end mb-4">
           <span class="seo-tag">isaacbridgetart</span>
         </div>
-        <div class="sm mb-6 justify-center"><span>Isaac Stencil Art Studio</span></div>
+        <div class="sm mb-6 justify-end"><span>Isaac Stencil Art Studio</span></div>
         <h1 class="fd text-[14vw] md:text-[10vw] lg:text-[8.5vw] leading-[.85] mb-8"><span class="hl"><span>HAND CUT</span></span><span class="hl"><span class="ts">STENCILS.</span></span><span class="hl"><span>LAYER BY <span class="text-[var(--ac)]">LAYER.</span></span></span></h1>
-        <p class="max-w-xl mx-auto text-[var(--fgd)] text-base md:text-lg leading-relaxed">Hand cut multi layer stencil art, each piece built from precisely cut layers, made with care. Original works available for collectors.</p>
+        <p class="max-w-xl ml-auto text-[var(--fgd)] text-base md:text-lg leading-relaxed">Hand cut multi layer stencil art, each piece built from precisely cut layers, made with care. Original works available for collectors.</p>
       </div>
-      <div class="mt-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-        <a href="#gallery" class="inline-flex items-center gap-3 fh text-sm tracking-[.15em] uppercase bg-[var(--ac)] text-black px-7 py-3.5 hover:bg-[var(--acb)] transition-colors pbtn w-fit mx-auto lg:mx-0"><span>Explore Available Works</span><i class="fas fa-arrow-down"></i></a>
+      <div class="mt-10 flex flex-col lg:flex-row lg:items-end lg:justify-end gap-6">
+        <a href="#gallery" class="inline-flex items-center gap-3 fh text-sm tracking-[.15em] uppercase bg-[var(--ac)] text-black px-7 py-3.5 hover:bg-[var(--acb)] transition-colors pbtn w-fit ml-auto lg:ml-0"><span>Explore Available Works</span><i class="fas fa-arrow-down"></i></a>
         <div class="flex items-center gap-6 max-w-sm w-full lg:w-auto"><div class="fm text-[10px] text-[var(--mt)] tracking-[.2em]"><span id="chN">01</span> / 07</div><div class="flex-1 pbar"><div class="pbf" id="rProg"></div></div><div class="fm text-[10px] text-[var(--ac)] tracking-[.2em]">REEL</div></div>
       </div>
     </div>
